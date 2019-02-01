@@ -1,0 +1,9 @@
+<?php $post = $feed ?>
+<div class="feed content-box">
+    <div>
+        <strong><a href="#">{{$post->user->fullname()}}</a></strong> added a new post
+        <br>
+        <small class="grey">{{$post->created_at->diffForHumans()}}</small>
+    </div>
+    @include('post.widgets.snippet')
+</div>
