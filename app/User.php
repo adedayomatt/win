@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'firstname','lastname','username', 'email', 'password'
+        'firstname','lastname','username', 'email', 'password','avatar'
     ];
 
     /**
@@ -61,7 +61,7 @@ class User extends Authenticatable
 	public function avatar(){
 		$image = array();
 		$image['src'] = $this->avatar === null ? asset('storage/images/users/default.png') : asset('storage/images/users/'.$this->avatar);
-		$image['alt'] = $this->name. ' on '.config('app.name');
+		$image['alt'] = $this->fullname().'('.$this->username().') on '.config('app.name');
 		return $image;
     }
     

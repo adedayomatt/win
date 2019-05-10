@@ -1,6 +1,6 @@
 <?php $discussion = $feed ?>
 <div class="feed content-box">
-    <strong><a href="#">{{$discussion->user->fullname()}}</a></strong> started a new discussion
+    <strong><a href="{{route('user.profile',[$discussion->user->username])}}">{{$discussion->user->fullname()}}</a></strong> started a new discussion
     @if($discussion->fromPost())
         on <a href="#">{{$discussion->post->user->fullname()}}</a>'s post
     @endif

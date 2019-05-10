@@ -1,10 +1,10 @@
-<!-- <script src="{{ asset('js/vendors/popper.min.js') }}"></script>
+<script src="{{ asset('js/vendors/popper.min.js') }}"></script>
 <script src="{{asset('js/vendors/bootstrap-4.min.js')}}"></script>
-<script src="{{asset('js/vendors/toastr.min.js')}}"></script> -->
+<script src="{{asset('js/vendors/toastr.min.js')}}"></script>
 
-<script src="http://wyzi.io/js/vendors/popper.min.js"></script>
+<!-- <script src="http://wyzi.io/js/vendors/popper.min.js"></script>
 <script src="http://wyzi.io/js/vendors/bootstrap-4.min.js"></script>
-<script src="http://wyzi.io/js/vendors/toastr.min.js"></script>
+<script src="http://wyzi.io/js/vendors/toastr.min.js"></script> -->
 
 <script>
 			toastr.options = {

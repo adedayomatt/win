@@ -2,7 +2,7 @@
 
 namespace App\Matto;
 class feeds
-
+// This class is to arrange feeds, discussion, posts and comment collections are passed to the constructor
 {
     public $posts = null;
     public $comments = null;

@@ -13,10 +13,12 @@
 
 Route::get('/', 'AppController@index')->name('home');
 Auth::routes();
-Route::get('@{username}','UserController@show')->name('profile');
+Route::get('@{username}','UserController@show')->name('user.profile');
 Route::get('@{username}/interests','UserController@createInterests')->name('create.interests');
 Route::post('@{username}/interests','UserController@addInterests')->name('add.interests');
-Route::get('@{username}/settings/interests','UserController@editInterests')->name('edit.interests');
+Route::get('@{username}/settings','UserController@settings')->name('user.settings');
+Route::put('@{username}/settings/avatar','UserController@updateAvatar')->name('update.avatar');
+Route::put('@{username}/settings/info','UserController@updateInfo')->name('update.info');
 Route::put('@{username}/settings/interests','UserController@updateInterests')->name('update.interests');
 
 Route::resource('tag','TagController');
