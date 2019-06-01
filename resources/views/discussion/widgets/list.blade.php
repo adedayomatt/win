@@ -1,18 +1,13 @@
 <?php
-    $title = isset($w_title) ? $w_title: 'Discussions';
-    $collection = isset($w_collection) ? $w_collection: $_discussions::all();
+    $collection = isset($discussion_w_collection) ? $discussion_w_collection: $_discussions::all();
 ?>
-<div class="content-box">
-    <h5>{{$title}}</h5>
-</div>
-
-<div class="content-box widget">
+<div class="widget my-1">
     @if($collection->count() >0 )
-        <ul class="list-group icon-bullet">
+        <div class="list-group">
             @foreach($collection as $discussion)
-                @include('discussion.widgets.single')
+                @include('discussion.templates.list')
             @endforeach
-        </ul>
+    </div>
     @else
         <div class="text-center" style="padding: 10px">
             <small class="text-danger"><i class="fa fa-exclamation-triangle"></i>  No discussion found</small>

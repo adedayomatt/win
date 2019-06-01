@@ -6,7 +6,7 @@ class FileUpload{
     public $slugs = array();
     public $totalSuccess = 0;
     public $report = 'Something went wrong';
-    public $allow = ['jpeg','png','jpg','gif','svg'];
+    public $allow = ['jpeg','png','jpg','JPG','gif','svg'];
 
     private $request;
     private $name;

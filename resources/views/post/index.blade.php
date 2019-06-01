@@ -1,14 +1,14 @@
 @extends('layouts.appRHSfixed')
-
+@section('styles')
+    .snippet{
+        background-color: #fff;
+    }
+@endsection
 @section('main')
-<div class="content-box">
-    <h5>posts</h5>
-</div>
+    <h5>Posts</h5>
     @if($posts->count() > 0)
         @foreach($posts as $post)
-            <div class="content-box">
                  @include('post.widgets.snippet')
-            </div>
         @endforeach
     @else
     <div class="row justify-content-center">
@@ -20,5 +20,10 @@
     @endif
 @endsection
 @section('RHS')
-    @include('tag.widget')
+    <div class="card">
+        <div class="card-body">
+        @include('tag.widgets.list')
+        </div>
+    </div>
+
 @endsection

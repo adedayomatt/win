@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
@@ -50,7 +51,10 @@ class User extends Authenticatable
 	public function watchings(){
 		return $this->hasMany('App\Watch');
     }
-    
+    public function discussionInvitations(){
+		return $this->belongsToMany('App\Discussion');
+	}
+
     public function fullname(){
         return $this->firstname.' '.$this->lastname;
     }
@@ -106,5 +110,16 @@ class User extends Authenticatable
 		}
 	return $interested_posts;
     }
+
+    public function discussionContributions(){
+       return  Comment::select(DB::raw('count(discussion_id) as total_comments, discussion_id'))->where('user_id', $this->id)->groupBy('discussion_id')->orderBy('created_at', 'desc')->get();
+    }
     
+    public function activeDiscussions(){
+        $discussions = [];
+        foreach($this->discussionContributions() as $contribution){
+            array_push($discussions, $contribution->discussion);
+        }
+        return collect($discussions);
+    }
 }

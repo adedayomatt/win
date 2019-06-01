@@ -1,0 +1,1 @@
+@include('discussion.widgets.list',['discussion_w_collection' => $_discussions::orderBy('created_at','desc')->take(5)->get()])

@@ -1,15 +1,11 @@
 <?php
-    $title = isset($w_title) ? $w_title: 'Forums';
-    $collection = isset($w_collection) ? $w_collection: $_forums::all();
+    $collection = isset($forum_w_collection) ? $forum_w_collection: $_forums::all();
 ?>
 <div class="content-box widget">
-        <div class="heading">
-            <h5>{{$title}}</h5>
-        </div>
         @if($collection->count() >0 )
             <ul class="list-group ball-bullet">
                 @foreach($collection as $forum)
-                    @include('forum.widgets.single')
+                    @include('forum.templates.list')
                 @endforeach
             </ul>
         @else

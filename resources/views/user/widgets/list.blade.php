@@ -1,24 +1,18 @@
 <?php
-    $title = isset($w_title) ? $w_title: 'Users';
-    $collection = isset($w_collection) ? $w_collection: $_users::all();
+    $collection = isset($users_collection) ? $users_collection: $_users::all();
 ?>
-<div class="card widget-card border-0">
-       <div class="card-header border-0">
-            <h5>{{$title}}</h5>
+
+    @if($collection->count() >0 )
+
+        @foreach($collection as $user)
+        <div class="py-1">
+        @include('user.widgets.snippet', ['user' => $user])
+        </div> 
+        @endforeach
+    @else
+        <div class="text-center" style="padding: 10px">
+            <small class="text-danger"><i class="fa fa-exclamation-triangle"></i>  No user found</small>
         </div>
-       <div class="card-body p-0">
-            @if($collection->count() >0 )
-                <div class="list-group">
-                    @foreach($collection as $user)
-                        @include('user.widgets.single')
-                    @endforeach
-                </div>
-            @else
-                <div class="text-center" style="padding: 10px">
-                    <small class="text-danger"><i class="fa fa-exclamation-triangle"></i>  No product found</small>
-                </div>
-            @endif
-       </div>
-   </div>
-  
+    @endif
+
 

@@ -27,12 +27,6 @@
                 Posts
             </a>
       </li>
-      <li class="nav-item ">
-            <a href="#" class="nav-link" >
-                Trainings
-            </a>
-      </li>
-
               <!-- <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Dropdown
@@ -47,9 +41,29 @@
 
     </ul>
 
+    @if($_tags::count() > 0)
+      <ul class="navbar-nav ml-auto" style="max-width: 200px; overflow-x: auto">
+        @foreach($_tags::all() as $tag)
+            <li class="nav-item ">
+                <a href="{{route('tag.show',[$tag->slug])}}" class="nav-link" >
+                    #{{$tag->name}}
+                </a>
+            </li>
+          @endforeach
+      </ul>
+    @endif
+    @auth()
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item ">
+              <a href="{{route('discussion.create')}}" class="btn btn-secondary btn-sm" >
+                  <i class="fa fa-plus"></i> New discussion
+              </a>
+        </li>
+
+    </ul>
+    @endauth()
     <ul class="navbar-nav ml-auto">
         @auth()
-
 
               <li class="nav-item dropdown">
 

@@ -1,0 +1,1 @@
+@include('components.owl-carousel', ['carousel_collection' => $_tags::trending(), 'carousel_template'=> 'tag.templates.carousel-trending'])

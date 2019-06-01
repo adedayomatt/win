@@ -9,8 +9,7 @@
             </div>
             {!! $post->content('full') !!}
         </div>
-        <?php $tags = $post->tags ?>
-            @include('tag.widget-alt')
+            @include('tag.widgets.inline', ['tags' => $post->tags])
 
     </div>
 

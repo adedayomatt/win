@@ -80,7 +80,7 @@ class UserController extends Controller
 			return $this->bounce($user);
 		}
 		$this->validate($request,[
-			'avatar' => ['required','image','mimes:jpeg,png,jpg,gif,svg','max:5048']
+			'avatar' => ['required','image','mimes:jpeg,png,jpg,JPG,gif,svg','max:5048']
 		]);
 		
 		if($request->hasFile('avatar')){
@@ -96,9 +96,9 @@ class UserController extends Controller
 				$user->avatar = $upload->slugs[0];
 				$user->save();
 				if(file_exists($storage.$upload->slugs[0])){//confirm if new avatar is uploaded successfully
-					if(file_exists($storage.$old_avatar)){
-						unlink($storage.$old_avatar);
-					}
+					// if(file_exists($storage.$old_avatar)){
+					// 	unlink($storage.$old_avatar);
+					// }
 				}
 			}
 

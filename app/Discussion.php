@@ -37,6 +37,19 @@ class Discussion extends Model
 	public function watchers(){
 		return $this->hasMany('App\Watcher');
 	}
+	public function invitedUsers(){
+		return $this->belongsToMany('App\User');
+	}
+	public function invitedUsersId(){
+		$users = [];
+		foreach($this->invitedUsers as $user){
+			array_push($users, $user->id);
+		}
+		return $users;
+	}
+	public function alreadyInvited($user){
+		return in_array($user->id, $this->invitedUsersId()) ? true : false;
+	}
 
 	public function fromPost(){
 		return  $this->post=== null ? false : true;
@@ -65,6 +78,19 @@ class Discussion extends Model
 		}
 	return $related_discussions;
 	}
+	
+	public function contributions(){
+		return	$this->comments()->select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id');
+	}
+
+	public function contributors(){
+		$contributors =[];
+		foreach($this->contributions()->get() as $contribution){
+		array_push($contributors, $contribution->user);
+		}
+		return  collect($contributors);
+	}
+
 
 
 

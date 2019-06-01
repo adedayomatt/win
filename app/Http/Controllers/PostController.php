@@ -19,7 +19,7 @@ class PostController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only post list and single post view is publicly accessible
+         $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only post list and single post view is publicly accessible
     }
 
     private function getPost($id){

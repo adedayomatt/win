@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Forum;
 use App\Post;
+use App\User;
 use App\Tag;
 use App\PostCategory;
 use App\Discussion;
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 		$Global = array(
             '_tags' => Tag::class,
+            '_users' => User::class,
 			'_forums' => Forum::class, 
             '_posts' => Post::class,
             '_postCategories' => PostCategory::class,

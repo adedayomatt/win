@@ -1,16 +1,11 @@
 <?php
-    $title = isset($w_title) ? $w_title: 'Posts';
-    $collection = isset($w_collection) ? $w_collection: $_posts::all();
+    $collection = isset($post_w_collection) ? $post_w_collection: $_posts::all();
 ?>
-<div class="content-box">
-    <h5>{{$title}}</h5>
-</div>
-
 <div class="content-box widget">
         @if($collection->count() >0 )
             <div class="list-group">
                 @foreach($collection as $post)
-                    @include('post.widgets.single')
+                    @include('post.templates.list')
                 @endforeach
             </div>
         @else

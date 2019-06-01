@@ -4,8 +4,7 @@
     ?>
    @foreach($comments as $comment) 
         <div class="list-group-item">
-           <?php $user= $comment->user?>
-           @include('user.widgets.snippet')
+           @include('user.widgets.snippet', ['user' => $comment->user])
             <small class="grey">{{$comment->created_at->diffForHumans()}}</small>
             {!!$comment->content!!}
             @include('comment.meta')

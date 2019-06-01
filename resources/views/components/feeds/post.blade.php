@@ -1,5 +1,5 @@
 <?php $post = $feed ?>
-<div class="feed content-box">
+<div class="feed">
     <div>
         <strong><a href="{{route('user.profile',[$post->user->username])}}">{{$post->user->fullname()}}</a></strong> added a new post
         <br>

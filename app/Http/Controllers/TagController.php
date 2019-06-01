@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Auth;
 use App\Tag;
 use App\Traits\Resource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -14,7 +15,7 @@ class TagController extends Controller
 
     public function __construct()
     {
-        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only post list and single post view is publicly accessible
+         $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only tag list and single tag view is publicly accessible
     }
 
     private function getTag($id){
@@ -82,6 +83,23 @@ class TagController extends Controller
 		return view('tag.show')->with('tag', $this->getTag($id));
     }
 
+    public function follow($id){
+        $tag = $this->getTag($id);
+        Auth::user()->tags()->attach($tag->id);
+        return redirect()->back()->with('success', 'You are now following #'.$tag->name);
+    }
+    public function unfollow($id){
+        $tag = $this->getTag($id);
+        $followers = $tag->followersId();
+        for($i=0;$i<count($followers); ++$i){
+            if($followers[$i] == Auth::id()){
+                array_splice($followers, $i, 1);
+            }
+        }
+        Auth::user()->tags()->sync($followers);
+        
+        return redirect()->back()->with('success', 'You no longer follow #'.$tag->name);
+    }
     /**
      * Show the form for editing the specified resource.
      *

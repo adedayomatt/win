@@ -11,7 +11,7 @@ class ForumController extends Controller
     use Resource;
 
 	public function __construct(){
-		// $this->middleware('auth')->except(['index','show']);
+		$this->middleware('auth')->except(['index','show']);
     }
 
     private function getForum($id){

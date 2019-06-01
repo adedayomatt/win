@@ -23,6 +23,8 @@ Route::put('@{username}/settings/interests','UserController@updateInterests')->n
 
 Route::resource('tag','TagController');
 Route::get('tags', 'TagController@index')->name('tags');
+Route::get('tag/{tag}/follow','TagController@follow')->name('tag.follow');
+Route::get('tag/{tag}/unfollow','TagController@unfollow')->name('tag.unfollow');
 Route::get('search/tag', 'TagController@search')->name('search.tag');
 
 Route::resource('forum','ForumController');
@@ -30,6 +32,7 @@ Route::get('forums','ForumController@index')->name('forums');
 
 Route::resource('discussion','DiscussionController');
 Route::get('discussions','DiscussionController@index')->name('discussions');
+Route::post('discussion/{discussion}/invite/','DiscussionController@inviteUsers')->name('discussion.invite.users');
 Route::resource('discussion/{discussion}/comment','CommentController');
 Route::post('discussion/{discussion}/comment/{comment}/reply','CommentController@reply')->name('comment.reply');
 Route::post('discussion/{discussion}/comment/{comment}/like','CommentController@like')->name('comment.like');
@@ -42,6 +45,7 @@ Route::get('post/{post}/discuss','PostController@discuss')->name('post.discuss')
 
 Route::resource('category','PostCategoryController',['as' => 'post']);
 Route::get('categories','PostCategoryController@index')->name('post.categories');
+
 
 
 

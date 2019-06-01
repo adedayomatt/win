@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Post;
 use App\Comment;
 use App\Discussion;
@@ -18,7 +19,9 @@ class AppController extends Controller
 		else{
 			$feeds = new Feeds(Discussion::all(),Post::all(),Comment::all());
 		}
-		return view('index')->with('feeds',$feeds->feeds());
+		$topContributors = Comment::select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id')->get();
+		return view('index')->with('feeds',$feeds->feeds())
+												->with('top_contributors', $topContributors);
 	}
 	
 	public function about(){

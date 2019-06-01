@@ -13,7 +13,7 @@ class DiscussionController extends Controller
     use Resource;
     
 	public function __construct(){
-		// $this->middleware('auth')->except(['index','show']);
+		 $this->middleware('auth')->except(['index','show']);
     }
     
     private function getDiscussion($id){
@@ -128,5 +128,11 @@ class DiscussionController extends Controller
         $this->getDiscussion($id)->delete();
 		 return redirect()->back()->with('success', 'Discussion deleted');
 
+    }
+
+    public function inviteUsers(Request $request, $id){
+        $discussion = $this->getDiscussion($id);
+        $discussion->invitedUsers()->attach($request->users);
+        return redirect()->back()->with('success', count($request->users).' person(s) invited to the discussion '.$discussion->title);
     }
 }
