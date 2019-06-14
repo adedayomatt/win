@@ -2,9 +2,13 @@
     <div class="d-flex">
         <span class="bullet"></span>
         <a class="mr-2 " href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a>
-        <small><span class="badge badge-secondary figure">{{$forum->discussions->count()}}</span> discussions</small>
+        <span class="ml-auto">{{$forum->discussions->count()}} discussions</span>
     </div>
-    <small class="grey">{!!$forum->description()!!}</small>
-    <br>
-    <small class="grey"><i class="fa fa-user"></i> created by {{$forum->user->fullname()}}</small>
+    @if($forum->description != '')
+        <small class="text-muted">{!!$forum->description()!!}</small>
+    @endif
+    <div>
+        <img src="{{$forum->user->avatar()['src']}}" alt="" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff" data-toggle="tooltip" title="{{$forum->user->username()}}">
+        <small class="text-muted"> <a href="{{route('user.profile',[$forum->user->username])}}">{{$forum->user->fullname()}}</a></small>
+    </div>
 </li>

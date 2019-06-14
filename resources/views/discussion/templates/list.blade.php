@@ -2,9 +2,20 @@
     <div class="px-2 ">
         <div class="d-flex">
             <p>
-                <a class="mr-2 discussion" href="{{route('discussion.show',[$discussion->slug])}}"><strong>{{ $discussion->title}}</strong></a>
-                @if($discussion->fromPost())
-                    on the post <a href="{{route('post.show',$discussion->post->slug)}}"><strong>  {{$discussion->post->title}}</strong></a>
+                @if(!$discussion->isTrashed())
+                    <a class="mr-2 discussion" href="{{route('discussion.show',[$discussion->slug])}}"><strong>{{ $discussion->title}}</strong></a>
+                @else
+                    <strong class="text-muted" data-toggle="tooltip" title="discussion deleted">{{$discussion->title}}</strong>
+                @endif
+
+                
+                @if($discussion->fromTraining())
+                    on the training 
+                    @if($discussion->training()->isTrashed())
+                        <strong class="text-muted" data-toggle="tooltip" title="training deleted">{{$discussion->training()->title}}</strong>
+                    @else
+                        <a href="{{route('training.show',$discussion->training()->slug)}}"><strong>  {{$discussion->training()->title}}</strong></a>
+                    @endif
                 @endif            
             </p> 
         </div>

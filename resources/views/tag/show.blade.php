@@ -1,82 +1,84 @@
 @extends('layouts.appLHSfixedRHSfixed')
-
+@section('styles')
+    .after-fixed-head{
+        padding-top: 72px;
+    }
+@endsection
 @section('LHS')
-    <div class="content-box">
+    <div class="lhs-fixed-head has-tag-follow bg-white p-2">
         <div class="d-flex">
-            <h5>{{$tag->name}}</h5>
-            @if($tag->following(Auth::id()))
-                <a href="{{route('tag.unfollow',[$tag->slug])}}" class="btn btn-sm btn-primary ml-auto"><i class="fa fa-minus"></i> unfollow</a>
-            @else
-                <a href="{{route('tag.follow',[$tag->slug])}}" class="btn btn-sm btn-primary ml-auto"><i class="fa fa-plus"></i> follow</a>
-            @endif
-        </div>
-        <div class="text-muted">
-            <p>{!!$tag->description!!}</p>
-            <div>
-                <span>{{number_format($tag->discussions->count())}} discussions</span>
-                <span class="ml-2">{{number_format($tag->posts->count())}} posts</span>
+            <h6><a href="{{route('tag.show',[$tag->slug])}}" class="tag">#{{$tag->name}}</a></h6>
+            <div class="ml-auto">
+                @include('tag.components.follow')
             </div>
         </div>
+        <div class="text-muted">
+            @include('tag.widgets.meta',['tag' => $tag])
+        </div>
     </div>
-    <h6>Other tags </h6>
-    @include('components.owl-carousel', ['carousel_collection' => $tag->otherTags()->take(10)->get(), 'carousel_template'=> 'tag.templates.carousel-default','carousel_layout' => ['xs' => 2, 'sm' => '2', 'md' => 2, 'lg' => 2]])
-    @include('components.ads.sample')
+    <div class="after-fixed-head">
+        @if($tag->description != null)
+            <strong class="text-muted">Description</strong>
+            <div class="content-box text-muted">
+                {!!$tag->description!!}
+            </div>
+        @endif
+        <h6>Other tags </h6>
+        @include('components.owl-carousel', ['carousel_collection' => $tag->otherTags($raw = true)->take(10)->get(), 'carousel_template'=> 'tag.templates.carousel-default','carousel_layout' => ['xs' => 2, 'sm' => '2', 'md' => 2, 'lg' => 2]])
+        @include('components.ads.sample')
+    </div>
 @endsection
 
 
 @section('main')
-
-        <div class="content-box ">
-            <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="discussions-tab" data-toggle="tab" href="#discussions" role="tab" aria-controls="discussions" aria-selected="true">Discussions ({{$tag->discussions->count()}})</a>
-                    <a class="nav-item nav-link" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="false">Posts ({{$tag->posts->count()}}) </a>
+            <div class="text-muted text-center py-1">
+                <strong>Activities in <span class="tag">#{{$tag->name}}</span></strong>
+            </div>
+        @if($activities->count() > 0)
+            <div class="infinite-scroll">
+                @foreach($activities as $activity)
+                    @if($activity->type() == 'discussion')
+                        @include('discussion.widgets.snippet', ['discussion' => $activity])
+                    @elseif($activity->type() == 'training')
+                        @include('training.widgets.snippet', ['training' => $activity])
+                    @endif
+                @endforeach
+                {{$activities->links()}}
+            </div>
+        @else
+            <div class="text-center text-muted py-2">
+                No activity in {{$tag->name}} yet
+                <div>
+                    <a href="{{route('discussion.create')}}" class="">create discussion</a> or 
+                    <a href="{{route('training.create')}}" class="">create training</a>
                 </div>
-            </nav>
-            <div class="tab-content" id="discussions-posts-tab-content">
-                <div class="tab-pane fade show active mt-2" id="discussions" role="tabpanel" aria-labelledby="discussions-tab">
-                    @if($tag->discussions->count() > 0)
-                        @foreach($tag->discussions as $discussion)
-                                @include('discussion.widgets.snippet', ['discussion' => $discussion])
-                        @endforeach
-                    @else
-                        <div class="row justify-content-center">
-                            <div class="col-md-8 text-muted">
-                                <h5>No discussion in {{$tag->name}} yet</h5>
-                                <a href="{{route('discussion.create')}}" class="btn btn-primary">Create one now</a>
-                            </div>
-                        </div>
-                    @endif    
-                </div>
-                <div class="tab-pane fade mt-2" id="posts" role="tabpanel" aria-labelledby="posts-tab">
-                    @if($tag->posts->count() > 0)
-                        @foreach($tag->posts as $post)
-                                @include('post.widgets.snippet', ['post' => $post])
-                        @endforeach
-                    @else
-                        <div class="row justify-content-center">
-                            <div class="col-md-8 text-muted">
-                                <h5>No post in {{$tag->name}} yet</h5>
-                                <a href="{{route('post.create')}}" class="btn btn-primary">Create one now</a>
-                            </div>
-                        </div>
-                    @endif 
-                </div>
-            </div> 
-        </div>
-    
-    
+            </div>
+        @endif    
+                
 @endsection
 
 @section('RHS')
     <div class="card">
         <div class="card-body">
             <h6>Followed by:</h6>
-            @include('user.widgets.list', ['users_collection' => $tag->followers()])
+            <hr>
+            <div style="max-height: 300px; overflow: auto">
+                @include('user.widgets.list', ['users_collection' => $tag->users()->take(10)->get()])
+                @if($tag->users()->count() > 10)
+                    <div class="text-muted text-right">
+                        ...and {{$tag->users()->count() - 10 }} others, <a href="#">see all followers</a>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
     <h6>Trending</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 2, 'md' => 2, 'lg' => 2] ])
 @endsection
+
+@section('b-scripts')
+    @include('tag.components.follow-script')
+@endsection
+
 
 

@@ -3,15 +3,17 @@
 namespace App\Providers;
 
 use App\Forum;
-use App\Post;
+use App\Training;
 use App\User;
 use App\Tag;
-use App\PostCategory;
 use App\Discussion;
-use App\DiscussionTag;
+use App\Comment;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,14 +24,38 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+         /**
+         * Paginate a standard Laravel Collection.
+         *
+         * @param int $perPage
+         * @param int $total
+         * @param int $page
+         * @param string $pageName
+         * @return array
+         */
+        Collection::macro('paginate', function($perPage, $total = null, $page = null, $pageName = 'page') {
+            $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+            return new LengthAwarePaginator(
+                $this->forPage($page, $perPage),
+                $total ?: $this->count(),
+                $perPage,
+                $page,
+                [
+                    'path' => LengthAwarePaginator::resolveCurrentPath(),
+                    'pageName' => $pageName,
+                ]
+            );
+        });
+
         Schema::defaultStringLength(191);
+    
 		$Global = array(
             '_tags' => Tag::class,
             '_users' => User::class,
 			'_forums' => Forum::class, 
-            '_posts' => Post::class,
-            '_postCategories' => PostCategory::class,
+            '_trainings' => Training::class,
             '_discussions' => Discussion::class,
+            '_comments' => Comment::class,
 		);
 		View::share($Global);
     }

@@ -4,26 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Posttag;
+use App\Trainingtag;
 use App\Traits\GetResource;
 
-class PostTagController extends Controller
+class TrainingTagController extends Controller
 {
     
     use GetResource;
 
     public function __construct()
     {
-        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only post list and single post view is publicly accessible
+        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only training list and single training view is publicly accessible
     }
 
     private function getTag($id){
-        return $this->find(Posttag::class,$id);
+        return $this->find(Trainingtag::class,$id);
     }
 
     public function search(Request $request){
-    return Posttag::search($request->get('q'))
-                    ->with('posts')
+    return Trainingtag::search($request->get('q'))
+                    ->with('trainings')
                     ->get();
     }
 
@@ -34,7 +34,7 @@ class PostTagController extends Controller
      */
     public function index()
     {
-        return view('post.tag.index')->with('posttags',Posttag::all());
+        return view('training.tag.index')->with('trainingtags',Trainingtag::all());
     }
 
     /**
@@ -44,7 +44,7 @@ class PostTagController extends Controller
      */
     public function create()
     {
-        return view('post.tag.create');
+        return view('training.tag.create');
     }
 
     /**
@@ -59,12 +59,12 @@ class PostTagController extends Controller
 		'tag_name' => 'required'
 		]);
 		
-		Posttag::create([
+		Trainingtag::create([
         'name' => $request->tag_name,
         'description' => $request->description,
         'slug' => str_slug($request->tag_name)
 		]);
-		return redirect()->route('post.tags')->with('success','Tag '.$request->tag_name.' created');
+		return redirect()->route('training.tags')->with('success','Tag '.$request->tag_name.' created');
    
     }
 
@@ -76,7 +76,7 @@ class PostTagController extends Controller
      */
     public function show($id)
     {
-		return view('post.tag.show')->with('posttag', $this->getTag($id));
+		return view('training.tag.show')->with('trainingtag', $this->getTag($id));
     }
 
     /**
@@ -87,7 +87,7 @@ class PostTagController extends Controller
      */
     public function edit($id)
     {
-		return view('post.tag.edit')->with('posttag', $this->getTag($id));
+		return view('training.tag.edit')->with('trainingtag', $this->getTag($id));
     }
 
     /**
@@ -108,7 +108,7 @@ class PostTagController extends Controller
         $tag->description = $request->description;
         $tag->slug = str_slug($request->tag_name);
 		$tag->save();
-		return redirect()->route('post.tag.show',[$tag->slug])->with('success','Tag '.$request->tag_name.' updated');
+		return redirect()->route('training.tag.show',[$tag->slug])->with('success','Tag '.$request->tag_name.' updated');
 		}
 
     /**

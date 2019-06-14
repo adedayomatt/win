@@ -1,7 +1,6 @@
 {!!Form::open(['route' => ['discussion.update',$discussion->id], 'method' => 'POST'])!!}
     @method('PUT')
     <fieldset>
-        <legend>Update Discussion</legend>
         <div class="form-group">
             {{form::label('discussion_title', 'Title')}}
             {{form::text('discussion_title',$discussion->title,['class'=>'form-control', 'placeholder'=>'Title of your discussion','required', 'autofocus'])}}
@@ -36,7 +35,7 @@
 
         <div class="form-group">
             {{form::label('content', 'Content')}}
-            {{form::textarea('content',$discussion->content,['id'=>'ckeditor','class'=>'form-control', 'placeholder'=>'content of your discussion...', 'required', 'autofocus'])}}
+            {{form::textarea('content',$discussion->content,['class'=>'ckeditor form-control', 'placeholder'=>'content of your discussion...', 'required', 'autofocus'])}}
             @if ($errors->has('content'))
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $errors->first('content') }}</strong>
@@ -46,8 +45,7 @@
 
         <div class="form-group row justify-content-center">
             <div class="col-sm-8">
-            <?php $prevTags = $discussion->tags ?>
-                @include('tag.components.attach')
+                @include('tag.components.select', ['prev_tags' => $discussion->tags])
             </div>
         </div>
 
@@ -56,7 +54,7 @@
     
     <div class=" form-group row">
         <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Update',['class' => 'btn btn-success btn-block'])}}
+            {{Form::submit('Update',['class' => 'btn btn-theme btn-block'])}}
         </div>
     </div>
 {!! Form::close() !!}

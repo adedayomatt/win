@@ -6,16 +6,27 @@
             @include('user.widgets.snippet',['user' => Auth::user()])
         </div>
         <h6>My Interests: </h6>
-        <div class="content-box">
-            @if(auth()->user()->tags->count() > 0)
-                 @include('tag.widgets.inline', ['tags' => auth()->user()->tags])
+        <div style="max-height: 200px; overflow: auto">
+            @if(auth()->user()->tagsFollowing->count() > 0)
+                 @include('tag.widgets.inline', ['tags' => auth()->user()->tagsFollowing])
             @else
                 <span class="grey">You don't have any interest yet</span> <a href="{{route('create.interests',auth()->user()->username)}}">Add interests now</a>
             @endif
         </div>
        @include('components.ads.sample')
-        <h6>People</h6>
-        @include('components.owl-carousel', ['carousel_collection' => $_users::all() , 'carousel_template' => 'user.templates.carousel-default', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>2]])
+       <h6>Forums</h6>
+        @if($_forums::count() > 0)
+            @include('components.owl-carousel', ['carousel_collection'=> $_forums::orderby('created_at','desc')->take(10)->get(), 'carousel_template'=>'forum.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => 2, 'md' => 2, 'lg' => 2]])
+            @if($_forums::count() > 10)
+                <div class="text-right">
+                    <a href="{{route('forum.index')}}">see more</a>
+                </div>
+            @endif
+        @else
+            <div class="content-box text-muted text-center">
+                <small>No forum yet</small> 
+            </div>
+        @endif
 
     @endauth
 
@@ -43,46 +54,34 @@
 @section('main')
     <h6>Trending</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
+   
+
     @auth()
         <h6>Feeds</h6>
         @include('components.feeds._feeds')
     @endauth
+
     @guest()
         <h6>See what people are talking about</h6>
-            @include('components.feeds.guest-feeds')
-        <h5>Here are some interesting post you might like</h5>
-            <div class="content-bo">
-                @include('components.owl-carousel', ['carousel_collection' => $_posts::orderby('created_at', 'desc')->take(10)->get(), 'carousel_template' => 'post.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3]])
-            </div>
-        <div class="text-right">
-            <a href="{{route('post.index')}}">see more</a>
-        </div>
+        @include('components.feeds._feeds')
     @endguest
   
 @endsection
 @section('RHS')
-    <h6>Forums</h6>
-    @include('components.owl-carousel', ['carousel_collection'=> $_forums::orderby('created_at','desc')->take(10)->get(), 'carousel_template'=>'forum.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => 2, 'md' => 2, 'lg' => 2]])
-
-    <h6>Tags</h6>
     <div class="content-box">
-        @include('tag.widgets.list')
+        <h6>Tags</h6>
+        <hr>
+        <div style="max-height: 400px; overflow:auto" class="auto-page">
+            <div class="content">
+                @include('tag.widgets.list')
+            </div>
+        </div>
+        <div class="text-right">
+            <a href="{{route('tags')}}">All tags</a>
+        </div>
     </div>
+    @include('layouts.components.footer');
 
-    <h6>Top Contributors</h6>
-    @if($top_contributors->count() > 0)
-        @include('components.owl-carousel', ['carousel_collection' => $top_contributors , 'carousel_template' => 'discussion.templates.carousel-contributor', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>2]])
-    @else
-        <p class="text-muted text-center">Not available</p>
-    @endif
-
-    @guest()
-        <!-- <div class="content-box text-center">
-                <h4>Don't miss out of the conversations</h4>
-                <a href="{{route('login')}}" class="btn btn-primary btn-block">Sign in</a>
-                <a href="{{route('register')}}" class="btn btn-success btn-block">Sign up</a>
-        </div> -->
-    @endguest
 
     
 @endsection

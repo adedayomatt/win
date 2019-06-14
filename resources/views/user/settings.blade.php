@@ -16,6 +16,12 @@
                             <li class="list-group-item" data-toggle="collapse" data-target="#interests" aria-expanded="true" aria-controls="interests">
                                 Interests
                             </li>
+                            <li class="list-group-item" data-toggle="collapse" data-target="#education" aria-expanded="true" aria-controls="education">
+                                Education
+                            </li>
+                            <li class="list-group-item" data-toggle="collapse" data-target="#work" aria-expanded="true" aria-controls="work">
+                                Work
+                            </li>
                         </ul>
                     </div>
 
@@ -34,12 +40,28 @@
                                 <h5 class="card-title grey">Interests</h5>
                                 <div class="card">
                                     <div class="card-body">
-                                        <?php $update = true ?>
-                                        @include('user.settings.interests')
+                                        @include('user.settings.interests', ['update' => true])
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <div id="education" class="collapse {{$tab === 'education' ? 'show' : '' }}" data-parent="#settings">
+                                <h5 class="card-title grey">Education</h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        @include('user.settings.education')
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="work" class="collapse {{$tab === 'work' ? 'show' : '' }}" data-parent="#settings">
+                                <h5 class="card-title grey">Work</h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        @include('user.settings.work')
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>

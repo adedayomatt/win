@@ -7,10 +7,10 @@
             @foreach($collection as $discussion)
                 @include('discussion.templates.list')
             @endforeach
-    </div>
+        </div>
     @else
-        <div class="text-center" style="padding: 10px">
-            <small class="text-danger"><i class="fa fa-exclamation-triangle"></i>  No discussion found</small>
+        <div class="content-box text-center text-muted">
+            <small>No discussion found</small>
         </div>
     @endif
 </div>

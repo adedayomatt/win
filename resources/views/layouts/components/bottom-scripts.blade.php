@@ -19,7 +19,7 @@
 				"newestOnTop": true,
 				"progressBar": true,
 				"escapeHtml": false,
-				"positionClass": "toast-top-right",
+				"positionClass": "toast-bottom-center",
 				"preventDuplicates": false,
 				"onclick": null,
 				"showDuration": "300",
@@ -31,7 +31,24 @@
 				"showMethod": "fadeIn",
 				"hideMethod": "fadeOut"
 			}
-	</script>
+
+	$('.infinite-scroll').each(function(){
+		var container = $(this);
+		container.find('ul.pagination').hide();
+		container.jscroll({
+            autoTrigger: true,
+            // loadingHtml: '<img class="center-block" src="/images/loading.gif" alt="Loading..." />',
+            loadingHtml: '<div class="text-muted text-center"><small>loading more...</small></div>',
+            padding: 0,
+            nextSelector: '.pagination li.active + li a',
+            contentSelector: 'div.infinite-scroll',
+            callback: function() {
+                container.find('ul.pagination').remove();
+            }
+        });
+	});
+
+</script>
 	@include('layouts.components.toastr')
 	@include('layouts.components.owl')
 

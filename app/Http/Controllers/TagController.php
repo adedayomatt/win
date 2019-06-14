@@ -15,7 +15,7 @@ class TagController extends Controller
 
     public function __construct()
     {
-         $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only tag list and single tag view is publicly accessible
+         $this->middleware(['auth','verified'])->except(['search','index', 'show','trainings','discussions','followers']);//This is to authenticate the user, only tag list and single tag view is publicly accessible
     }
 
     private function getTag($id){
@@ -24,8 +24,9 @@ class TagController extends Controller
 
     public function search(Request $request){
     return Tag::search($request->get('q'))
-                    ->with('posts')
+                    ->with('trainings')
                     ->with('discussions')
+                    ->with('users')
                     ->get();
     }
 
@@ -36,7 +37,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return view('tag.index')->with('tags',Tag::all());
+        return view('tag.index')->with('tags',Tag::orderby('name','asc')->paginate(config('app.pagination')));
     }
 
     /**
@@ -62,13 +63,17 @@ class TagController extends Controller
          ],[
              'unique' => 'Tag already exist'
          ]);
-		
-		Tag::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'slug' => str_slug($request->name)
-		]);
-		return redirect()->route('tags')->with('success','Tag '.$request->name.' created');
+		$tag_format = str_replace('-','_',str_slug($request->name));
+		$tag = Tag::create([
+            'user_id' => Auth::id(),
+            'name' => $tag_format,
+            'description' => $request->description,
+            'slug' => str_slug($request->name)
+        ]);
+
+        Auth::user()->tagsFollowing()->attach($tag->id);
+
+		return redirect()->route('tags')->with('success','Tag '.$tag_format.' created');
    
     }
 
@@ -80,26 +85,58 @@ class TagController extends Controller
      */
     public function show($id)
     {
-		return view('tag.show')->with('tag', $this->getTag($id));
+        $tag = $this->getTag($id);
+        $tagActivities = $tag->discussions->merge($tag->trainings)->sortByDesc('created_at')->paginate(config('app.pagination'));
+        //dd($tagActivities);
+        return view('tag.show')->with('tag', $tag)
+                                ->with('activities', $tagActivities);
     }
 
-    public function follow($id){
+    public function discussions($id){
         $tag = $this->getTag($id);
-        Auth::user()->tags()->attach($tag->id);
-        return redirect()->back()->with('success', 'You are now following #'.$tag->name);
+        return view('tag.discussions')->with('tag', $tag)
+                                    ->with('discussions', $tag->discussions()->orderby('created_at','desc')->paginate(config('app.pagination')));
     }
-    public function unfollow($id){
+    public function trainings($id){
         $tag = $this->getTag($id);
-        $followers = $tag->followersId();
-        for($i=0;$i<count($followers); ++$i){
-            if($followers[$i] == Auth::id()){
-                array_splice($followers, $i, 1);
+        return view('tag.trainings')->with('tag', $tag)
+                                ->with('trainings', $tag->trainings()->orderby('created_at','desc')->paginate(config('app.pagination')));
+    }
+
+    public function followers($id){
+        $tag = $this->getTag($id);
+        return view('tag.followers')->with('tag', $tag)
+                                ->with('followers', $tag->users()->orderby('created_at','desc')->paginate(config('app.pagination')));
+    }
+
+    public function follow(Request $request, $id){
+        $tag = $this->getTag($id);
+        if(Auth::user()->isFollowing($tag)){ //if already following
+            $tagsFollowingId = Auth::user()->interests();
+            $interests = [];
+            foreach($tagsFollowingId as $id){
+                if($id != $tag->id){
+                    array_push($tagsFollowingId, $id);
+                }
             }
+            Auth::user()->tagsFollowing()->sync($interests);
+    
+            if($request->has('async')){//if submitted via ajax
+                return json_encode(['message' => 'You no longer follow #'.$tag->name]);
+            }
+            return redirect()->route('tag.show',[$tag->slug])->with('success', 'You no longer follow #'.$tag->name);
+
+        }else{ //if not following before
+            Auth::user()->tagsFollowing()->attach($tag->id);
+            if($request->has('async')){//if submitted via ajax
+                return json_encode(['message' => 'You are now following #'.$tag->name]);
+            }
+            return redirect()->route('tag.show',[$tag->slug])->with('success', 'You are now following #'.$tag->name);
         }
-        Auth::user()->tags()->sync($followers);
-        
-        return redirect()->back()->with('success', 'You no longer follow #'.$tag->name);
     }
+
+
+
     /**
      * Show the form for editing the specified resource.
      *

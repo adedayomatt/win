@@ -1,12 +1,12 @@
-<nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
-  <a class="navbar-brand" href="{{route('home')}}">{{config('app.name')}}</a>
+<nav class="navbar navbar-expand-lg fixed-top">
+  <a class="navbar-brand white" href="{{route('home')}}">{{config('app.name')}}</a>
   
   <form class="form-inline my-2 my-lg-0" id="tag-search-wrapper">
         @include('tag.components.search')
  </form>
 
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
+  <button class="navbar-toggler bg-white" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bar color-primary"></i>
   </button>
 
   <div class="collapse navbar-collapse" id="nav-collapse">
@@ -23,39 +23,40 @@
             </a>
       </li>
       <li class="nav-item ">
-            <a href="{{route('posts')}}" class="nav-link" >
-                Posts
+            <a href="{{route('trainings')}}" class="nav-link" >
+                Trainings
             </a>
       </li>
-              <!-- <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                  </div>
-              </li> -->
-
+      <li class="nav-item ">
+            <a href="{{route('users')}}" class="nav-link" >
+                Users
+            </a>
+      </li>
     </ul>
 
-    @if($_tags::count() > 0)
-      <ul class="navbar-nav ml-auto" style="max-width: 200px; overflow-x: auto">
-        @foreach($_tags::all() as $tag)
-            <li class="nav-item ">
-                <a href="{{route('tag.show',[$tag->slug])}}" class="nav-link" >
-                    #{{$tag->name}}
-                </a>
-            </li>
+   
+
+  <div class="navbar-nav">
+    <div class="owl-carousel owl-theme" data-xs="2" data-sm="2" data-md="3" data-lg="3" style="width: 300px; overflow:auto">
+          @foreach($_tags::trending() as $trend)
+              <a href="{{route('tag.show',[$trend->tag->slug])}}" class="nav-link" title="{{$trend->tag->name}} - {{$trend->tag->description}}">
+                  <small>#{{str_limit($trend->tag->name, 10)}}</small> 
+              </a>
           @endforeach
-      </ul>
-    @endif
+      </div>
+  </div>
+   
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a href="{{route('tags')}}" class="nav-link" >
+              All tags
+          </a>
+      </li>
+    </ul>
     @auth()
     <ul class="navbar-nav ml-auto">
         <li class="nav-item ">
-              <a href="{{route('discussion.create')}}" class="btn btn-secondary btn-sm" >
+              <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm" >
                   <i class="fa fa-plus"></i> New discussion
               </a>
         </li>
@@ -72,21 +73,21 @@
                       {{ auth()->user()->username }} <span class="caret"></span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">                            
-                  
-                  <a class="dropdown-item" href="{{route('tag.create')}}">New tag</a>
+                    <a class="dropdown-item" href="{{route('user.profile',[Auth::user()->username])}}">
+                      <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> My profile
+                    </a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{route('tag.create')}}">create tag</a>
+                    <div class="dropdown-divider"></div>
+                    @if(Auth::user()->isVerified())
+                      <a class="dropdown-item" href="{{route('training.create')}}">create training</a>
+                      <div class="dropdown-divider"></div>
+                    @endif
 
-                    <a class="dropdown-item" href="{{route('post.create')}}">New post</a>
+                      <a class="dropdown-item" href="{{route('forum.create')}}">create forum</a>
                       <div class="dropdown-divider"></div>
 
-                      <a class="dropdown-item" href="{{route('post.category.create')}}">New post category</a>
-                      <div class="dropdown-divider"></div>
-
-
-                      <a class="dropdown-item" href="{{route('forum.create')}}">New Forum</a>
-                      <div class="dropdown-divider"></div>
-
-                      <a class="dropdown-item" href="{{route('discussion.create')}}">New Discussion</a>
+                      <a class="dropdown-item" href="{{route('discussion.create')}}">create discussion</a>
                       <div class="dropdown-divider"></div>
 
 
@@ -102,12 +103,16 @@
               </li>
           @endauth
         @guest()
-            <a href="{{route('login')}}" class="btn btn-primary btn-sm">Sign in</a>
-            <a href="{{route('register')}}" class="btn btn-success btn-sm ml-3">Sign up</a>
+        <li class="nav-item text-right">
+            <a href="{{route('login')}}" class="btn btn-default btn-sm mx-1">Sign in</a>
+            <a href="{{route('register')}}" class="btn btn-default btn-sm mx-1">Sign up</a>
+        </li>
+           
         @endguest
     </ul>
 
 <!-- Right Side Of Navbar -->
   </div>
 </nav>
+  @include('layouts.components.alerts')
 @yield('after-nav')

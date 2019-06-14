@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,12 +15,15 @@ class Comment extends Model
 	public function type(){
 		return 'comment';
 	}
+	static function topContributors(){
+		return Comment::select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id')->get();
+	}
 
    public function user(){
 		return $this->belongsTo('App\User');
 	}
 	public function discussion(){
-		return $this->belongsTo('App\Discussion');
+		return Discussion::withTrashed()->where('id', $this->discussion_id)->first();
 	}
 	public function likes(){
 		return $this->hasMany('App\CommentLike');

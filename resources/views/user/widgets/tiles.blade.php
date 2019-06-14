@@ -4,7 +4,7 @@
             @break
         @endif
         <a href="{{route('user.profile',[$user->username])}}">
-            <img src="{{$user->avatar()['src']}}" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px" data-toggle="tooltip" title="{{$user->fullname()}}">
+            <img src="{{$user->avatar()['src']}}" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="{{$user->fullname()}}">
         </a>
     @endforeach
     @if($users->count() > $max)

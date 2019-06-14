@@ -19,18 +19,87 @@
 <link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/styles.css"> 
 <style>
     body{
-        background-color: #FAFAFA;
+        background-color: #fafafab8;
     }
-    nav.bg-light{
-        background-color: #fff !important;
+    nav.navbar{
+      background-color: #F1F1F1;
+      box-shadow: 0px 3px 3px rgba(0,0,0,.2)
     }
-
-  .tag-search{
+    .top-alert{
+      position:fixed; 
+       z-index: 200;
+       left:0;
+        right: 0;
+    }
+  .tag-search,
+  .discussion-search,
+  .training-search,
+  .forum-search,
+  .user-search{
         width: 300px !important;
-        border: 0;
-        background-color: #f7f7f7 !important;
     }
-
+  nav .tag-search{
+    border: 0;
+  }
+.dropdown-toggle.no-icon::after{
+  content: unset;
+}
+.btn{
+  border: none;
+}
+.btn:focus,
+.btn:active{
+  border: none;
+}
+.bg-primary,
+a.btn-primary,
+a.btn-theme,
+a[role='tab'],
+.btn-primary,
+.btn-theme,
+.list-group.ball-bullet .list-group-item:hover .bullet
+{
+  background-color: {{primaryColor()}} !important;
+}
+a.btn-secondary,
+.btn-secondary{
+  background-color: {{secondaryColor()}} !important;
+}
+.color-primary,
+nav.navbar .nav-link,
+h1,h2,h3,h4,h5,h6,
+a:hover,
+nav.navbar .owl-carousel a,
+.btn-default,
+a.btn-default,
+a.btn-secondary,
+.btn-secondary
+{
+  color: {{primaryColor()}} !important;
+}
+a[role='tab'],
+a.btn-primary,
+a.btn-theme,
+.btn-primary,
+.btn-theme
+{
+  color: #fff !important;
+}
+a[role='tab'].active,
+.btn-default
+{
+  background-color: #fff !important;
+}
+textarea.textarea{
+  height: 100px !important;
+}
+.no-whitespace{
+  white-space: unset;
+}
+.card,
+.card-body{
+  border: none;
+}
     /* owl nav */
 
 .owl-theme .owl-nav {
@@ -72,7 +141,12 @@
         padding-left: 0;
         padding-right: 0;
         }
-        
+        .lhs-fixed-head{
+          position: fixed;
+          z-index: 1029;
+          left:0;
+          right: 0;
+}
         @yield('xs-styles')
     }
 
@@ -82,11 +156,17 @@
 
     @media (min-width: 768px){
         nav .tag-search{
-        width: 400px !important;
+        width: 300px !important;
         }
         nav .tag-search-wrapper{
             margin-left: 50px
         }
+        .top-alert{
+          right:20%; 
+          left:20%;
+        }
+     
+
 
         @yield('md-styles')
     }

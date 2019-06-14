@@ -1,7 +1,10 @@
 <?php
 
 return [
-
+    //amount of content to load at once for paginated contents
+    'pagination' => 1,
+    'primary_color' => '#4D551C',
+    'secondary_color' => '#FFF3CD',
     /*
     |--------------------------------------------------------------------------
     | Application Name

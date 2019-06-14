@@ -3,14 +3,14 @@
 @section('main')
     <div class="row justify-content-center ">
         <div class="col-md-8 shadow-lg">
-            {!!Form::open(['route' => 'post.category.store', 'method' => 'POST'])!!}
+            {!!Form::open(['route' => 'training.category.store', 'method' => 'POST'])!!}
                 <h4>New Business Category</h4>
                 <div class="form-group">
-                    {{form::label('category_name', 'Category Name')}}
-                    {{form::text('category_name',old('category_name'),['class'=>'form-control', 'placeholder'=>'category name','required','autofocus'])}}
-                    @if($errors->has('category_name'))
+                    {{form::label('name', 'Category Name')}}
+                    {{form::text('name',old('name'),['class'=>'form-control', 'placeholder'=>'category name','required','autofocus'])}}
+                    @if($errors->has('name'))
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('category_name') }}</strong>
+                            <strong>{{ $errors->first('name') }}</strong>
                         </span>
                     @endif
                 </div>  
@@ -36,7 +36,7 @@
 @endsection
 
 @section('RHS')
-    @include('post.category.widget')
+    @include('training.category.widget')
 @endsection
 
 @section('b-scripts')

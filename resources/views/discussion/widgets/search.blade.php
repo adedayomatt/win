@@ -1,0 +1,1 @@
+<input type="search" class="discussion-search form-control" placeholder="search for discussion..." style="">

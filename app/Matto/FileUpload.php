@@ -3,20 +3,20 @@ namespace App\Matto;
 use Session;
 
 class FileUpload{
-    public $slugs = array();
+    public $files = array();
     public $totalSuccess = 0;
     public $report = 'Something went wrong';
-    public $allow = ['jpeg','png','jpg','JPG','gif','svg'];
-
+    public $allowed_photo = ['jpeg','png','jpg','JPG','gif','svg'];
+    public $allowed_video = ['mp4'];
     private $request;
     private $name;
     private $title;
     private $path;
     
-    public function __construct($request,$name = 'photo',$title = '',$path = 'public/images'){
+    public function __construct($request,$name = 'file',$title = '',$path = 'public/images'){
         $this->request = $request;
         $this->name = $name;
-        $this->title = ($title == '' ? 'image-'.time() : $title);
+        $this->title = ($title == '' ? 'file-'.time() : $title);
         $this->path = $path;
 
         if(is_array($request->$name)){
@@ -38,6 +38,7 @@ class FileUpload{
 
     private function upload($filebag,$nameToStore){
             $uploaded = false;
+            $allowed = array_merge($this->allowed_photo, $this->allowed_video);
             if($filebag !== null){
                 //Get file with the extension_loaded
                 $fileNameWithExt = $filebag->getClientOriginalName();
@@ -48,10 +49,11 @@ class FileUpload{
                 //Filenames to store
                 $slug = $nameToStore.".$fileExt";
             
-                if(in_array($fileExt,$this->allow)){
-                    //Upload image
+                if(in_array($fileExt,$allowed)){
+                    //Upload file
+                    $fileType = in_array($fileExt, $this->allowed_photo) ? 'photo' : (in_array($fileExt, $this->allowed_video) ? 'video' : null);
                     if($filebag->storeAs($this->path,$slug)){
-                        array_push($this->slugs, $slug);
+                        array_push($this->files, ['slug' => $slug, 'type' => $fileType]);
                         $uploaded = true;
                     }
                 }

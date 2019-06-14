@@ -11,7 +11,7 @@ function previewImages(form) {
     images.style.display = 'flex';
 
     status.setAttribute('class','text-center text-info grey');
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp|.mp4)$/;
      
     preview.appendChild(status);
     preview.appendChild(images);
@@ -23,7 +23,7 @@ function previewImages(form) {
         }
 
 
-    input.addEventListener('change', function(){
+    input.addEventListener('change', function(){zx C
       images.innerHTML = ''; //clear previous preview (if any..);
 
        for(var i = 0; i<input.files.length; ++i){
@@ -40,7 +40,7 @@ function previewImages(form) {
                         imageContainer.style.width = preview.getAttribute('preview-width') || '200px';
                         imageContainer.style.height = preview.getAttribute('preview-height') || 'auto';
 
-                        var image = new Image();
+                        var image = new Image                   ();
                         image.src = e.target.result;
                         image.style.width = '100%';
                         image.style.height = preview.getAttribute('preview-height') || 'auto';

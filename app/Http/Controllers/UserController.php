@@ -5,7 +5,7 @@ use Auth;
 
 use Validator;
 use App\User;
-use App\Post;
+use App\Training;
 use App\Matto\Feeds;
 use App\Matto\FileUpload;
 use Illuminate\Http\Request;
@@ -15,8 +15,13 @@ class UserController extends Controller
 {
 
 	public function __construct(){
-		$this->middleware('auth')->except(['index','show']);
+		$this->middleware('auth')->except(['search','index','show']);
 	}
+
+	public function search(Request $request){
+        return User::search($request->get('q'))
+                            ->get();
+        }
 
 	protected function find($username){
 		return User::where('username',$username)->firstorfail();
@@ -29,13 +34,13 @@ class UserController extends Controller
 	}
 
     public function index(){
-		$users = User::orderby('created_at','asc')->paginate(5);
+		$users = User::orderby('created_at','asc')->paginate(config('app.pagination'));
 		return view('user.index')->with('users',$users);
 	}
 	
 	public function show($username){
 		$user = $this->find($username);
-		$feeds = new Feeds($user->discussions,null,$user->comments);
+		$feeds = new Feeds($user->discussions,$user->trainings,$user->comments);
 		return view('user.show')->with(['user'=>$user,'feeds'=>$feeds->feeds()]);
 	}
 
@@ -52,11 +57,10 @@ class UserController extends Controller
 		if(!$this->authorized($user)){
 			return $this->bounce($user);
 		}
-
-		$this->validate($request, [
-            'tags' => 'required',
-        ]);
-		$user->tags()->attach($request->tags);
+		if(!$request->has('tags') || count($request->tags) == 0){
+			return redirect()->back()->with('info','No tag selected, you will have nothing on your feed');
+		}
+		$user->tagsFollowing()->attach($request->tags);
 		$following = $user->tags->count();
 		return redirect()->route('home')->with('success','You are now following '.$following.' tags');
 	}
@@ -89,17 +93,17 @@ class UserController extends Controller
 			
 			$upload = new FileUpload($request,
 									$name='avatar',
-									$title=$user->id.'@'.$user->username.'-'.time(),
+									$title=$user->id.'-'.$user->username.'-'.time(),
 									$path = 'public/images/users/'
 								  );
-			if(!empty($upload->slugs)){
-				$user->avatar = $upload->slugs[0];
+			if(!empty($upload->files)){
+				$user->avatar = $upload->files[0]['slug'];
 				$user->save();
-				if(file_exists($storage.$upload->slugs[0])){//confirm if new avatar is uploaded successfully
-					// if(file_exists($storage.$old_avatar)){
-					// 	unlink($storage.$old_avatar);
-					// }
-				}
+				// if(file_exists($storage.$upload->files[0])){//confirm if new avatar is uploaded successfully
+				// 	// if(file_exists($storage.$old_avatar)){
+				// 	// 	unlink($storage.$old_avatar);
+				// 	// }
+				// }
 			}
 
 			return redirect()->back()->with('success','profile picture updated!');
@@ -124,9 +128,6 @@ class UserController extends Controller
 		if(User::where([['id','!=',$user->id],['username',$request->username]])->count() > 0){
 			return redirect()->back()->with('error','username '.$request->username.' already taken');
 		}
-		if($request->hasFile('avatar')){
-		
-			}
 
 		$user->firstname = $request->firstname;
 		$user->lastname = $request->lastname;
@@ -143,13 +144,57 @@ class UserController extends Controller
 			return $this->bounce($user);
 		}
 
-		$this->validate($request, [
-            'tags' => 'required',
-        ]);
-		$user->tags()->sync($request->tags);
+		if(!$request->has('tags') || count($request->tags) == 0){
+			$user->tagsFollowing()->sync([]);
+			return redirect()->back()->with('info','No tag selected, you will have nothing on your feed');
+		}
+		$user->tagsFollowing()->sync($request->tags);
 
 		return redirect()->back()->with('success','interest updated');
 	}
+
+	public function updateWork(Request $request, $username){
+		$user = $this->find($username);
+		if(!$this->authorized($user)){
+			return $this->bounce($user);
+		}
+		
+		$this->validate($request, [
+            'position' => 'required|string',
+			'company' => 'required',
+        ]);
+		
+		$user->work->position = $request->position;
+		$user->work->company_id = $request->company;
+		$user->work->job_description = $request->job_description;
+		$user->work->started_at = $request->started_at;
+		$user->work->save();
+		
+		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
+	}
+
+	public function updateEducation(Request $request, $username){
+		$user = $this->find($username);
+		if(!$this->authorized($user)){
+			return $this->bounce($user);
+		}
+		
+		$this->validate($request, [
+            'school' => 'required',
+			'course' => 'required|string',
+			'started_at' => 'required|date',
+			'started_at' => 'date'
+        ]);
+		
+		$user->education->school_id = $request->shool;
+		$user->education->course = $request->course;
+		$user->education->started_at = $request->start;
+		$user->education->finished_at = $request->finish;
+		$user->education->save();
+		
+		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
+	}
+
 
 
 }

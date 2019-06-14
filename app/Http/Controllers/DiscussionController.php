@@ -7,14 +7,24 @@ use App\Discussion;
 use App\Traits\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
 
 class DiscussionController extends Controller
 {
     use Resource;
     
 	public function __construct(){
-		 $this->middleware('auth')->except(['index','show']);
+		 $this->middleware(['auth','verified'])->except(['search','index','show']);
     }
+
+    public function search(Request $request){
+        return Discussion::search($request->get('q'))
+                            ->with('user')
+                            ->with('forum')
+                            ->with('tags')
+                            ->with('comments')
+                            ->get();
+        }
     
     private function getDiscussion($id){
         return $this->find(Discussion::class,$id);
@@ -26,7 +36,13 @@ class DiscussionController extends Controller
      */
     public function index()
     {		
-        return view('discussion.index')->with('discussions',Discussion::Orderby('created_at','desc')->get());
+        $src = Input::get('src', 'interests');
+        if(Auth::check() && ($src == null || $src == 'interests')){
+            $discussions = Auth::user()->interestedDiscussions();
+        }else{
+            $discussions = Discussion::orderBy('created_at','desc');
+        }
+        return view('discussion.index')->with('discussions',$discussions->paginate(config('app.pagination')))->with('src', $src);
     }
 
     /**
@@ -55,8 +71,8 @@ class DiscussionController extends Controller
         
         $discussion = new Discussion();
         $discussion->user_id = auth()->user()->id;
-        if($request->exists('post')){
-            $discussion->post_id = $request->post;
+        if($request->exists('training')){
+            $discussion->training_id = $request->training;
         }
 		$discussion->title = $request->discussion_title;
 		$discussion->content = $request->content;
@@ -76,7 +92,9 @@ class DiscussionController extends Controller
      */
     public function show($id)
     {
-        return view('discussion.show')->with('discussion', $this->getDiscussion($id));
+        $discussion = $this->getDiscussion($id);
+        return view('discussion.show')->with('discussion', $discussion)
+                                        ->with('comments',$discussion->comments()->where('comment_id',null)->orderby('created_at','desc')->paginate(config('app.pagination')));
     }
 
     /**
@@ -109,7 +127,7 @@ class DiscussionController extends Controller
 		$discussion->title = $request->discussion_title;
 		$discussion->content = $request->content;
 		$discussion->forum_id = $request->forum;
-		$discussion->slug = $this->updateteSlug($discussion,$request->discussion_title);
+		// $discussion->slug = $this->updateteSlug($discussion,$request->discussion_title);
         $discussion->save();
         
         $discussion->tags()->sync($request->tags);
@@ -117,6 +135,13 @@ class DiscussionController extends Controller
 		return redirect()->route('discussion.show',$discussion->slug)->with('success','Discussion updated');
 		}
 
+        public function delete($id){
+            if(!$training->isMine()){
+                return redirect()->route('discussion.show',[$id])->with('error','Not allowed!');
+            }
+    
+            return view('discussion.delete')->with('discussion', $discussion);
+        }
     /**
      * Remove the specified resource from storage.
      *
@@ -125,10 +150,13 @@ class DiscussionController extends Controller
      */
     public function destroy($id)
     {
-        $this->getDiscussion($id)->delete();
-		 return redirect()->back()->with('success', 'Discussion deleted');
-
-    }
+        $discussion = $this->getDiscussion($id);
+        if(!$discussion->isMine()){
+			return redirect()->route('discussion.show',[$id])->with('error','Not allowed!');
+		}
+         $discussion->delete();
+		 return redirect()->route('discussions')->with('success', 'Discussion <strong>"'.$discussion->title.'"</strong> deleted successfully');
+        }
 
     public function inviteUsers(Request $request, $id){
         $discussion = $this->getDiscussion($id);

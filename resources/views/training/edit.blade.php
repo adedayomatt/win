@@ -1,15 +1,19 @@
 @extends('layouts.appRHSfixed')
 
 @section('main')
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        @include('post.forms.edit')
-    </div>
+<div class="justify-content-center">
+        <div class="content-box">
+            Edit Training: <strong><a href="{{route('training.show',$training->slug)}}">{{$training->title}}</a></strong>
+        </div>
+        <div class="content-box">
+            @include('training.forms.edit')
+        </div>
 </div>
 @endsection
 
 @section('RHS')
-
+    <p>Discussions on <strong>{{$training->title}}</strong> - {{$training->discussions->count()}}</p>
+    @include('training.widgets.discussions')
 @endsection
 
 

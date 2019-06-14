@@ -3,23 +3,23 @@
 @section('main')
     <div class="row justify-content-center ">
         <div class="col-md-8 shadow-lg">
-            {!!Form::open(['route' => ['post.category.update',$postcategory->slug], 'method' => 'POST'])!!}
+            {!!Form::open(['route' => ['training.category.update',$trainingcategory->slug], 'method' => 'POST'])!!}
                 @method('PUT')
-                <h4>Update post Category</h4>
-               <h5 class="float-right"><a href="{{route('post.category.show',$postcategory->slug)}}">{{$postcategory->name}}</a></h5> 
+                <h4>Update training Category</h4>
+               <h5 class="float-right"><a href="{{route('training.category.show',$trainingcategory->slug)}}">{{$trainingcategory->name}}</a></h5> 
                 <div class="form-group">
-                    {{form::label('category_name', 'Category Name')}}
-                    {{form::text('category_name',$postcategory->name,['class'=>'form-control', 'placeholder'=>'category name','required','autofocus'])}}
-                    @if($errors->has('category_name'))
+                    {{form::label('name', 'Category Name')}}
+                    {{form::text('name',$trainingcategory->name,['class'=>'form-control', 'placeholder'=>'category name','required','autofocus'])}}
+                    @if($errors->has('name'))
                         <span class="invalid-feedback" role="alert">
-                            <strong>{{ $errors->first('category_name') }}</strong>
+                            <strong>{{ $errors->first('name') }}</strong>
                         </span>
                     @endif
                 </div>  
 
                 <div class="form-group">
                     {{form::label('description', 'Description')}}
-                    {{form::textarea('description',$postcategory->description,['id'=>'ckeditor','class'=>'form-control','placeholder'=>'about this category...'])}}
+                    {{form::textarea('description',$trainingcategory->description,['id'=>'ckeditor','class'=>'form-control','placeholder'=>'about this category...'])}}
                     @if ($errors->has('description'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('description') }}</strong>
@@ -40,9 +40,9 @@
 @section('RHS')
     <?php
         $w_title = "Posts";
-        $w_collection = $postcategory->posts;
+        $w_collection = $trainingcategory->trainings;
     ?>
-    @include('post.widgets.list')
+    @include('training.widgets.list')
 @endsection
 
 @section('b-scripts')

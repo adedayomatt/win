@@ -3,7 +3,7 @@
 @section('main')
 <div class="mt-50">
     <div class="row justify-content-center">
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-3 col-sm-4">
             <div class="content-box">
                 <div style="padding: 40px 0">
                     <div class="text-center">

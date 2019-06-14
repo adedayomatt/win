@@ -17,7 +17,7 @@ class CreateForumsTable extends Migration
             $table->increments('id');
 			$table->integer('user_id')->unsigned();
             $table->string('name');
-            $table->mediumText('description');
+            $table->mediumText('description')->nullable();
             $table->string('slug');
             $table->timestamps();
             $table->softDeletes();

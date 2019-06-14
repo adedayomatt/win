@@ -1,9 +1,22 @@
-@extends('layouts.appRHSfixed')
+@extends('layouts.app')
 
 @section('main')
 <div class="row justify-content-center">
-    <div class="col-md-8">
-        @include('forum.forms.edit')
+    <div class="col-md-4">
+        <div class="content-box">
+            <h6>Update Forum <strong><a href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a></strong></h6>
+            <hr>
+            @include('forum.forms.edit')
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="content-box">
+            <h6>Contributors</h6>
+            <hr>
+            <div style="max-height: 300px; overflow: auto">
+                @include('user.widgets.list', ['users_collection' => $forum->contributors()])
+            </div>
+        </div>
     </div>
 </div>
 @endsection

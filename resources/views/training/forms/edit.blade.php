@@ -1,53 +1,89 @@
-{!!Form::open(['route' => 'update.post', 'method' => 'POST','class' =>'has-image-upload' ,'files' => true])!!}
-    <fieldset>
-        <legend>Update Post</legend>
-        <h3>{{$post->title}}</h3>
+{!!Form::open(['route' => ['training.update',$training->id], 'method' => 'POST','class' =>'has-image-upload' ,'files' => true])!!}
+    @method('PUT')
         <div class="form-group">
-            {{form::label('post_title', 'Title')}}
-            {{form::text('post_title',$post->title,['class'=>'form-control', 'placeholder'=>'Title of your post','required', 'autofocus'])}}
-            @if ($errors->has('post_title'))
+            {{form::label('training_title', 'Title')}}
+            {{form::text('training_title',$training->title,['class'=>'form-control', 'placeholder'=>'Title of your training','required', 'autofocus'])}}
+            @if ($errors->has('training_title'))
                 <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('post_title') }}</strong>
+                    <strong>{{ $errors->first('training_title') }}</strong>
                 </span>
             @endif
         </div>  
 
-        <div class="form-group row">
-            <div class="col-sm-4">
-                {{form::label('category', 'Category')}}
-            </div>
-            <div class="col-sm-8">
-                <?php
-                    $categories = array();
-                    foreach($_businessCategories::all() as $c){
-                        $categories["$c->id"] = $c->name; 
-                    }
-                ?>
-                {{form::select('category',$categories,$post->category->id,
-                ['class'=>'form-control','placeholder' => 'Select category','required'])}}
-                @if ($errors->has('category'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('category') }}</strong>
-                    </span>
-                @endif
-            </div>
-        </div>
-
-
         <div class="form-group">
-            {{form::label('body', 'Body')}}
-            {{form::textarea('body',old('body'),['id'=>'ckeditor','class'=>'form-control', 'placeholder'=>'content of your post...', 'required', 'autofocus'])}}
-            @if ($errors->has('body'))
+            {{form::label('training_content', 'Post content')}}
+            {{form::textarea('training_content',$training->content,['class'=>'ckeditor form-control', 'placeholder'=>'content of your training...', 'required', 'autofocus'])}}
+            @if ($errors->has('training_content'))
                 <span class="invalid-feedback" role="alert">
-                    <strong>{{ $errors->first('body') }}</strong>
+                    <strong>{{ $errors->first('training_content') }}</strong>
                 </span>
             @endif
         </div>
-    </fieldset>
-    
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="form-group ">
+                    @include('tag.components.select', ['prev_tags' => $training->tags])
+                </div>
+            </div>
+        </div>
+        
     <div class="row">
         <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Create',['class' => 'btn btn-success btn-block'])}}
+            {{Form::submit('Update training',['class' => 'btn btn-theme btn-block'])}}
         </div>
     </div>
 {!! Form::close() !!}
+
+<h6>Post Media</h6>
+
+<div class="content-box">
+    @if($training->media->count() > 0)
+    {!!Form::open(['route' => ['training.media.remove',$training->id], 'method' => 'DELETE'])!!}
+        <div class="row">
+            @foreach($training->media as $media)
+                <div class="col-sm-6 col-md-4 p-0">
+                    <div class="p-1">
+                        <div class="p-1" style="border: 1px solid #f2f2f2; border-radius: 3px">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="media-{{$media->id}}" name="media[]" value="{{$media->id}}">
+                                <label class="custom-control-label" for="media-{{$media->id}}"> mark to remove</label>
+                            </div>
+                            @if($media->isPhoto())
+                                @include('training.media.photo',['media' => $media])
+                            @elseif($media->isVideo())
+                                @include('training.media.video',['media' => $media])
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-sm btn-danger"><i class="fa fa-times"></i> remove selected media</button>
+            </div>
+        </div>
+    {!! Form::close() !!}
+
+    @else
+            <p class="text-muted">The training has no media. Add Media</p>
+    @endif
+</div>
+
+{!!Form::open(['route' => ['training.media.add',$training->id], 'method' => 'POST' ,'files' => true])!!}
+    <div class="form-group">
+        <label class="">Add photo/video to training</label>
+        {{form::file('media[]',['class' => 'form-control','accept' =>'image/*,video/*', 'multiple'])}}
+        @if ($errors->has('cover'))
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $errors->first('cover') }}</strong>
+        </span>
+        @endif
+    </div>
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-times"></i> Add Media</button>
+    </div>
+{!! Form::close() !!}
+
+
+

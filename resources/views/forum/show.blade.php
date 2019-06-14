@@ -1,4 +1,4 @@
-@extends('layouts.appLHSfixed')
+@extends('layouts.appLHSfixedRHSfixed')
 @section('styles')
     .snippet{
         background-color: #fff;
@@ -25,42 +25,41 @@
             <small>No contributors yet</small>
         </div>
     @endif
-    
-    <div class="jumbotron text-center">
-        <h4>Place Ads Here</h4>
-    </div>
+    @include('components.ads.sample')
 @endsection
 
 @section('main')
-
-<h6>Discussions in {{$forum->name}}</h6>
-<div class="row">
-    <div class="col-md-8 no-padding-xs">
-        @if($forum->discussions->count() > 0)
+<div class="text-muted text-center py-1">
+    <strong>Discussions in {{$forum->name}}</strong>
+</div>
+    <?php $discussions = $forum->discussions()->orderby('created_at','desc')->paginate(config('app.pagination')) ?>
+    @if($discussions->count() > 0)
+        <div class="infinite-scroll">
             @foreach($forum->discussions as $discussion)
                     @include('discussion.widgets.snippet')
             @endforeach
-        @else
-            <div class="content-box text-muted text-center">
-                <small>No discussion in {{$forum->name}} yet</small>
-                <a href="{{route('discussion.create')}}" class="btn btn-sm btn-primary">Create one now</a>
-            </div>
-        @endif
-    </div>
-    <div class="col-md-4 no-padding-xs">
+            {{$discussions->links()}}
+        </div>
+    @else
+        <div class="text-muted text-center">
+            <small>No discussion in {{$forum->name}} yet.  <a href="{{route('discussion.create')}}">create discussion</a></small>
+           
+        </div>
+    @endif
     
-        <h6>You may also want to see </h6>
-        @include('components.owl-carousel', ['carousel_collection' => $_forums::where('id','!=',$forum->id)->take(10)->get(), 'carousel_template'=>'forum.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => '2', 'md' => 2, 'lg' => 2]])
+        
+@endsection
 
+@section('RHS')
+        @if($forum->otherForums()->count() > 0)
+            <h6>You may also want to see </h6>
+            @include('components.owl-carousel', ['carousel_collection' => $forum->otherForums(), 'carousel_template'=>'forum.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => '2', 'md' => 2, 'lg' => 2]])
+        @endif
         <div class="card mt-2">
             <div class="card-body">
                 @include('tag.widgets.list')
             </div>
         </div>
-        
-    </div>
-</div>
-    
 @endsection
 
 

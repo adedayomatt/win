@@ -11,8 +11,15 @@ class ForumController extends Controller
     use Resource;
 
 	public function __construct(){
-		$this->middleware('auth')->except(['index','show']);
+		$this->middleware(['auth','verified'])->except(['search','index','show']);
     }
+
+    public function search(Request $request){
+        return Forum::search($request->get('q'))
+                            ->with('discussions')
+                            ->with('user')
+                            ->get();
+        }
 
     private function getForum($id){
         return $this->find(Forum::class,$id);
@@ -25,7 +32,7 @@ class ForumController extends Controller
      */
     public function index()
     {
-        return view('forum.index')->with('forums',Forum::Orderby('created_at','desc')->paginate(5));
+        return view('forum.index')->with('forums',Forum::Orderby('created_at','desc')->paginate(config('app.pagination')));
     }
 
     /**
@@ -49,14 +56,16 @@ class ForumController extends Controller
         $this->validate($request,[
         'forum_name' => 'required',
         ]);
-        
-		Forum::create([
+        if(Forum::where('name', $request->forum_name)->count() > 0){
+            return redirect()->back()->with('error', 'Forum '.$request->name.' already exist');
+        }
+		$forum = Forum::create([
             'user_id' => Auth::user()->id,
             'name' => $request->forum_name,
             'description' => $request->description,
             'slug' => $this->generateSlug(Forum::class,$request->forum_name)
 		]);
-		return redirect()->back()->with('success', 'Forum '.$request->name.' created successfully');
+		return redirect()->route('forum.show',[$forum->slug])->with('success', 'Forum '.$request->name.' created successfully');
     }
 
     /**
@@ -97,9 +106,9 @@ class ForumController extends Controller
         $forum = $this->getForum($id);
 		$forum->name = $request->forum_name;
 		$forum->description = $request->description;
-		$forum->slug = $this->updateSlug($forum,$request->forum_name);
-		
-		return redirect()->back()->with('success', 'Forum '.$forum->name.' updated');
+		// $forum->slug = $this->updateSlug($forum,$request->forum_name);
+		$forum->save();
+		return redirect()->route('forum.show',[$forum->slug])->with('success', 'Forum '.$forum->name.' updated');
     }
 
     /**

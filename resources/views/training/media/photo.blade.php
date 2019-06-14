@@ -1,0 +1,1 @@
+<img src="{{asset('storage/trainings/media/'.$media->slug)}}" alt="{{$training->title}}" width="100%">

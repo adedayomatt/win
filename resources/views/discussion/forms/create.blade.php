@@ -1,7 +1,7 @@
 {!!Form::open(['route' => 'discussion.store', 'method' => 'POST'])!!}
-    @if(isset($post))
-        @include('post.widgets.snippet')
-        {{form::hidden('post',$post->id)}}
+    @if(isset($training))
+        @include('training.widgets.snippet')
+        {{form::hidden('training',$training->id)}}
     @endif
     <fieldset>
         <div class="form-group">
@@ -24,33 +24,39 @@
             @endif
         </div>
 
-        <div class="form-group">
-                {{form::label('forum', 'Forum')}}
-                <?php
-                    $forums = array();
-                    foreach($_forums::all() as $f){
-                        $forums["$f->id"] = $f->name; 
-                    }
-                ?>
-                {{form::select('forum',$forums,null,
-                ['class'=>'form-control','placeholder' => 'Select forum','required'])}}
-                @if ($errors->has('forum'))
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $errors->first('forum') }}</strong>
-                    </span>
-                @endif
-        </div>
-
-        <div class="form-group row justify-content-center">
-            <div class="col-sm-8">
-                @include('tag.components.attach')
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    {{form::label('forum', 'Forum')}}
+                    <?php
+                        $forums = array();
+                        foreach($_forums::all() as $f){
+                            $forums["$f->id"] = $f->name; 
+                        }
+                    ?>
+                    {{form::select('forum',$forums,null,
+                    ['class'=>'form-control','placeholder' => 'Select forum','required'])}}
+                    @if ($errors->has('forum'))
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $errors->first('forum') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group justify-content-center">
+                    @include('tag.components.select')
+                </div>
             </div>
         </div>
+        
+
+        
 
     
     <div class="form-group row">
         <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Create',['class' => 'btn btn-success btn-block'])}}
+            {{Form::submit('Create',['class' => 'btn btn-theme btn-block'])}}
         </div>
     </div>
 </fieldset>

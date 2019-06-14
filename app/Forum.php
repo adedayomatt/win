@@ -5,13 +5,27 @@ namespace App;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Forum extends Model
 {
-	use softDeletes;
+	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id','name','description','slug'];
-	
+	protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'forums.name' => 10,
+            'forums.description' => 10
+		],
+  ];
+
     public function discussions(){
 		return $this->hasMany('App\Discussion');
 	}
@@ -21,9 +35,13 @@ class Forum extends Model
 	
 	public function description($mode = 'snippet'){
 		if($mode === 'snippet'){
-			return $this->description == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No description </small>': str_limit(strip_tags($this->description),50);
+			return $this->description == null ? '': str_limit(strip_tags($this->description),50);
 		}
-		return $this->description == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No description </small>': $this->description;
+		return $this->description == null ? '': $this->description;
+	}
+
+	public function otherForums(){
+		return Forum::where('id', '!=', $this->id)->orderby('created_at', 'desc')->get();
 	}
 
 	public function discussionsId(){
@@ -50,12 +68,12 @@ class Forum extends Model
 		return	Discussion::select(DB::raw('count(user_id) as discussions, user_id'))->whereIn('id',$this->discussionsId())->groupBy('user_id')->get();
 	}
 
-	public function posters(){
-		$posters = [];
-		foreach($this->postings() as $post){
-			array_push($posters, $post->user);
+	public function trainingers(){
+		$trainingers = [];
+		foreach($this->trainingings() as $training){
+			array_push($trainingers, $training->user);
 		}
-		return collect($posters);
+		return collect($trainingers);
 	}
 
 }

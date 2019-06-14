@@ -2,23 +2,17 @@
     <div class="d-flex">
         <div class="mr-3">
             @auth()
-                @if($comment->isLiked())
-                    <form action="{{route('comment.unlike',[$discussion->slug,$comment->id])}}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-link p-0 " data-toggle="tooltip" title="You liked {{$comment->user->firstname}}'s comment, unlike?"><i class="fas fa-thumbs-up" style="color: red; font-size: 18px"></i></button>
-                    </form>
-                @else
-                    <form action="{{route('comment.like',[$discussion->slug,$comment->id])}}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-link p-0" data-toggle="tooltip" title="Like {{$comment->user->firstname}}'s comment" ><i class="far fa-thumbs-up"></i></button>
-                    </form>
-                @endif
+                <form action="{{route('comment.like',[$discussion->slug,$comment->id])}}" class="comment-like" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-link p-0 like-unlike" data-role="{{$comment->isLiked() ? 'unlike' : 'like'}}" data-count="{{$comment->likes->count()}}"><i class="fas fa-thumbs-up"></i></button>
+                    <small class="ml-2 pt-1" data-toggle="tooltip" title="{{$comment->likes()->count().' person(s) liked this'.($comment->isLiked() ? ' (including You)' : '')}}"><strong class="theme-color likes-counter">{{$comment->likes->count()}}</strong> likes</small>
+                </form>
             @endauth
             @guest()
                 <button class="btn btn-link p-0 grey" data-toggle="tooltip" title="sign in to like {{$comment->user->firstname}}'s comment"><i class="far fa-thumbs-up"></i></button>
+                <small class="ml-2 pt-1" data-toggle="tooltip" title="{{$comment->likes()->count().' person(s) liked this'.($comment->isLiked() ? ' (including You)' : '')}}"><strong class="theme-color likes-counter">{{$comment->likes->count()}}</strong> likes</small>
             @endguest
         </div>
-        <small class="mr-2 pt-1" data-toggle="tooltip" title="{{$comment->likes()->count().' person(s) liked this'.($comment->isLiked() ? ' (including You)' : '')}}"><strong class="theme-color" >{{$comment->likes->count()}}</strong> likes</small>
         <small class="mr-2 pt-1" data-toggle="collapse" data-target="#comment-{{$comment->id}}-replies" aria-expanded="false" aria-controls="comment-{{$comment->id}}-replies" title="{{$comment->replies()->count().' person(s) replied to '. $comment->user->fullname()}}"><strong class="theme-color" >{{$comment->replies->count()}}</strong> replies</small>
         @auth()
             <small class="pt-1" data-toggle="tooltip" title="reply to {{$comment->user->fullname()}}'s comment on {{$discussion->title}}">

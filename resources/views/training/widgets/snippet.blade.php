@@ -1,18 +1,25 @@
-<div class="card">
-    <div class="card-header">
-        <div class="row align-items-center">
-            <div class="col-2 text-center">
-                <img src="{{$post->avatar()['src']}}" alt="{{$post->avatar()['alt']}}" class="avatar avatar-sm">
-            </div>
-            <div class="col-10">
-                <h4>{{$post->name}}</h4>
-                @include('post.widgets.operations.edit')
-            </div>
-        </div>        
+@if($training->isTrashed())
+    <div class="content-box text-muted" data-toggle="tooltip" title="training deleted">
+        <strong class="d-block">{{$discussion->training()->title}}</strong>
+        <small>{!!$discussion->training()->content()!!}</small>
     </div>
-    <div class="card-body">
-        <p class="text-center">
-            {!!$post->body!!}
-        </p>
+@else
+<div class="snippet row row-eq-height">
+    <div class="col-4" style="background-image: url('{{$training->cover()['src']}}'); background-size: cover; background-repeat: no-repeat; background-position: center">
+        <img class="d-none" src="{{$training->cover()['src']}}" alt="{{$training->cover()['alt']}}" width="100%">
     </div>
+    <div class="col-8">
+        <div class="float-right bg-primary  py-1 px-2 small" style="color:#fff">training</div>
+        <div class="card-title">
+            <div>
+                <a href="{{route('training.show',$training->slug)}}"><strong>{{$training->title}}</strong></a>
+                <div class="ml-2">
+                @include('training.widgets.meta')
+                </div>
+            </div>
+        </div>
+        {!!$training->content()!!} 
+    </div>
+    @include('tag.widgets.inline',['tags'=> $training->tags])
 </div>
+@endif

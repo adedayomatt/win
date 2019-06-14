@@ -9,7 +9,7 @@ class Tag extends Model
 {
 	use SearchableTrait;
 	
-	protected $fillable = ['name','description','slug'];
+	protected $fillable = ['user_id','name','description','slug'];
 
 	  /**
      * Searchable rules.
@@ -34,7 +34,7 @@ class Tag extends Model
     $trendArray = array();
     foreach(Tag::all() as $tag){
       $trend = 0;
-      $trend += $tag->posts->count();
+      $trend += $tag->trainings->count();
       $trend += $tag->discussions->count();
       foreach($tag->discussions as $discussion){
         $trend += $discussion->comments->count();
@@ -43,36 +43,36 @@ class Tag extends Model
         'tag' => $tag,
         'trend' => $trend,
         'discussions' => $tag->discussions,
-        'posts' => $tag->posts
+        'trainings' => $tag->trainings
       ];
     }
     // dd(collect($trendArray));
     return collect($trendArray)->sortByDesc('trend');
   }
 
+  public function user(){
+    return $this->belongsTo('App\User');
+  }
   
-	public function posts(){
-		return $this->belongsToMany('App\Post');
+	public function trainings(){
+		return $this->belongsToMany('App\Training');
     }
 
     public function discussions(){
 		return $this->belongsToMany('App\Discussion');
     }
 
-	public function trainings(){
-		return $this->belongsToMany('App\Training');
-    }
-
   public function users(){
 		return $this->belongsToMany('App\User');
   }
 
-  public function otherTags(){
-    return Tag::where('id','!=', $this->id);
+  public function otherTags($raw = false){
+    $builder = Tag::where('id','!=', $this->id);
+    return $raw == true ? $builder : $builder->get();
   }
 
   public function feeds(){
-    $feeds = new Feeds($this->discussions, $this->posts);
+    $feeds = new Feeds($this->discussions, $this->trainings);
     return $feeds->feeds();
   }
   public function followers(){
@@ -92,9 +92,9 @@ class Tag extends Model
 
 	public function description($mode = 'snippet'){
 		if($mode === 'snippet'){
-			return $this->description == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No description </small>': str_limit(strip_tags($this->description),50);
+			return $this->description == null ? '': str_limit(strip_tags($this->description),50);
 		}
-		return $this->description == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No description </small>': $this->description;
+		return $this->description == null ? '': $this->description;
   }
   
 

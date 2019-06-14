@@ -17,7 +17,7 @@ trait Resource
     }
     protected function generateSlug($model,$string){
         $lastEntry = $model::orderby('id','desc')->first();
-        return str_slug($string.' '.($lastEntry->id + 1));
+        return $lastEntry == null ? str_slug($string) :str_slug($string.' '.($lastEntry->id + 1));
     }
     protected function updateSlug($resource,$string){
         return str_slug($string.' '.$resource->id);

@@ -8,10 +8,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable,softDeletes;
+    use Notifiable,softDeletes, SearchableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -30,10 +31,32 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+	protected $searchable = [
+        /**
+         * Columns and their priority in search results.
+         * Columns with higher values are more important.
+         * Columns with equal values have equal importance.
+         *
+         * @var array
+         */
+        'columns' => [
+            'users.firstname' => 10,
+            'users.lastname' => 10,
+            'users.username' => 10
+		],
+  ];
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmailNotification);
+    }
+    public function sendPasswordResetNotification($token){
+		$this->notify(new \App\Notifications\PasswordResetNotification($token));
+	}  
 
 
-	public function posts(){
-		return $this->hasMany('App\Post');
+	public function trainings(){
+		return $this->hasMany('App\Training');
     }
     public function discussions(){
 		return $this->hasMany('App\Discussion');
@@ -41,11 +64,19 @@ class User extends Authenticatable
     public function comments(){
         return $this->hasMany('App\Comment');
     }
-    public function tags(){
+    public function tagsFollowing(){
         return $this->belongsToMany('App\Tag');
     }
 
-    public function commentsLikes(){
+    public function tags(){
+        return $this->hasMany('App\Tag');
+      }
+
+    public function forums(){
+        return $this->hasMany('App\Forum');
+      }
+
+      public function commentsLikes(){
         return $this->hasMany('App\CommentLike');
     }
 	public function watchings(){
@@ -53,7 +84,20 @@ class User extends Authenticatable
     }
     public function discussionInvitations(){
 		return $this->belongsToMany('App\Discussion');
-	}
+    }
+    public function work(){
+		return $this->hasOne('App\Work');
+    }
+	public function education(){
+		return $this->hasOne('App\Education');
+    }
+
+    public function emailVerified(){
+        return $this->email_verified_at == null ? false : true;
+    }
+    public function isVerified(){
+        return $this->verified_at == null ? false : true;
+    }
 
     public function fullname(){
         return $this->firstname.' '.$this->lastname;
@@ -75,49 +119,53 @@ class User extends Authenticatable
 
     public function interests(){
         $tags = array();
-		foreach($this->tags as $tag){
+		foreach($this->tagsFollowing as $tag){
 			array_push($tags, $tag->id);
 		}
 		return $tags;
     }
 
+    public function isFollowing($tag){
+        return in_array($tag->id, $this->interests()) ? true : false;
+    }
+
     public function interestedDiscussions(){
-		$discussions = collect([]);
-		$interested_discussions = $discussions;
-
+		$discussions = [];
 		foreach($this->interests() as $interest){//Get discussions that has the tags user is following
-			$discussion_IDs = array();
 		   $IDs = DB::select("select discussion_id from discussion_tag where tag_id=$interest");
-		   foreach($IDs as $id){
-				array_push($discussion_IDs,$id->discussion_id);
+           foreach($IDs as $id){
+                $discussion = Discussion::where('id',$id->discussion_id)->first();
+                if($discussion != null){
+                    array_push($discussions, $discussion);
+                }
 		   }
-			$interested_discussions = $discussions->merge(Discussion::whereIn('id',$discussion_IDs)->get());
-		}
-	return $interested_discussions;
+        }
+        return collect($discussions);
     }
 
-    public function interestedPosts(){
-		$posts = collect([]);
-		$interested_posts = $posts;
-
-		foreach($this->interests() as $interest){//Get posts that has the tags user is following
-			$post_IDs = array();
-		   $IDs = DB::select("select post_id from post_tag where tag_id=$interest");
+    public function interestedTrainings(){
+		$trainings = [];
+		foreach($this->interests() as $interest){//Get trainings that has the tags user is following
+			$training_IDs = array();
+		   $IDs = DB::select("select training_id from tag_training where tag_id=$interest");
 		   foreach($IDs as $id){
-				array_push($post_IDs,$id->post_id);
+               $training = Training::where('id',$id->training_id)->first();
+               if($training != null){
+                array_push($trainings, $training);
+               }
 		   }
-			$interested_posts = $posts->merge(Post::whereIn('id',$post_IDs)->get());
 		}
-	return $interested_posts;
+	return collect($trainings);
     }
 
-    public function discussionContributions(){
-       return  Comment::select(DB::raw('count(discussion_id) as total_comments, discussion_id'))->where('user_id', $this->id)->groupBy('discussion_id')->orderBy('created_at', 'desc')->get();
+    public function discussionContributions($raw = false){
+        $query = Comment::select(DB::raw('count(discussion_id) as total_comments, discussion_id'))->where('user_id', $this->id)->groupBy('discussion_id')->orderBy('created_at', 'desc');
+       return  $raw == true ? $query : $query->get();
     }
     
-    public function activeDiscussions(){
+    public function activeDiscussions($raw = false){
         $discussions = [];
-        foreach($this->discussionContributions() as $contribution){
+        foreach($this->discussionContributions(true)->orderby('total_comments','desc')->get() as $contribution){
             array_push($discussions, $contribution->discussion);
         }
         return collect($discussions);

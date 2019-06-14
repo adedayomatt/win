@@ -9,8 +9,8 @@
                 @endforeach
             </ul>
         @else
-            <div class="text-center" style="padding: 10px">
-                <small class="text-danger"><i class="fa fa-exclamation-triangle"></i>  No forum found</small>
+            <div class="content-box text-muted text-center">
+                <small> No forum found</small>
             </div>
         @endif
 </div>

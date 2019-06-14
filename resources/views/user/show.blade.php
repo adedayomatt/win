@@ -29,6 +29,17 @@
     #avatar-upload div{
      
     }
+    .profile-section{
+        border: 1px solid #f2f2f2;
+        margin-bottom: 3px;
+    }
+    .profile-section>.content-box{
+        margin: 0;
+        border-radius: 0;
+    }
+    .profile-section .collapse{
+        padding: 5px;
+    }
 @endsection
 
 @section('sm-styles')
@@ -60,7 +71,7 @@
                                 @csrf
                                 @method('PUT')
                                 <input  type="file" name="avatar" accept="image/*" onchange="javascript: document.querySelector('form#avatar-upload').submit()">
-                                <div class="text-center"><i class="fa fa-camera" style="font-size: 30px; cursor: pointer"></i> change</div>
+                                <div class="text-center"><span class="operation" style="cursor: pointer"><i class="fa fa-camera" ></i></span></div>
                             </form>
                         @endif
                     </div>
@@ -75,104 +86,229 @@
                         {{$user->bio}}
                     </div>
                     @if($user->auth())
+                        @if(!auth()->user()->emailVerified())
+                            <div class="alert alert-warning">
+                                <i class="fa fa-exclamation-triangle"></i> {{auth()->user()->firstname}}, check your mailbox <strong>{{auth()->user()->email}}</strong> for verification link
+                            </div>
+                            Didn't receive any mail, <a href="{{ route('verification.resend') }}">click here to request another</a>
+                        @endif
                         <div class="text-right">
-                            <small><a href="{{route('user.settings',[$user->username])}}?tab=info"><i class="fas fa-cog" title="edit"></i> edit</a></small>
+                            <a href="{{route('user.settings',[$user->username])}}?tab=info" class="operation"><i class="fas fa-cog" title="edit"></i></a>
                         </div>
                     @endif
                 </div>
             </div>
-            <h6>Interest: </h6>
-            <div class="content-box">
-                @if($user->tags->count()> 0)
-                    @include('tag.widgets.inline', ['tags' => $user->tags ])
-                    @if($user->auth())
-                    <div class="text-right">
-                            <small><a href="{{route('user.settings',[$user->username])}}?tab=interests"><i class="fas fa-pen" title="edit"></i></a></small>
+
+            <div class="profile-section-container">
+                
+                <div class="profile-section">
+                    <div class="content-box" data-toggle="collapse" data-target="#interests" aria-expanded="true">
+                        <div class="d-flex">
+                            <h6>Interest ({{$user->tagsFollowing->count()}})</h6>
+                            @if($user->auth())
+                                <div class="ml-auto">
+                                    <a href="{{route('user.settings',[$user->username])}}?tab=interests" class="operation"><i class="fas fa-pen" title="edit"></i></a>
+                                </div>
+                            @endif
                         </div>
-                    @endif
-                @else
-                    <span class="grey">No interest</span>
-                    @if($user->auth())
-                        <a href="{{route('add.interests',[$user->username])}}">Add interest</a>
-                    @endif
-                @endif
+                    </div>
+                    <div class="collapse" id="interests" data-parent=".profile-section-container">
+                        @if($user->tagsFollowing->count()> 0)
+                            @include('tag.widgets.inline', ['tags' => $user->tagsFollowing ])
+                        @else
+                            <div class="text-muted text-center">
+                                No interest
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="content-box" data-toggle="collapse" data-target="#trainings">
+                        <div class="d-flex">
+                            <h6>Published Trainings ({{$user->trainings->count()}})</h6>
+                            @if($user->auth())
+                                <div class="ml-auto">
+                                    <a href="{{route('training.create')}}" class="operation"><i class="fas fa-plus" title="create new training"></i></a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="collapse" id="trainings" data-parent=".profile-section-container">
+                        @if($user->trainings->count() > 0)
+                            @foreach($user->trainings()->orderby('created_at', 'desc')->take(2)->get() as $training)
+                                <h6><a href="{{route('training.show',[$training->slug])}}">{{$training->title}}</a></h6>
+                                <div class="text-muted">
+                                    <small class="m-1"><a href="{{route('training.show',[$training->slug])}}#discussions">{{$training->discussions->count()}} discussions</a></small>
+                                    <small class="m-1">published {{$training->created_at->diffForHumans()}}</small>
+                                </div>
+                                @if($training->tags->count() > 0)
+                                    @foreach($training->tags()->take(4)->get() as $tag)
+                                        <a href="{{route('tag.show',[$tag->slug])}}" class="tag">#{{$tag->name}}</a>
+                                    @endforeach
+                                    @if($training->tags->count() > 4)
+                                        <small class="text-muted ml-2"> + {{$training->tags->count() - 4}} other tags</small>
+                                    @endif
+                                @endif
+                                <hr>
+                            @endforeach
+                            @if($user->trainings->count() > 2)
+                                <div class="text-muted text-right">
+                                    + <a href="#">{{$user->trainings->count() - 2}} more</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="text-muted text-center">
+                                No training yet
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="content-box" data-toggle="collapse" data-target="#forums">
+                        <div class="d-flex">
+                            <h6>Forums ({{$user->forums->count()}})</h6>
+                            @if($user->auth())
+                                <div class="ml-auto">
+                                    <a href="{{route('forum.create')}}" class="operation"><i class="fas fa-plus" title="create new forum"></i></a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="collapse" id="forums" data-parent=".profile-section-container">
+                        @if($user->forums->count() > 0)
+                            @foreach($user->forums()->orderby('created_at', 'desc')->take(2)->get() as $forum)
+                                <h6><a href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a></h6>
+                                <div class="text-muted">
+                                    <small class="m-1">{{$forum->discussions->count()}} discussions</a></small>
+                                    <small class="m-1">created {{$forum->created_at->diffForHumans()}}</a></small>
+                                </div>
+                                <hr>
+                            @endforeach
+                            @if($user->forums->count() > 2)
+                                <div class="text-muted text-right">
+                                    + <a href="#">{{$user->forums->count() - 2}} more</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="text-muted text-center">
+                                No forum created yet
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="content-box" data-toggle="collapse" data-target="#discussions-started">
+                        <div class="d-flex">
+                            <h6>Discussion started ({{$user->discussions->count()}})</h6>
+                            @if($user->auth())
+                                <div class="ml-auto">
+                                    <a href="{{route('discussion.create')}}" class="operation"><i class="fas fa-plus" title="create new discussion"></i></a>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="collapse" id="discussions-started" data-parent=".profile-section-container">
+                        @if($user->discussions->count() > 0)
+                            @foreach($user->discussions()->orderby('created_at', 'desc')->take(2)->get() as $discussion)
+                                <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
+                                <div class="text-muted">
+                                    <small class="m-1"> in <a href="{{route('forum.show',$discussion->forum->slug)}}">{{$discussion->forum->name}}</a></small>
+                                    <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$discussion->comments->count()}} comments </a></small>
+                                    <small class="m-1">started {{$discussion->created_at->diffForHumans()}}</small>
+                                </div>
+                                @if($discussion->tags->count() > 0)
+                                    @foreach($discussion->tags()->take(4)->get() as $tag)
+                                        <a href="{{route('tag.show',[$tag->slug])}}" class="tag">{{$tag->name}}</a>
+                                    @endforeach
+                                    @if($discussion->tags->count() > 4)
+                                        <small class="text-muted ml-2"> + {{$discussion->tags->count() - 4}} other tags</small>
+                                    @endif
+                                @endif
+                                <hr>
+                            @endforeach
+                            @if($user->discussions->count() > 2)
+                                <div class="text-muted text-right">
+                                    + <a href="#">{{$user->discussions->count() - 2}} more</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="text-muted text-center">
+                                No discussion started yet
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <div class="profile-section content-box" data-toggle="collapse" data-target="#discussions-contributions">
+                        <div class="d-flex">
+                            <h6>Discussion contributed ({{$user->discussionContributions()->count()}})</h6>
+                        </div>
+                    </div>
+
+                    <div class="collapse" id="discussions-contributions" data-parent=".profile-section-container">
+                        @if($user->discussionContributions()->count() > 0)
+                            @foreach($user->discussionContributions() as $contribution)
+                                <?php $discussion = $contribution->discussion();  ?>
+                                @if(!$discussion->isTrashed())
+                                    <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
+                                @else
+                                    <h6 class="text-muted" data-toggle="tooltip" title="discussion deleted">{{$discussion->title}}</h6>
+                                @endif
+                                <div class="text-muted">
+                                    <small class="m-1"> in <a href="{{route('forum.show',$discussion->forum->slug)}}">{{$discussion->forum->name}}</a></small>
+                                    <small class="m-1"> started by <a href="{{route('user.profile',[$discussion->user->username])}}">{{$discussion->user->username()}}</a> {{$discussion->created_at->diffForHumans()}}</small>
+                                    <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$contribution->total_comments}} contributions </a></small>
+                                    <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$discussion->comments->count()}} total comments </a></small>
+                                </div>
+                                @if($discussion->tags->count() > 0)
+                                    @foreach($discussion->tags()->take(4)->get() as $tag)
+                                        <a href="{{route('tag.show',[$tag->slug])}}" class="tag">{{$tag->name}}</a>
+                                    @endforeach
+                                    @if($discussion->tags->count() > 4)
+                                        <small class="text-muted ml-2"> + {{$discussion->tags->count() - 4}} other tags</small>
+                                    @endif
+                                @endif
+                                <hr>
+                            @endforeach
+                            @if($user->discussionContributions()->count() > 2)
+                                <div class="text-muted text-right">
+                                    + <a href="#">{{$user->discussionContributions()->count() - 2}} more</a>
+                                </div>
+                            @endif
+                        @else
+                            <div class="text-muted text-center">
+                                Not contributing to any discussion
+                            </div>
+                        @endif
+                    </div>
+                </div>
+                
+
             </div>
-           
         </div>
     </div>
 @endsection
 @section('main')
-<div id="discussions" class="anchor"></div>
-        <h6>Discussions</h6>
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a class="nav-item nav-link active" id="initiated-discussions-tab" data-toggle="tab" href="#initiated-discussions" role="tab" aria-controls="initiated-discussions" aria-selected="true">initiated ({{$user->discussions->count()}})</a>
-                <a class="nav-item nav-link" id="contributing-discussions-tab" data-toggle="tab" href="#contributing-discussions" role="tab" aria-controls="contributing-discussions" aria-selected="true">contributing ({{$user->discussionContributions()->count()}})</a>
-                @if($user->auth())
-                    <a class="nav-item nav-link" id="invited-discussions-tab" data-toggle="tab" href="#invitations" role="tab" aria-controls="invitations" aria-selected="false">Invitations ({{$user->discussionInvitations()->count()}}) </a>
-                @endif
-            </div>
-        </nav>
-        <div class="tab-content" id="discussions-tab-content">
-            <div class="tab-pane fade show active mt-2" id="initiated-discussions" role="tabpanel" aria-labelledby="initiated-discussions-tab">
-                @if($user->discussions->count() > 0)
-                    @include('components.owl-carousel', ['carousel_collection' => $user->discussions, 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>3,'lg'=>3], 'carousel_template' => 'user.templates.carousel-discussion'])
-                @else
-                    <div class="content-box text-center">
-                        <small class="text-muted ">
-                            No discussion started yet
-                        </small>
-                        @if($user->auth())    
-                            <a href="{{route('discussion.create')}}" class="btn btn-sm btn-secondary"><i class="fa fa-plus"></i> start a discussion</a>
-                        @endif
-                    </div>
-                   
-                @endif    
-            </div>
+      
 
-            <div class="tab-pane fade mt-2" id="contributing-discussions" role="tabpanel" aria-labelledby="contributing-discussions-tab">
-                @if($user->activeDiscussions()->count() > 0)
-                    @include('components.owl-carousel', ['carousel_collection' => $user->activeDiscussions(), 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>3,'lg'=>3], 'carousel_template' => 'discussion.templates.carousel-default'])
-                @else
-                    <div class="content-box text-center">
-                        <small class="text-muted ">
-                            No contribution yet
-                        </small>
-                        <a href="{{route('discussion.index')}}" class="btn btn-sm btn-secondary"><i class="fa fa-plus"></i> start contributing</a>
-                    </div>
-                   
-                @endif    
-            </div>
-            @if($user->auth())
-                <div class="tab-pane fade mt-2" id="invitations" role="tabpanel" aria-labelledby="invited-discussions-tab">
-                @if($user->discussionInvitations->count() > 0)
-                        @include('components.owl-carousel', ['carousel_collection' => $user->discussionInvitations, 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>3,'lg'=>3], 'carousel_template' => 'discussion.templates.carousel-invitation'])
-                    @else
-                        <div class="content-box text-center">
-                            <small class="text-muted">You have no invitation yet</small>
-                        </div>
-                    @endif 
-                </div>
-            @endif
-        </div> 
-
-    <div class="">
-        <div id="activities" class="anchor"></div>
-        <div class="content-box">
-            <h5>Activities</h5>
-        </div>
-        @include('components.feeds._feeds',['feeds' => $feeds])
         @if($user->auth())
-            <h6>Posts in your interests</h6>
-            <div class="content-box">
-                @if($user->interestedPosts()->count() > 0)
-                    @include('components.owl-carousel', ['carousel_collection' => $user->interestedPosts(), 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3], 'carousel_template' => 'post.templates.carousel-default'])
+            <h6>Training in your interests</h6>
+                @if($user->interestedTrainings()->count() > 0)
+                    @include('components.owl-carousel', ['carousel_collection' => $user->interestedTrainings(), 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3], 'carousel_template' => 'training.templates.carousel-default'])
                 @else
-                    <p class="text-muted text-center">No post found</p>
+                    <div class="content-box">
+                        <p class="text-muted text-center">No training found</p>
+                    </div>
                 @endif
-            </div>
         @else
-            @auth
+            <!-- @auth
                 <h6>Invite {{$user->firstname}} to your discussions</h6>
                 @if(Auth::user()->discussions->count() > 0)
                     <div class="content-box">
@@ -183,8 +319,15 @@
                         <i class="fa fa-exclamation-triangle"></i> But you haven't started any discussion yet
                     </div>
                 @endif
-            @endauth
+            @endauth -->
         @endif
+
+    <div class="">
+        <div id="activities" class="anchor"></div>
+        <div class="text-muted text-center">
+            <strong>Activities</strong>
+        </div>
+        @include('components.feeds._feeds',['feeds' => $feeds])
     </div>
 @endsection
 
@@ -199,7 +342,7 @@
                 <div class="list-group">
                     @foreach($user->discussionContributions() as $contribution)
                         <div class="contnt-box">
-                            @include('discussion.templates.list', ['discussion' => $contribution->discussion])
+                            @include('discussion.templates.list', ['discussion' => $contribution->discussion()])
                             <div class="text-right text-muted">
                                 <p>contributed {{$contribution->total_comments}} comments</p>
                             </div>

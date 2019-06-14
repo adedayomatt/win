@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     use Resource;
+
+    public function __construct(){
+        $this->middleware('verified');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -75,25 +79,34 @@ class CommentController extends Controller
     }
 
 
-    public function like($discussion,$comment){
+    public function like(Request $request, $discussion,$comment){
         $comment = $this->find(Comment::class,$comment);
-        CommentLike::create([
-            'user_id' => Auth::id(),
-            'comment_id' => $comment->id
-        ]);
-        return redirect()->back()->with('success','You liked '.$comment->user->fullname().' comment on '.$comment->discussion->title);
-    }
+        if($comment->isLiked()){ //if already liked
+            $like = CommentLike::where([
+                ['comment_id',$comment->id],
+                ['user_id',Auth::id()]
+            ])->firstorfail();
+            $like->delete();
 
-    public function unlike($discussion,$comment){
-        $comment = $this->find(Comment::class,$comment);
-        $like = CommentLike::where([
-                                        ['comment_id',$comment->id],
-                                        ['user_id',Auth::id()]
-                                    ])->firstorfail();
-        $like->delete();
+            if($request->has('async')){
+            return json_encode(['message' => 'you unliked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
+            }
 
-        return redirect()->back()->with('success','You unliked '.$like->comment->user->fullname().' comment on '.$like->comment->discussion->title);
-    }
+            return redirect()->back()->with('success','You unliked '.$like->comment->user->fullname().' comment on '.$like->comment->discussion->title);
+
+        }else{ //if not liked before
+            CommentLike::create([
+                'user_id' => Auth::id(),
+                'comment_id' => $comment->id
+            ]);
+            if($request->has('async')){
+                return json_encode(['message' => 'you liked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
+            }
+            return redirect()->back()->with('success','You liked '.$comment->user->fullname().' comment on '.$comment->discussion->title);
+            }
+        }
+
+
 
     /**
      * Display the specified resource.

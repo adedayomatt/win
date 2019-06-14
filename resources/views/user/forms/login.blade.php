@@ -31,7 +31,7 @@
     <div class="form-group">
             {{form::submit(__('Login'),['class'=>'btn btn-primary btn-block'])}}
     </div>
-    @if (Route::has('vendor.password.request'))
+    @if (Route::has('password.request'))
         <div class="text-right">
             <a class="btn btn-link" href="{{ route('password.request') }}">
                 {{ __('Forgot Your Password?') }}

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -94,6 +95,7 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
+        Session::put('new_user',$user->id);
         return redirect()->route('create.interests',[$user->username]);
     }
 

@@ -41,7 +41,7 @@
 
     <div class="form-group">
         {{form::label('bio','Bio')}}
-        {{form::textarea('bio',$user->bio,['class'=>'form-control','placeholder' => 'Something about you...','style' => 'height: 150px !important; resize: none'])}}
+        {{form::textarea('bio',$user->bio,['class'=>'form-control textarea','placeholder' => 'Something about you...','style' => 'height: 150px !important; resize: none'])}}
         @if ($errors->has('bio'))
         <span class="invalid-feedback" role="alert">
             <strong>{{ $errors->first('bio') }}</strong>
