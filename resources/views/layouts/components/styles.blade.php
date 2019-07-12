@@ -35,7 +35,10 @@
   .discussion-search,
   .training-search,
   .forum-search,
-  .user-search{
+  .user-search,
+  .school-search,
+  .company-search
+  {
         width: 300px !important;
     }
   nav .tag-search{

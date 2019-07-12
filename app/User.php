@@ -170,4 +170,27 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return collect($discussions);
     }
+    public function hasEducation(){
+        return $this->education == null ? false : true;
+    }
+    public function educationStatus(){
+        $status = "";
+        if($this->hasEducation()){
+            $status .= ($this->education->finished_at != null && $this->education->finished_at < now() ? 'studied ' : 'studying ')
+                        .($this->education->course != null ? $this->education->course : '')
+                        .' at '.$this->education->school->name;
+        }
+        return $status;
+    }
+    public function hasWork(){
+        return $this->work == null ? false : true;
+    }
+    public function workStatus(){
+        $status = "";
+        if($this->hasWork()){
+            $status .= ($this->work->position != null ? $this->work->position.' at ': 'Works at ').$this->work->company->name;
+        }
+        return $status;
+    }
+
 }

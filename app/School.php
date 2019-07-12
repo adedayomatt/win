@@ -7,6 +7,8 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class School extends Model
 {
+    use SearchableTrait;
+    
     protected $fillable = ['name', 'address', 'about'];
     protected $searchable = [
         /**

@@ -6,6 +6,10 @@ use Auth;
 use Validator;
 use App\User;
 use App\Training;
+use App\School;
+use App\Education;
+use App\Work;
+use App\Company;
 use App\Matto\Feeds;
 use App\Matto\FileUpload;
 use Illuminate\Http\Request;
@@ -61,7 +65,7 @@ class UserController extends Controller
 			return redirect()->back()->with('info','No tag selected, you will have nothing on your feed');
 		}
 		$user->tagsFollowing()->attach($request->tags);
-		$following = $user->tags->count();
+		$following = $user->tagsFollowing()->count();
 		return redirect()->route('home')->with('success','You are now following '.$following.' tags');
 	}
 
@@ -73,7 +77,6 @@ class UserController extends Controller
 		if(!$this->authorized($user)){
 			return $this->bounce($user);
 		}
-		
 		return view('user.settings')->with('user',Auth::user())
 									->with('tab',Input::get('tab'));
 	}
@@ -160,15 +163,35 @@ class UserController extends Controller
 		}
 		
 		$this->validate($request, [
-            'position' => 'required|string',
-			'company' => 'required',
+			'started_at' => 'date'
         ]);
 		
-		$user->work->position = $request->position;
-		$user->work->company_id = $request->company;
-		$user->work->job_description = $request->job_description;
-		$user->work->started_at = $request->started_at;
-		$user->work->save();
+		if($request->has('company_id') && is_numeric($request->company_id)){
+			$company_id = $request->company_id;
+		}elseif($request->company !== ''){
+			$new_company = Company::create([
+				'name' => $request->company
+			]);
+			$company_id = $new_company->id;
+		}
+		else{
+			return redirect()->back()->with('error','company name is not filled');
+		}
+		if(!$user->hasWork()){
+			Work::create([
+				'user_id' => $user->id,
+				'company_id' => $company_id,
+				'position' => $request->position,
+				'job_description' => $request->job_description,
+				'started_at' => $request->started_at
+			]);
+		}else{
+			$user->work->position = $request->position;
+			$user->work->company_id = $company_id;
+			$user->work->job_description = $request->job_description;
+			$user->work->started_at = $request->started_at;
+			$user->work->save();
+		}
 		
 		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
 	}
@@ -180,17 +203,38 @@ class UserController extends Controller
 		}
 		
 		$this->validate($request, [
-            'school' => 'required',
-			'course' => 'required|string',
-			'started_at' => 'required|date',
-			'started_at' => 'date'
-        ]);
-		
-		$user->education->school_id = $request->shool;
-		$user->education->course = $request->course;
-		$user->education->started_at = $request->start;
-		$user->education->finished_at = $request->finish;
-		$user->education->save();
+            // 'school' => 'required',
+			// 'course' => 'required|string',
+			'started_at' => 'date',
+			'finished_at' => 'date',
+		]);
+
+		if($request->has('school_id') && is_numeric($request->school_id)){
+			$school_id = $request->school_id;
+		}elseif($request->school !== ''){
+			$new_school = School::create([
+				'name' => $request->school
+			]);
+			$school_id = $new_school->id;
+		}
+		else{
+			return redirect()->back()->with('error','school name is not filled');
+		}
+		if(!$user->hasEducation()){
+			Education::create([
+				'user_id' => $user->id,
+				'school_id' => $school_id,
+				'course' => $request->course,
+				'started_at' => $request->start,
+				'finished_at' => $request->finish,
+			]);
+		}else{
+			$user->education->school_id = $school_id;
+			$user->education->course = $request->course;
+			$user->education->started_at = $request->start;
+			$user->education->finished_at = $request->finish;
+			$user->education->save();
+		}
 		
 		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
 	}

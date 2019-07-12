@@ -29,7 +29,7 @@ class WelcomeMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Finally! '.$this->user->firstname.', You are welcome')
+        return $this->subject('Finally! '.$this->user->firstname.', You are welcome to '.config('app.name'))
                     ->view('mail.welcome-mail');
     }
 }

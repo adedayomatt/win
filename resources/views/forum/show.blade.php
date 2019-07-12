@@ -55,8 +55,8 @@
             <h6>You may also want to see </h6>
             @include('components.owl-carousel', ['carousel_collection' => $forum->otherForums(), 'carousel_template'=>'forum.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => '2', 'md' => 2, 'lg' => 2]])
         @endif
-        <div class="card mt-2">
-            <div class="card-body">
+        <div class="">
+            <div class="">
                 @include('tag.widgets.list')
             </div>
         </div>

@@ -26,7 +26,6 @@ class VerificationController extends Controller
      *
      */
     public function redirectTo(){
-        Session::flash('alert_success','Congratulations, you have just verified your email. No more restrictions, you can now create tags, forums, and discussions, Enjoy!');
         return route('home');
     }
 
@@ -37,7 +36,7 @@ class VerificationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->except('verify');
+        $this->middleware('auth');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }

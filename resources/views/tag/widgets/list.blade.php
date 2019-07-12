@@ -5,7 +5,7 @@
         @if($tags_collection->count() > 0)
         <div class="list-group ball-bullet">
             @foreach($tags_collection as $tag)
-                <div class="list-group-item" syle="background-color: transparent">
+                <div class="list-group-item" style="background-color: inherit">
                     <div class="d-flex">
                         <span class="bullet"></span>
                         <div>

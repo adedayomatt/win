@@ -7,6 +7,8 @@ use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Company extends Model
 {
+    use SearchableTrait;
+    
     protected $fillable = ['user_id', 'name', 'address', 'about'];
     protected $searchable = [
         /**

@@ -17,9 +17,9 @@ class CreateWorksTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('company_id')->unsigned();
-            $table->string('position');
-            $table->longText('job_description');
-            $table->timestamp('started_at');
+            $table->string('position')->nullable();
+            $table->longText('job_description')->nullable();
+            $table->timestamp('started_at')->nullable();
             $table->timestamps();
         });
     }

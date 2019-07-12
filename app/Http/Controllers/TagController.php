@@ -15,7 +15,8 @@ class TagController extends Controller
 
     public function __construct()
     {
-         $this->middleware(['auth','verified'])->except(['search','index', 'show','trainings','discussions','followers']);//This is to authenticate the user, only tag list and single tag view is publicly accessible
+        $this->middleware('auth')->except(['search','index', 'show','trainings','discussions','followers']);
+        $this->middleware('verified')->except(['search','index', 'show','trainings','discussions','followers','follow']);
     }
 
     private function getTag($id){
@@ -116,7 +117,7 @@ class TagController extends Controller
             $interests = [];
             foreach($tagsFollowingId as $id){
                 if($id != $tag->id){
-                    array_push($tagsFollowingId, $id);
+                    array_push($interests, $id);
                 }
             }
             Auth::user()->tagsFollowing()->sync($interests);

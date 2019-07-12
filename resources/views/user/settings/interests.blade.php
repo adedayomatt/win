@@ -12,7 +12,7 @@
         @csrf
         @include('tag.components.select')
         <h6>suggestions</h6>
-        @include('tag.widgets.suggestions', ['suggestions_collection' => $_tags::whereNotIn('id',$user->interests())->orderby('name','asc')->get()])
+        @include('tag.widgets.suggestions', ['suggestions' => $_tags::whereNotIn('id',$user->interests())->orderby('name','asc')->get()])
         <input type="submit" class="btn btn-primary" value="update interests">
     </form>
 @endif

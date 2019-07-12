@@ -49,7 +49,6 @@
         @endif
     </div>
 
-
     <div class="form-group">
             {{form::submit('Update Info',['class'=>'btn btn-primary'])}}
     </div>

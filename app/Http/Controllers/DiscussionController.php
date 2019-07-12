@@ -136,7 +136,8 @@ class DiscussionController extends Controller
 		}
 
         public function delete($id){
-            if(!$training->isMine()){
+            $discussion = $this->getDiscussion($id);
+            if(!$discussion->isMine()){
                 return redirect()->route('discussion.show',[$id])->with('error','Not allowed!');
             }
     

@@ -57,7 +57,6 @@
    
 
     @auth()
-        <h6>Feeds</h6>
         @include('components.feeds._feeds')
     @endauth
 
@@ -68,9 +67,7 @@
   
 @endsection
 @section('RHS')
-    <div class="content-box">
-        <h6>Tags</h6>
-        <hr>
+    <div class="">
         <div style="max-height: 400px; overflow:auto" class="auto-page">
             <div class="content">
                 @include('tag.widgets.list')

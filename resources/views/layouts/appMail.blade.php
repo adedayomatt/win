@@ -10,7 +10,7 @@
             body{
                 margin: 0;
                 font-family: 'Open Sans', Arial, sans-serif !important;
-                line-height: 30px;
+                line-height: 25px;
             }
             .mail-head,
             .mail-body,

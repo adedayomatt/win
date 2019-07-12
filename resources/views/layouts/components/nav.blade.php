@@ -6,7 +6,7 @@
  </form>
 
   <button class="navbar-toggler bg-white" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">
-    <i class="fa fa-bar color-primary"></i>
+    <i class="fa fa-bars color-primary"></i>
   </button>
 
   <div class="collapse navbar-collapse" id="nav-collapse">

@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use Mail;
+use Session;
 use App\Mail\WelcomeMail;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Queue\InteractsWithQueue;
@@ -28,6 +29,7 @@ class SendWelcomeMail
      */
     public function handle(Verified $event)
     {
+        Session::flash('alert_success','Congratulations, you have just verified your email. No more restrictions, you can now create tags, forums, and discussions, Enjoy!');
         Mail::to($event->user->email)->send(new WelcomeMail($event->user));
     }
 }

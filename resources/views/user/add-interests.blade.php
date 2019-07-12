@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('main')
-<div class="mt-50">
+<div class="">
     <div class="row justify-content-center">
         <div class="col-md-8 col-sm-8">
             <form action="{{route('add.interests',[$user->username])}}" method="POST">
                 @csrf    
-                <div class="content-box mt-5">
+                <div class="content-box ">
                     <div style="padding: 40px 0">
                         <div class="row align-items-center">
                             <div class="col-md-6">
@@ -20,6 +20,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                @if($user)
                                 @include('tag.components.select')
                                 @include('tag.widgets.suggestions',['suggestions' => $_tags::whereNotIn('id', $user->interests())->get()])
                                 <input type="submit" class="btn btn-block btn-primary" value="Add interests">
