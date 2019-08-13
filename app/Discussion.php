@@ -119,5 +119,10 @@ class Discussion extends Model
 	public function isMine(){
 		return (Auth::check() && Auth::id() == $this->user_id) ? true : false;
 	}
+
+	// users that this discusion is targeted at according to the tags
+	public function reachableUsers(){
+		return Tag::getFollowers($this->tags);
+	}
 	
 }

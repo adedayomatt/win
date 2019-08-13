@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\User;
 use App\Matto\Feeds;
 use Illuminate\Database\Eloquent\Model;
 use Nicolaslopezj\Searchable\SearchableTrait;
@@ -30,7 +31,7 @@ class Tag extends Model
         ],
   ];
   
-  static function trending(){
+  public static function trending(){
     $trendArray = array();
     foreach(Tag::all() as $tag){
       $trend = 0;
@@ -50,6 +51,18 @@ class Tag extends Model
     return collect($trendArray)->sortByDesc('trend');
   }
 
+  // return collection of users following an collection of tags
+  public static function getFollowers($tags){
+    $followers_id = [];
+    foreach($tags as $tag){
+        foreach($tag->followers() as $user){
+            if(!in_array($user->id, $followers_id)){
+                array_push($followers_id, $user->id);
+            }
+        }
+    }
+    return User::whereIn('id', $followers_id)->get();
+  }
   public function user(){
     return $this->belongsTo('App\User');
   }

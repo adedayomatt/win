@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Discussion;
 use App\Traits\Resource;
+use App\Events\NewDiscussion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -81,6 +82,8 @@ class DiscussionController extends Controller
         $discussion->save();
         $discussion->tags()->attach($request->tags);
 
+        event(new NewDiscussion($discussion));
+        
 		return redirect()->route('discussion.show',$discussion->slug)->with('success', 'Discussion '.$request->title.' started');
      }
 

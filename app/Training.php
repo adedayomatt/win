@@ -116,4 +116,9 @@ class Training extends Model
 		return (Auth::check() && Auth::id() == $this->user_id) ? true : false;
 	}
 
+	// users that this training is targeted at according to the tags
+	public function reachableUsers(){
+		return Tag::getFollowers($this->tags);
+	}
+
 }

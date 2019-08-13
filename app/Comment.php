@@ -10,7 +10,7 @@ class Comment extends Model
 {
 	use softDeletes;
 	
-	protected $fillable = ['user_id', 'discussion_id','content'];
+	protected $fillable = ['user_id', 'discussion_id','comment_id','content'];
    
 	public function type(){
 		return 'comment';
@@ -39,11 +39,23 @@ class Comment extends Model
 	public function replies(){
 		return $this->hasMany('App\Comment');
 	}
+
+	public function comment(){
+		return $this->belongsTo('App\Comment');
+	}
 	
 	public function content($mode = 'snippet'){
 		if($mode === 'snippet'){
 			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': str_limit(strip_tags($this->content),50);
 		}
 		return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': $this->content;
+	}
+
+	public function repliers(){
+		$users = [];
+		foreach($this->replies()->select(DB::raw('user_id'))->groupBy('user_id')->get() as $reply){
+			array_push($users, $reply->user);
+		}
+		return collect($users);
 	}
 }

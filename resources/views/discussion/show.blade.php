@@ -32,6 +32,7 @@
             @if($discussion->isMine())
                 <div class="float-right">
                     @include('discussion.widgets.options')
+                    <small data-toggle="tooltip" title="Number of users this discussion has potential of reaching according to the tags used">reachable: {{$discussion->reachableUsers()->count()}}</small>
                 </div>         
              @endif
             <h5>{{$discussion->title}}</h5>

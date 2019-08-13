@@ -9,6 +9,7 @@ use App\Training;
 use App\Media;
 use App\Matto\FileUpload;
 use App\Traits\Resource;
+use App\Events\NewTraining;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
@@ -100,7 +101,9 @@ class TrainingController extends Controller
             }
         }
     }
-	
+    
+    event(new NewTraining($training));
+
 	return redirect()->route('training.show',$training->slug)->with('success','Training published!');
 		}
 

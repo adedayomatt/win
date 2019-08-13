@@ -6,6 +6,8 @@ use App\Comment;
 use App\Discussion;
 use App\CommentLike;
 use App\Traits\Resource;
+use App\Events\NewComment;
+use App\Events\NewCommentReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,6 +57,8 @@ class CommentController extends Controller
         $comment->content = $request->comment;
         $comment->save();
 
+        event(new NewComment($comment));
+
         return redirect()->route('discussion.show',$discussion->slug)->with('success','comment added');
 
     }
@@ -68,14 +72,16 @@ class CommentController extends Controller
         $comment = $this->find(Comment::class,$comment);
         $discussion = $this->find(Discussion::class,$discussion);
 
-        $comment = new Comment();
-        $comment->user_id = Auth::id();
-        $comment->comment_id = $request->parent_comment;
-        $comment->discussion_id = $discussion->id;
-        $comment->content = $request->comment;
-        $comment->save();
+        $reply = new Comment();
+        $reply->user_id = Auth::id();
+        $reply->comment_id = $request->parent_comment;
+        $reply->discussion_id = $discussion->id;
+        $reply->content = $request->comment;
+        $reply->save();
 
-        return redirect()->back()->with('success','You replied to '.$comment->user->fullname().' comment on '.$comment->discussion->title);
+        event(new NewCommentReply($reply));
+
+        return redirect()->back()->with('success','You replied to '.$comment->user->fullname().' comment on '.$comment->discussion()->title);
     }
 
 

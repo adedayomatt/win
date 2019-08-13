@@ -21,8 +21,26 @@ class EventServiceProvider extends ServiceProvider
         ],
         Verified::class => [
             'App\Listeners\SendWelcomeMail'
+        ],
+        'App\Events\NewTraining' => [ 
+            'App\Listeners\SendNewTrainingNotification'
+        ],
+        'App\Events\NewDiscussion' => [
+            'App\Listeners\SendNewDiscussionNotification'
+        ],
+        'App\Events\NewComment' => [
+            'App\Listeners\SendNewCommentNotificationToAuthor',
+            'App\Listeners\SendNewCommentNotificationToContributors'
+        ],
+        'App\Events\NewCommentReply' => [
+            'App\Listeners\SendNewCommentReplyNotification',
+        ],
+
+        'App\Events\NewCommentLike' => [
+            'App\Listeners\SendNewCommentLikeNotification'
         ]
-    ];
+
+];
 
     /**
      * Register any events for your application.
