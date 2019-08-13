@@ -17,6 +17,8 @@
         }
     .comment-area{
         width: 50%;
+        right:0;
+        left: unset;
     }
 @endsection
 @section('after-nav')
@@ -44,7 +46,7 @@
             @include('tag.widgets.inline', ['tags' => $discussion->tags])
         </div>
     </div>
-    <strong>Contributors ({{$discussion->contributions()->get()->count()}})</strong>
+    <h6>Contributors ({{$discussion->contributions()->get()->count()}})</h6>
     <div class="">
         @if($discussion->contributions()->count() > 0)
             @include('components.owl-carousel', ['carousel_collection' => $discussion->contributions()->get(), 'carousel_template'=> 'discussion.templates.carousel-contributor', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3]])
@@ -54,14 +56,20 @@
             </div>
         @endif
     </div>
-    <div class="comment-seperator"></div>
-    @include('comment.create')
+    <h6>Related Discussions</h6>
+    @if($discussion->relatedDiscussions()->count() > 0)
+        @include('components.owl-carousel', ['carousel_collection' => $discussion->relatedDiscussions(), 'carousel_template' => 'discussion.templates.carousel-default', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3]])
+    @else
+        <div class="content-box text-muted text-center">
+            No related discussion
+        </div>
+    @endif
 @endsection
 
 @section('RHS')
     <div class=" anchor" id="comments"></div>
     <div class="row">
-        <div class="col-md-6 col-no-padding-xs">
+        <div class="col-12 col-no-padding-xs">
             <div class="widget" style="background-color: inherit">
                 <div class="">
                     <h6>Comments (<span class="figure">{{$discussion->comments->count()}}</span>)</h6>
@@ -77,11 +85,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 col-no-padding-xs">
-            <h6>Related Discussions</h6>
-            @include('discussion.widgets.list', ['discussion_w_collection' => $discussion->relatedDiscussions()])
+        <div class="col-12 col-no-padding-xs">
         </div>
     </div>
+    <div class="comment-seperator"></div>
+    @include('comment.create')
+
 @endsection
 
 @section('b-scripts')

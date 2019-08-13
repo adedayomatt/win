@@ -19,7 +19,7 @@ class UserController extends Controller
 {
 
 	public function __construct(){
-		$this->middleware('auth')->except(['search','index','show']);
+		$this->middleware('auth')->except(['search','index','show','contributions']);
 	}
 
 	public function search(Request $request){
@@ -239,6 +239,9 @@ class UserController extends Controller
 		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
 	}
 
-
+	public function contributions($username){
+		$user = User::where('username',$username)->firstorfail();
+        return view('user.contributions')->with('user',$user)->with('contributions', $user->discussionContributions($raw = true)->paginate(config('app.pagination')));
+	}
 
 }

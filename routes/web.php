@@ -27,6 +27,10 @@ Route::group(['prefix' => 'search'], function(){
 
 Route::get('users','UserController@index')->name('users');
 Route::get('@{username}','UserController@show')->name('user.profile');
+Route::get('@{username}/trainings','TrainingController@userTrainings')->name('user.trainings');
+Route::get('@{username}/forums','ForumController@userForums')->name('user.forums');
+Route::get('@{username}/discussions','DiscussionController@userDiscussions')->name('user.discussions');
+Route::get('@{username}/contributions','UserController@contributions')->name('user.contributions');
 Route::get('@{username}/interests','UserController@createInterests')->name('create.interests');
 Route::post('@{username}/interests','UserController@addInterests')->name('add.interests');
 Route::get('@{username}/settings','UserController@settings')->name('user.settings');

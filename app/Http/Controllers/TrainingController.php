@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\User;
 use App\Tag;
 use App\Training;
 use App\Media;
@@ -22,7 +23,7 @@ class TrainingController extends Controller
      */
     public function __construct()
     {
-         $this->middleware(['auth','verified'])->except(['search','index', 'show']);//This is to authenticate the user, only training list and single training view is publicly accessible
+         $this->middleware(['auth','verified'])->except(['search','index', 'show','userTrainings']);//This is to authenticate the user, only training list and single training view is publicly accessible
     }
 
     public function search(Request $request){
@@ -218,5 +219,10 @@ class TrainingController extends Controller
 		$training->delete();
 		return redirect()->route('trainings')->with('success','Training deleted!');
     }
+
+    public function userTrainings($username){
+        $user = User::where('username',$username)->firstorfail();
+        return view('training.index')->with('user',$user)->with('trainings', $user->trainings);
+	}
 
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Watcher;
+use App\User;
 use App\Discussion;
 use App\Traits\Resource;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class DiscussionController extends Controller
     use Resource;
     
 	public function __construct(){
-		 $this->middleware(['auth','verified'])->except(['search','index','show']);
+		 $this->middleware(['auth','verified'])->except(['search','index','show','userDiscussions']);
     }
 
     public function search(Request $request){
@@ -164,4 +164,9 @@ class DiscussionController extends Controller
         $discussion->invitedUsers()->attach($request->users);
         return redirect()->back()->with('success', count($request->users).' person(s) invited to the discussion '.$discussion->title);
     }
+
+    public function userDiscussions($username){
+        $user = User::where('username',$username)->firstorfail();
+        return view('discussion.index')->with('user',$user)->with('discussions', $user->discussions);
+	}
 }

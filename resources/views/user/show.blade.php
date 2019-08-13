@@ -143,7 +143,6 @@
                     @endif
                     <div class="profile-container">
                         <div class="profile-section-container">
-                            
                             <div class="profile-section">
                                 <div class="content-box" data-toggle="collapse" data-target="#interests" aria-expanded="true">
                                     <div class="d-flex">
@@ -155,7 +154,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="collapse" id="interests" data-parent=".profile-section-container">
+                                <div class="collapse" id="interests" data-parent="">
                                     @if($user->tagsFollowing->count()> 0)
                                         @include('tag.widgets.inline', ['tags' => $user->tagsFollowing ])
                                     @else
@@ -167,7 +166,7 @@
                             </div>
 
                             <div class="profile-section">
-                                <div class="content-box" data-toggle="collapse" data-target="#trainings">
+                                <div class="content-box" data-toggle="collapse" data-target="#trainings" aria-expanded="true">
                                     <div class="d-flex">
                                         <h6>Published Trainings ({{$user->trainings->count()}})</h6>
                                         @if($user->auth())
@@ -178,9 +177,9 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="trainings" data-parent=".profile-section-container">
+                                <div class="collapse" id="trainings" data-parent="">
                                     @if($user->trainings->count() > 0)
-                                        @foreach($user->trainings()->orderby('created_at', 'desc')->take(2)->get() as $training)
+                                        @foreach($user->trainings()->orderby('created_at', 'desc')->take(3)->get() as $training)
                                             <h6><a href="{{route('training.show',[$training->slug])}}">{{$training->title}}</a></h6>
                                             <div class="text-muted">
                                                 <small class="m-1"><a href="{{route('training.show',[$training->slug])}}#discussions">{{$training->discussions->count()}} discussions</a></small>
@@ -196,9 +195,9 @@
                                             @endif
                                             <hr>
                                         @endforeach
-                                        @if($user->trainings->count() > 2)
+                                        @if($user->trainings->count() > 3)
                                             <div class="text-muted text-right">
-                                                + <a href="#">{{$user->trainings->count() - 2}} more</a>
+                                                + <a href="{{route('user.trainings',[$user->username])}}">{{$user->trainings->count() - 2}} more</a>
                                             </div>
                                         @endif
                                     @else
@@ -210,7 +209,7 @@
                             </div>
 
                             <div class="profile-section">
-                                <div class="content-box" data-toggle="collapse" data-target="#forums">
+                                <div class="content-box" data-toggle="collapse" data-target="#forums" aria-expanded="true">
                                     <div class="d-flex">
                                         <h6>Forums ({{$user->forums->count()}})</h6>
                                         @if($user->auth())
@@ -221,9 +220,9 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="forums" data-parent=".profile-section-container">
+                                <div class="collapse" id="forums" data-parent="">
                                     @if($user->forums->count() > 0)
-                                        @foreach($user->forums()->orderby('created_at', 'desc')->take(2)->get() as $forum)
+                                        @foreach($user->forums()->orderby('created_at', 'desc')->take(3)->get() as $forum)
                                             <h6><a href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a></h6>
                                             <div class="text-muted">
                                                 <small class="m-1">{{$forum->discussions->count()}} discussions</a></small>
@@ -231,9 +230,9 @@
                                             </div>
                                             <hr>
                                         @endforeach
-                                        @if($user->forums->count() > 2)
+                                        @if($user->forums->count() > 3)
                                             <div class="text-muted text-right">
-                                                + <a href="#">{{$user->forums->count() - 2}} more</a>
+                                             + <a href="{{route('user.forums',[$user->username])}}">{{$user->forums->count() - 3}} more</a>
                                             </div>
                                         @endif
                                     @else
@@ -245,7 +244,7 @@
                             </div>
 
                             <div class="profile-section">
-                                <div class="content-box" data-toggle="collapse" data-target="#discussions-started">
+                                <div class="content-box" data-toggle="collapse" data-target="#discussions-started" aria-expanded="true">
                                     <div class="d-flex">
                                         <h6>Discussion started ({{$user->discussions->count()}})</h6>
                                         @if($user->auth())
@@ -256,9 +255,9 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="discussions-started" data-parent=".profile-section-container">
+                                <div class="collapse" id="discussions-started" data-parent="">
                                     @if($user->discussions->count() > 0)
-                                        @foreach($user->discussions()->orderby('created_at', 'desc')->take(2)->get() as $discussion)
+                                        @foreach($user->discussions()->orderby('created_at', 'desc')->take(3)->get() as $discussion)
                                             <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
                                             <div class="text-muted">
                                                 <small class="m-1"> in <a href="{{route('forum.show',$discussion->forum->slug)}}">{{$discussion->forum->name}}</a></small>
@@ -275,9 +274,9 @@
                                             @endif
                                             <hr>
                                         @endforeach
-                                        @if($user->discussions->count() > 2)
+                                        @if($user->discussions->count() > 3)
                                             <div class="text-muted text-right">
-                                                + <a href="#">{{$user->discussions->count() - 2}} more</a>
+                                                + <a href="{{route('user.discussions',[$user->username])}}">{{$user->discussions->count() - 3}} more</a>
                                             </div>
                                         @endif
                                     @else
@@ -289,15 +288,15 @@
                             </div>
                             
                             <div class="profile-section">
-                                <div class="profile-section content-box" data-toggle="collapse" data-target="#discussions-contributions">
+                                <div class="profile-section content-box" data-toggle="collapse" data-target="#discussions-contributions" aria-expanded="true">
                                     <div class="d-flex">
                                         <h6>Discussion contributed ({{$user->discussionContributions()->count()}})</h6>
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="discussions-contributions" data-parent=".profile-section-container">
+                                <div class="collapse" id="discussions-contributions" data-parent="">
                                     @if($user->discussionContributions()->count() > 0)
-                                        @foreach($user->discussionContributions() as $contribution)
+                                        @foreach($user->discussionContributions($raw = true)->take(3)->get() as $contribution)
                                             <?php $discussion = $contribution->discussion();  ?>
                                             @if(!$discussion->isTrashed())
                                                 <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
@@ -320,9 +319,9 @@
                                             @endif
                                             <hr>
                                         @endforeach
-                                        @if($user->discussionContributions()->count() > 2)
+                                        @if($user->discussionContributions()->count() > 3)
                                             <div class="text-muted text-right">
-                                                + <a href="#">{{$user->discussionContributions()->count() - 2}} more</a>
+                                                + <a href="{{route('user.contributions',[$user->username])}}">{{$user->discussionContributions()->count() - 3}} more</a>
                                             </div>
                                         @endif
                                     @else
@@ -382,7 +381,7 @@
             @if($user->discussionContributions()->count() > 0)
             <div class="content-box">
                 <div class="list-group">
-                    @foreach($user->discussionContributions() as $contribution)
+                    @foreach($user->discussionContributions($raw = true)->take(3)->get() as $contribution)
                         <div class="contnt-box">
                             @include('discussion.templates.list', ['discussion' => $contribution->discussion()])
                             <div class="text-right text-muted">
@@ -392,6 +391,12 @@
                     @endforeach 
                  </div>
             </div>
+            @if($user->discussionContributions()->count() > 3)
+                <div class="text-right">
+                    <a href="{{route('user.contributions',[$user->username])}}">  + {{$user->discussionContributions()->count() - 3}} more
+                </div>
+            @endif</a>
+            
                
             @else
                 @if($user->auth())

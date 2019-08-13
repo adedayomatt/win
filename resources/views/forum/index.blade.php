@@ -13,6 +13,9 @@
     <div class="lhs-fixed-head bg-white">
         <div class="row py-1">
             <div class="col-8 mb-2">
+                @if(isset($user))
+                    @include('user.widgets.snippet')
+                @endif
                 <h6>Forums</h6>
             </div>
             <div class="col-4 mb-2">

@@ -165,14 +165,16 @@ class User extends Authenticatable implements MustVerifyEmail
     
     public function activeDiscussions($raw = false){
         $discussions = [];
-        foreach($this->discussionContributions(true)->orderby('total_comments','desc')->get() as $contribution){
+        foreach($this->discussionContributions($raw = true)->orderby('total_comments','desc')->get() as $contribution){
             array_push($discussions, $contribution->discussion);
         }
         return collect($discussions);
     }
+
     public function hasEducation(){
         return $this->education == null ? false : true;
     }
+
     public function educationStatus(){
         $status = "";
         if($this->hasEducation()){
@@ -182,6 +184,7 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return $status;
     }
+
     public function hasWork(){
         return $this->work == null ? false : true;
     }

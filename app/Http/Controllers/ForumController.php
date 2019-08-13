@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\User;
 use App\Forum;
 use App\Traits\Resource;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ class ForumController extends Controller
     use Resource;
 
 	public function __construct(){
-		$this->middleware(['auth','verified'])->except(['search','index','show']);
+		$this->middleware(['auth','verified'])->except(['search','index','show','userForums']);
     }
 
     public function search(Request $request){
@@ -121,7 +122,13 @@ class ForumController extends Controller
     {
        $forum = $this->getForum($id);
 	   $forum->delete();
-		 return redirect()->back()->with('success', 'Forum '.$forum->name.' deleted');
+		 return redirect()->route('forums')->with('success', 'Forum '.$forum->name.' deleted');
 
     }
+
+    public function userForums($username){
+        $user = User::where('username',$username)->firstorfail();
+        return view('forum.index')->with('user',$user)->with('forums', $user->forums);
+	}
+
 }
