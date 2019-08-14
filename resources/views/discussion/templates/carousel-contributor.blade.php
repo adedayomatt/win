@@ -6,6 +6,6 @@
         <small class="d-block">{{str_limit($item->user->workStatus(), 60)}}</small>
     </div>
     <div class="text-right">
-        <small><a href="{{route('user.profile',[$item->user->username])}}#contributions">{{$item->contributions}} contributions</a></small>
+        <small><a href="{{route('discussion.show',[$item->discussion()->slug])}}?contributor={{$item->user->username}}">{{$item->contributions}} contributions</a></small>
     </div>
 </div>

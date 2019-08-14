@@ -7,7 +7,6 @@
                 @else
                     <strong class="text-muted" data-toggle="tooltip" title="discussion deleted">{{$discussion->title}}</strong>
                 @endif
-
                 
                 @if($discussion->fromTraining())
                     on the training 
@@ -19,8 +18,10 @@
                 @endif            
             </p> 
         </div>
-        <div >
-            @include('discussion.widgets.meta')
+        <div>
+            @if(!$discussion->isTrashed())
+                @include('discussion.widgets.meta')
+            @endif
             {!!$discussion->content()!!}
             @include('tag.widgets.inline', ['tags' => $discussion->tags])
         </div>

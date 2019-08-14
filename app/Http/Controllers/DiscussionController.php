@@ -96,8 +96,20 @@ class DiscussionController extends Controller
     public function show($id)
     {
         $discussion = $this->getDiscussion($id);
+        $contributor = null;
+        $comments = $discussion->comments()->where('comment_id',null);
+        $count = $discussion->comments->count();
+        if(request()->get('contributor') != null){
+            $contributor = User::where('username',request()->get('contributor'))->first();
+            if($contributor != null){
+                $comments = $discussion->comments()->where('user_id', $contributor->id);
+                $count = $comments->count();
+            }
+        }
         return view('discussion.show')->with('discussion', $discussion)
-                                        ->with('comments',$discussion->comments()->where('comment_id',null)->orderby('created_at','desc')->paginate(config('app.pagination')));
+                                        ->with('comments', $comments->orderby('created_at','desc')->paginate(config('app.pagination')))
+                                        ->with('count', $count)
+                                        ->with('contributor', $contributor);
     }
 
     /**

@@ -73,7 +73,14 @@
         <div class="col-12 col-no-padding-xs">
             <div class="widget" style="background-color: inherit">
                 <div class="">
-                    <h6>Comments (<span class="figure">{{$discussion->comments->count()}}</span>)</h6>
+                    <h6>Comments (<span class="figure">{{number_format($count)}}</span>)</h6>
+                    @if(isset($contributor))
+                        <div class="text-muted">
+                            @include('user.widgets.snippet', ['user' => $contributor])
+                        </div>
+                        <div class="text-right small"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">show all {{number_format($discussion->comments->count())}} comments</a></div>
+                        <hr>
+                    @endif
                 </div>
                 <div class="comments-container">
                     @if($discussion->comments->count() > 0)

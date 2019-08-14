@@ -44,6 +44,9 @@ class Comment extends Model
 		return $this->belongsTo('App\Comment');
 	}
 	
+	public function isReply(){
+		return $this->comment == null ? false : true;
+	}
 	public function content($mode = 'snippet'){
 		if($mode === 'snippet'){
 			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': str_limit(strip_tags($this->content),50);

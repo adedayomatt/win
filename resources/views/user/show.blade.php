@@ -154,7 +154,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="collapse" id="interests" data-parent="">
+                                <div class="collapse show" id="interests" data-parent="">
                                     @if($user->tagsFollowing->count()> 0)
                                         @include('tag.widgets.inline', ['tags' => $user->tagsFollowing ])
                                     @else
@@ -177,7 +177,7 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="trainings" data-parent="">
+                                <div class="collapse show" id="trainings" data-parent="">
                                     @if($user->trainings->count() > 0)
                                         @foreach($user->trainings()->orderby('created_at', 'desc')->take(3)->get() as $training)
                                             <h6><a href="{{route('training.show',[$training->slug])}}">{{$training->title}}</a></h6>
@@ -195,11 +195,12 @@
                                             @endif
                                             <hr>
                                         @endforeach
+                                        <div class="text-muted text-right small">
                                         @if($user->trainings->count() > 3)
-                                            <div class="text-muted text-right">
-                                                + <a href="{{route('user.trainings',[$user->username])}}">{{$user->trainings->count() - 2}} more</a>
-                                            </div>
+                                            + {{$user->trainings->count() - 2}} more. 
                                         @endif
+                                        <a href="{{route('user.trainings',[$user->username])}}">all trainings</a>
+                                        </div>
                                     @else
                                         <div class="text-muted text-center">
                                             No training yet
@@ -220,7 +221,7 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="forums" data-parent="">
+                                <div class="collapse show" id="forums" data-parent="">
                                     @if($user->forums->count() > 0)
                                         @foreach($user->forums()->orderby('created_at', 'desc')->take(3)->get() as $forum)
                                             <h6><a href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a></h6>
@@ -230,11 +231,13 @@
                                             </div>
                                             <hr>
                                         @endforeach
-                                        @if($user->forums->count() > 3)
-                                            <div class="text-muted text-right">
-                                             + <a href="{{route('user.forums',[$user->username])}}">{{$user->forums->count() - 3}} more</a>
-                                            </div>
-                                        @endif
+                                        <div class="text-muted text-right small">
+                                            @if($user->forums->count() > 3)
+                                                + {{$user->forums->count() - 3}} more. 
+                                            @endif
+                                            <a href="{{route('user.forums',[$user->username])}}">all forums</a>
+                                        </div>
+                                        
                                     @else
                                         <div class="text-muted text-center">
                                             No forum created yet
@@ -255,7 +258,7 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="discussions-started" data-parent="">
+                                <div class="collapse show" id="discussions-started" data-parent="">
                                     @if($user->discussions->count() > 0)
                                         @foreach($user->discussions()->orderby('created_at', 'desc')->take(3)->get() as $discussion)
                                             <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
@@ -274,11 +277,12 @@
                                             @endif
                                             <hr>
                                         @endforeach
-                                        @if($user->discussions->count() > 3)
-                                            <div class="text-muted text-right">
-                                                + <a href="{{route('user.discussions',[$user->username])}}">{{$user->discussions->count() - 3}} more</a>
-                                            </div>
-                                        @endif
+                                        <div class="text-muted text-right small">
+                                            @if($user->discussions->count() > 3)
+                                                + {{$user->discussions->count() - 3}} more. 
+                                            @endif
+                                            <a href="{{route('user.discussions',[$user->username])}}">all discussions</a>
+                                        </div>
                                     @else
                                         <div class="text-muted text-center">
                                             No discussion started yet
@@ -294,21 +298,22 @@
                                     </div>
                                 </div>
 
-                                <div class="collapse" id="discussions-contributions" data-parent="">
+                                <div class="collapse show" id="discussions-contributions" data-parent="">
                                     @if($user->discussionContributions()->count() > 0)
                                         @foreach($user->discussionContributions($raw = true)->take(3)->get() as $contribution)
                                             <?php $discussion = $contribution->discussion();  ?>
                                             @if(!$discussion->isTrashed())
                                                 <h6><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
+                                                <div class="text-muted">
+                                                    <small class="m-1"> in <a href="{{route('forum.show',$discussion->forum->slug)}}">{{$discussion->forum->name}}</a></small>
+                                                    <small class="m-1"> started by <a href="{{route('user.profile',[$discussion->user->username])}}">{{$discussion->user->username()}}</a> {{$discussion->created_at->diffForHumans()}}</small>
+                                                    <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$contribution->total_comments}} contributions </a></small>
+                                                    <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$discussion->comments->count()}} total comments </a></small>
+                                                </div>
                                             @else
                                                 <h6 class="text-muted" data-toggle="tooltip" title="discussion deleted">{{$discussion->title}}</h6>
                                             @endif
-                                            <div class="text-muted">
-                                                <small class="m-1"> in <a href="{{route('forum.show',$discussion->forum->slug)}}">{{$discussion->forum->name}}</a></small>
-                                                <small class="m-1"> started by <a href="{{route('user.profile',[$discussion->user->username])}}">{{$discussion->user->username()}}</a> {{$discussion->created_at->diffForHumans()}}</small>
-                                                <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$contribution->total_comments}} contributions </a></small>
-                                                <small class="m-1"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">{{$discussion->comments->count()}} total comments </a></small>
-                                            </div>
+                                            
                                             @if($discussion->tags->count() > 0)
                                                 @foreach($discussion->tags()->take(4)->get() as $tag)
                                                     <a href="{{route('tag.show',[$tag->slug])}}" class="tag">{{$tag->name}}</a>
@@ -319,11 +324,12 @@
                                             @endif
                                             <hr>
                                         @endforeach
-                                        @if($user->discussionContributions()->count() > 3)
-                                            <div class="text-muted text-right">
-                                                + <a href="{{route('user.contributions',[$user->username])}}">{{$user->discussionContributions()->count() - 3}} more</a>
-                                            </div>
-                                        @endif
+                                        <div class="text-muted text-right small">
+                                            @if($user->discussionContributions()->count() > 3)
+                                                + {{$user->discussionContributions()->count() - 3}} more. 
+                                            @endif
+                                            <a href="{{route('user.contributions',[$user->username])}}">all contributions</a>
+                                        </div>
                                     @else
                                         <div class="text-muted text-center">
                                             Not contributing to any discussion
@@ -379,14 +385,16 @@
     <div id="contributions" class="anchor"></div>
     <h6>Contributions ({{$user->discussionContributions()->sum('total_comments')}})</h6>
             @if($user->discussionContributions()->count() > 0)
-            <div class="content-box">
+            <div class="content-bo">
                 <div class="list-group">
                     @foreach($user->discussionContributions($raw = true)->take(3)->get() as $contribution)
-                        <div class="contnt-box">
+                        <div class="content-box">
                             @include('discussion.templates.list', ['discussion' => $contribution->discussion()])
-                            <div class="text-right text-muted">
-                                <p>contributed {{$contribution->total_comments}} comments</p>
-                            </div>
+                            @if(!$contribution->discussion()->isTrashed())
+                                <div class="text-right text-muted">
+                                    <p>contributed <a href="{{route('discussion.show', [$contribution->discussion()->slug])}}?contributor={{$user->username}}">{{$contribution->total_comments}} comments</a></p>
+                                </div>
+                            @endif
                         </div>
                     @endforeach 
                  </div>

@@ -34,9 +34,11 @@
                     @foreach($contributions as $contribution)
                         <div class="content-box">
                             @include('discussion.templates.list', ['discussion' => $contribution->discussion()])
-                            <div class="text-right text-muted">
-                                <p>contributed {{$contribution->total_comments}} comments</p>
-                            </div>
+                            @if(!$contribution->discussion()->isTrashed())
+                                <div class="text-right text-muted">
+                                    <p>contributed <a href="{{route('discussion.show', [$contribution->discussion()->slug])}}?contributor={{$user->username}}">{{$contribution->total_comments}} comments</a></p>
+                                </div>
+                            @endif
                         </div>
                     @endforeach 
                     @if($contributions instanceof \Illuminate\Pagination\LengthAwarePaginator )

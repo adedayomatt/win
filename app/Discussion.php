@@ -99,7 +99,7 @@ class Discussion extends Model
 	}
 	
 	public function contributions(){
-		return	$this->comments()->select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id');
+		return	$this->comments()->select(DB::raw('count(user_id) as contributions, discussion_id, user_id'))->groupBy('user_id');
 	}
 
 	public function contributors(){
