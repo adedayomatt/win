@@ -36,14 +36,14 @@ class SendNewCommentReplyNotification
                 array_push($other_repliers, $replier);
             }
         }
-
-        if($event->reply->user->id != Auth::id()){
+        if($event->reply->user->id != $event->reply->comment->user->idd){ //if the replier is not the owner of the parent comment
             // notification for the parent comment owner
-            Notification::send($event->reply->comment->user, new NewCommentReplyNotification($event->reply, true));
+            Notification::send($event->reply->comment->user, new NewCommentReplyNotification($event->reply, $comment_owner = true));
         }
         //notification for other users aside the parent comment owner and the replier
         if(count($other_repliers) > 0){
             Notification::send(collect($other_repliers), new NewCommentReplyNotification($event->reply));
         }
+       
     }
 }

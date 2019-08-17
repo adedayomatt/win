@@ -8,6 +8,7 @@ use App\CommentLike;
 use App\Traits\Resource;
 use App\Events\NewComment;
 use App\Events\NewCommentReply;
+use App\Events\NewCommentLike;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -98,17 +99,19 @@ class CommentController extends Controller
             return json_encode(['message' => 'you unliked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
             }
 
-            return redirect()->back()->with('success','You unliked '.$like->comment->user->fullname().' comment on '.$like->comment->discussion->title);
+            return redirect()->back()->with('success','You unliked '.$like->comment->user->fullname().' comment on '.$like->comment->discussion()->title);
 
         }else{ //if not liked before
-            CommentLike::create([
+           $like =  CommentLike::create([
                 'user_id' => Auth::id(),
                 'comment_id' => $comment->id
             ]);
+            event(new NewCommentLike($like));
+
             if($request->has('async')){
                 return json_encode(['message' => 'you liked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
             }
-            return redirect()->back()->with('success','You liked '.$comment->user->fullname().' comment on '.$comment->discussion->title);
+            return redirect()->back()->with('success','You liked '.$comment->user->fullname().' comment on '.$comment->discussion()->title);
             }
         }
 

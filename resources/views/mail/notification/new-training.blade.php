@@ -1,9 +1,8 @@
 
 @extends('layouts.appMail')
-
+@section('head')
+    {{$subject}}
+@endsection
 @section('body')
-    <div>
-        {{$subject}}
-    </div>
     @include('mail.snippets.training')
 @endsection

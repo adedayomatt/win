@@ -3,7 +3,7 @@
 namespace App\Listeners;
 
 use Notification;
-use App\Notifications\NewDiscussionNofication;
+use App\Notifications\NewDiscussionNotification;
 use App\Events\NewDiscussion;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,6 +28,6 @@ class SendNewDiscussionNotification
      */
     public function handle(NewDiscussion $event)
     {
-        Notification::send($discussion->reachableUsers(),new NewDiscussionNofication($event->discussion));
+        Notification::send($event->discussion->reachableUsers(),new NewDiscussionNotification($event->discussion));
     }
 }

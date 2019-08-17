@@ -1,10 +1,10 @@
 
 @extends('layouts.appMail')
+@section('head')
+    {{$subject}}
+@endsection
 
 @section('body')
-    <div>
-        {{$subject}}
-    </div>
     @include('mail.snippets.discussion',['discussion' => $reply->comment->discussion()])
     <div style="margin-left: 80px">
         @include('mail.snippets.user',['user' => $reply->comment->user])

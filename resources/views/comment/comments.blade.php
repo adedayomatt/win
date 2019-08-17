@@ -3,7 +3,7 @@
     <div class="infinite-scroll">
         @foreach($comments as $comment)
             <div class="list-group-item comment" id="{{$comment->user->username}}-comment-{{$comment->id}}" style="background-color: inherit">
-                <div style="background-color: #f7f7f7; border-radius: 5px; padding: 5px; margin-bottom: 5px">
+                <div style="background-color: #f7f7f7; border-radius: 5px; padding: 5px; margin-bottom: 5px;">
                     <div class="d-flex">
                         <img src="{{$comment->user->avatar()['src']}}" alt="{{$comment->user->avatar()['alt']}}" class="avatar avatar-sm">
                         <div class="ml-2 pt-1" >

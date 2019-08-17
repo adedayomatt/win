@@ -8,7 +8,7 @@
                 @csrf    
                 <div class="content-box ">
                     <div style="padding: 40px 0">
-                        <div class="row align-items-center">
+                        <div class="row align-items-start">
                             <div class="col-md-6">
                                 @include('user.widgets.snippet')
                                 <div class="text-center">
@@ -21,9 +21,10 @@
                             </div>
                             <div class="col-md-6">
                                 @if($user)
-                                @include('tag.components.select')
-                                @include('tag.widgets.suggestions',['suggestions' => $_tags::whereNotIn('id', $user->interests())->get()])
-                                <input type="submit" class="btn btn-block btn-primary" value="Add interests">
+                                    @include('tag.components.select')
+                                    @include('tag.widgets.suggestions',['suggestions' => $_tags::whereNotIn('id', $user->interests())->get()])
+                                    <input type="submit" class="btn btn-block btn-primary" value="Add interests">
+                                @endif
                             </div>
                         </div>
                         </div>

@@ -99,6 +99,7 @@ class DiscussionController extends Controller
         $contributor = null;
         $comments = $discussion->comments()->where('comment_id',null);
         $count = $discussion->comments->count();
+        //if you want to filter out only comments by a a particular contributor
         if(request()->get('contributor') != null){
             $contributor = User::where('username',request()->get('contributor'))->first();
             if($contributor != null){

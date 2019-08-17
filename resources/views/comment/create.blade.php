@@ -7,11 +7,11 @@
     @else
         {!!Form::open(['route' => ['comment.store',$discussion->slug], 'method' => 'POST'])!!}
             <img src="{{Auth::user()->avatar()['src']}}" alt="" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff; position:absolute" data-toggle="tooltip" title="Add comment">
-            <div style="position: absolute; right:25px; padding-top: 5px">
-                {{Form::submit('Add comment',['class' => 'btn btn- btn-theme'])}}
+            <div style="position: absolute; right:0;">
+                {{Form::submit('Add comment',['class' => 'btn btn- btn-theme', 'style' => 'height: 50px; border-radius: 0'])}}
             </div>
             <div>
-                <textarea name="comment" placeholder="comment on {{str_limit($discussion->title,100)}}" style="height: 50px;padding: 10px 60px;width: 100%;border: none; " required>{{old('comment')}}</textarea>
+                <textarea name="comment" placeholder="comment on {{str_limit($discussion->title,100)}}" style="height: 50px;padding: 10px 60px; padding-right:130px;width: 100%;border: none; resize:none" required>{{old('comment')}}</textarea>
                 @if ($errors->has('comment'))
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $errors->first('comment') }}</strong>

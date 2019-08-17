@@ -105,7 +105,10 @@ class Discussion extends Model
 	public function contributors(){
 		$contributors =[];
 		foreach($this->contributions()->get() as $contribution){
-		array_push($contributors, $contribution->user);
+		// exclude the author
+		if($contribution->user->id != $this->user->id){
+			array_push($contributors, $contribution->user);
+			}
 		}
 		return  collect($contributors);
 	}	

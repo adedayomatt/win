@@ -27,6 +27,6 @@ class SendNewTrainingNotification
      */
     public function handle(NewTraining $event)
     {
-        Notification::send($training->reachableUsers(),new NewTrainingNofication($event->discussion));
+        Notification::send($event->training->reachableUsers(),new NewTrainingNofication($event->discussion));
     }
 }

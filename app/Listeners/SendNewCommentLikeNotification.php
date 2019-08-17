@@ -28,6 +28,9 @@ class SendNewCommentLikeNotification
      */
     public function handle(NewCommentLike $event)
     {
-        Notification::send($event->comment_like->comment->user, new NewCommentLikeNotification($event->comment_like));
+        // don't bother to send notification if the person liking the comment is the owner
+        if($event->comment_like->user->id != $event->comment_like->comment->user->id){
+            Notification::send($event->comment_like->comment->user, new NewCommentLikeNotification($event->comment_like));
+        }
     }
 }
