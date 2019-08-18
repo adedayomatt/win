@@ -38,7 +38,7 @@ class UserController extends Controller
 	}
 
     public function index(){
-		$users = User::orderby('created_at','asc')->paginate(config('app.pagination'));
+		$users = User::orderby('created_at','asc')->paginate(config('custom.pagination'));
 		return view('user.index')->with('users',$users);
 	}
 	
@@ -241,7 +241,7 @@ class UserController extends Controller
 
 	public function contributions($username){
 		$user = User::where('username',$username)->firstorfail();
-        return view('user.contributions')->with('user',$user)->with('contributions', $user->discussionContributions($raw = true)->paginate(config('app.pagination')));
+        return view('user.contributions')->with('user',$user)->with('contributions', $user->discussionContributions($raw = true)->paginate(config('custom.pagination')));
 	}
 
 }

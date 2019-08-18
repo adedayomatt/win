@@ -1,4 +1,4 @@
-<?php $discussions = $training->discussions()->orderby('created_at','desc')->paginate(config('app.pagination')) ?>
+<?php $discussions = $training->discussions()->orderby('created_at','desc')->paginate(config('custom.pagination')) ?>
 @if($discussions->count() > 0)
     <div class="infinite-scroll">
         @foreach($discussions as $discussion)

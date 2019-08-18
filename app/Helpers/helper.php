@@ -1,4 +1,5 @@
 <?php
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -19,12 +20,12 @@ if(!function_exists('isNewUser')){
 }
 if(!function_exists('primaryColor')){
     function primaryColor(){
-        return config('app.primary_color');
+        return config('custom.primary_color');
     }
 }
 
 if(!function_exists('secondaryColor')){
     function secondaryColor(){
-        return config('app.secondary_color');
+        return config('custom.secondary_color');
     }
 }

@@ -1,7 +1,11 @@
 <?php
 
 namespace App\Listeners;
+
+
 use Notification;
+use Carbon\Carbon;
+use App\Jobs\SendNotificationEmails;
 use App\Notifications\NewTrainingNofication;
 use App\Events\NewTraining;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,6 +31,12 @@ class SendNewTrainingNotification
      */
     public function handle(NewTraining $event)
     {
-        Notification::send($event->training->reachableUsers(),new NewTrainingNofication($event->discussion));
+        // Notification::send($event->training->reachableUsers(),new NewTrainingNofication($event->training));
+        
+        // queue the mailing job instead...
+        SendNotificationEmails::dispatch($event->training->reachableUsers(), new NewTrainingNofication($event->training))
+                            ->onQueue(config('custom.notification_mail_queue'))
+                            ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+
     }
 }

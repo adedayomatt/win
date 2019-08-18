@@ -52,7 +52,7 @@ class TrainingController extends Controller
         }else{
             $trainings = Training::orderBy('created_at','desc');
         }
-        return view('training.index')->with('trainings',$trainings->paginate(config('app.pagination')))->with('src', $src);
+        return view('training.index')->with('trainings',$trainings->paginate(config('custom.pagination')))->with('src', $src);
     }
 
     /**

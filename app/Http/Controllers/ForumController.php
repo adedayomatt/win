@@ -33,7 +33,7 @@ class ForumController extends Controller
      */
     public function index()
     {
-        return view('forum.index')->with('forums',Forum::Orderby('created_at','desc')->paginate(config('app.pagination')));
+        return view('forum.index')->with('forums',Forum::Orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
 
     /**

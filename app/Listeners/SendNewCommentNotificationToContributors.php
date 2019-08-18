@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use Notification;
+use Carbon\Carbon;
+use App\Jobs\SendNotificationEmails;
 use App\Notifications\NewCommentNotificationForContributors;
 use App\Events\NewComment;
 use Illuminate\Queue\InteractsWithQueue;
@@ -28,6 +30,15 @@ class SendNewCommentNotificationToContributors
      */
     public function handle(NewComment $event)
     {
-        Notification::send($event->comment->discussion()->contributors(), new NewCommentNotificationForContributors($event->comment));
+        $recipients = $event->comment->discussion()->contributors();
+        $notification = new NewCommentNotificationForContributors($event->comment);
+
+        // Notification::send($recipients, $notification);
+
+        // queue the mailing job instead...
+        SendNotificationEmails::dispatch($recipients, $notification)
+                            ->onQueue(config('custom.notification_mail_queue'))
+                            ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+
     }
 }

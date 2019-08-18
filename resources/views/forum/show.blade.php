@@ -32,7 +32,7 @@
 <div class="text-muted text-center py-1">
     <strong>Discussions in {{$forum->name}}</strong>
 </div>
-    <?php $discussions = $forum->discussions()->orderby('created_at','desc')->paginate(config('app.pagination')) ?>
+    <?php $discussions = $forum->discussions()->orderby('created_at','desc')->paginate(config('custom.pagination')) ?>
     @if($discussions->count() > 0)
         <div class="infinite-scroll">
             @foreach($forum->discussions as $discussion)

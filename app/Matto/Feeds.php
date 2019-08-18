@@ -22,6 +22,6 @@ class feeds
 							->merge($this->comments)
 							->merge($this->discussions)
 							->sortByDesc('created_at');
-            return $feeds->paginate(config('app.pagination'));  								
+            return $feeds->paginate(config('custom.pagination'));  								
 	}
 }

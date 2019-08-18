@@ -43,7 +43,7 @@ class DiscussionController extends Controller
         }else{
             $discussions = Discussion::orderBy('created_at','desc');
         }
-        return view('discussion.index')->with('discussions',$discussions->paginate(config('app.pagination')))->with('src', $src);
+        return view('discussion.index')->with('discussions',$discussions->paginate(config('custom.pagination')))->with('src', $src);
     }
 
     /**
@@ -108,7 +108,7 @@ class DiscussionController extends Controller
             }
         }
         return view('discussion.show')->with('discussion', $discussion)
-                                        ->with('comments', $comments->orderby('created_at','desc')->paginate(config('app.pagination')))
+                                        ->with('comments', $comments->orderby('created_at','desc')->paginate(config('custom.pagination')))
                                         ->with('count', $count)
                                         ->with('contributor', $contributor);
     }

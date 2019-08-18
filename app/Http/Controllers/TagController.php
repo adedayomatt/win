@@ -38,7 +38,7 @@ class TagController extends Controller
      */
     public function index()
     {
-        return view('tag.index')->with('tags',Tag::orderby('name','asc')->paginate(config('app.pagination')));
+        return view('tag.index')->with('tags',Tag::orderby('name','asc')->paginate(config('custom.pagination')));
     }
 
     /**
@@ -87,7 +87,7 @@ class TagController extends Controller
     public function show($id)
     {
         $tag = $this->getTag($id);
-        $tagActivities = $tag->discussions->merge($tag->trainings)->sortByDesc('created_at')->paginate(config('app.pagination'));
+        $tagActivities = $tag->discussions->merge($tag->trainings)->sortByDesc('created_at')->paginate(config('custom.pagination'));
         //dd($tagActivities);
         return view('tag.show')->with('tag', $tag)
                                 ->with('activities', $tagActivities);
@@ -96,18 +96,18 @@ class TagController extends Controller
     public function discussions($id){
         $tag = $this->getTag($id);
         return view('tag.discussions')->with('tag', $tag)
-                                    ->with('discussions', $tag->discussions()->orderby('created_at','desc')->paginate(config('app.pagination')));
+                                    ->with('discussions', $tag->discussions()->orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
     public function trainings($id){
         $tag = $this->getTag($id);
         return view('tag.trainings')->with('tag', $tag)
-                                ->with('trainings', $tag->trainings()->orderby('created_at','desc')->paginate(config('app.pagination')));
+                                ->with('trainings', $tag->trainings()->orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
 
     public function followers($id){
         $tag = $this->getTag($id);
         return view('tag.followers')->with('tag', $tag)
-                                ->with('followers', $tag->users()->orderby('created_at','desc')->paginate(config('app.pagination')));
+                                ->with('followers', $tag->users()->orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
 
     public function follow(Request $request, $id){

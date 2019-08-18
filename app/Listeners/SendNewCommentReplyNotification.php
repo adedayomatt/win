@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use Auth;
 use Notification;
+use Carbon\Carbon;
+use App\Jobs\SendNotificationEmails;
 use App\Notifications\NewCommentReplyNotification;
 use App\Events\NewCommentReply;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,21 +31,35 @@ class SendNewCommentReplyNotification
      */
     public function handle(NewCommentReply $event)
     {
-        $other_repliers = [];
+        $recipients = [];
         foreach($event->reply->comment->repliers() as $replier){
             // if it's not the parent comment owner and not the person that is replying
             if($replier->id != $event->reply->comment->user->id && $replier->id != Auth::id()){
-                array_push($other_repliers, $replier);
+                array_push($recipients, $replier);
             }
         }
-        if($event->reply->user->id != $event->reply->comment->user->idd){ //if the replier is not the owner of the parent comment
+        
+        if($event->reply->user->id != $event->reply->comment->user->id){ //if the replier is not the owner of the parent comment
             // notification for the parent comment owner
-            Notification::send($event->reply->comment->user, new NewCommentReplyNotification($event->reply, $comment_owner = true));
+
+            //Notification::send($recipient, $notification);
+            
+            // dispatch the mailing job instead...
+            SendNotificationEmails::dispatch($event->reply->comment->user, new NewCommentReplyNotification($event->reply, $comment_owner = true))
+                                    ->onQueue(config('custom.notification_mail_queue'))
+                                    ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+
         }
         //notification for other users aside the parent comment owner and the replier
-        if(count($other_repliers) > 0){
-            Notification::send(collect($other_repliers), new NewCommentReplyNotification($event->reply));
+        if(count($recipients) > 0){
+            
+           // Notification::send(collect($recipients), new NewCommentReplyNotification($event->reply));
+            
+           // queue the mailing job instead...
+            SendNotificationEmails::dispatch(collect($recipients), new NewCommentReplyNotification($event->reply))
+                                    ->onQueue(config('custom.notification_mail_queue'))
+                                    ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+
         }
-       
     }
 }
