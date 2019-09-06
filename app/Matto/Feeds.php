@@ -16,12 +16,9 @@ class feeds
     }
 
     public function feeds(){
-		$collection = collect([]);
-		$feeds = $collection;
-		$feeds = $collection->merge($this->trainings)
+		$feeds = collect([])->merge($this->trainings)
 							->merge($this->comments)
-							->merge($this->discussions)
-							->sortByDesc('created_at');
-            return $feeds->paginate(config('custom.pagination'));  								
+							->merge($this->discussions);
+        return $feeds->sortByDesc('created_at')->paginate(config('custom.pagination'));  								
 	}
 }

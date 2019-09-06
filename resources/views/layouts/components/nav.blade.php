@@ -1,8 +1,9 @@
+<init></init>
 <nav class="navbar navbar-expand-lg fixed-top">
   <a class="navbar-brand white" href="{{route('home')}}">{{config('app.name')}}</a>
   
-  <form class="form-inline my-2 my-lg-0" id="tag-search-wrapper">
-        @include('tag.components.search')
+  <form class="form-inline my-2 my-lg-0" id="global-search-wrapper">
+        <global-search container="#global-search-wrapper"></global-search>
  </form>
 
   <button class="navbar-toggler bg-white" type="button" data-toggle="collapse" data-target="#nav-collapse" aria-controls="nav-collapse" aria-expanded="false" aria-label="Toggle navigation">

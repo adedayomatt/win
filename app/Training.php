@@ -12,7 +12,8 @@ class Training extends Model
 {
 	use softDeletes, SearchableTrait;
 	
-    protected $fillable = ['user_id','title','content','slug','cover'];
+	protected $fillable = ['user_id','title','content','slug','cover'];
+	protected $appends = ['type','photos','videos','cover','discussions_count','createdat_timestamp'];
 	protected $searchable = [
         /**
          * Columns and their priority in search results.
@@ -26,9 +27,7 @@ class Training extends Model
             'trainings.content' => 10
 		],
   ];
-	public function type(){
-		return 'training';
-	}
+
 
 	public function user(){
 		return $this->belongsTo('App\User');
@@ -43,6 +42,31 @@ class Training extends Model
 	}
 	public function media(){
 		return $this->hasMany('App\Media');
+	}
+
+	// Attributes APIs
+	public function getTypeAttribute(){
+		$this->user;
+		return 'training';
+	}
+
+	public function getPhotosAttribute(){
+		return $this->photos();
+	}
+	public function getVideosAttribute(){
+		return $this->videos();
+	}
+
+	public function getDiscussionsCountAttribute(){
+		return $this->discussions()->count();
+	}
+
+	public function getCreatedatTimestampAttribute(){
+		return $this->created_at->getTimestamp();
+	}
+
+	public function getCoverAttribute(){
+		return $this->cover();
 	}
 	public function isTrashed(){
 		return $this->deleted_at == null ? false : true;

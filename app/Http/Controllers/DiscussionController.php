@@ -6,24 +6,32 @@ use App\User;
 use App\Discussion;
 use App\Traits\Resource;
 use App\Events\NewDiscussion;
+use App\Http\Resources\Discussion as DiscussionResource;
+use App\Http\Resources\Comment as CommentResource;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request as RequestFacade;
 
 class DiscussionController extends Controller
 {
     use Resource;
     
 	public function __construct(){
-		 $this->middleware(['auth','verified'])->except(['search','index','show','userDiscussions']);
+        if($this->isAPIRequest()){
+            $middleware = ['auth:api','verified'];
+        }else{
+            $middleware = ['auth','verified'];
+        }
+        $this->middleware($middleware)->except(['search','index','show','comments','userDiscussions']);
+
     }
 
     public function search(Request $request){
         return Discussion::search($request->get('q'))
                             ->with('user')
                             ->with('forum')
-                            ->with('tags')
-                            ->with('comments')
                             ->get();
         }
     
@@ -43,6 +51,11 @@ class DiscussionController extends Controller
         }else{
             $discussions = Discussion::orderBy('created_at','desc');
         }
+        
+        if($this->isAPIRequest()){
+            return DiscussionResource::collection($discussions->paginate(config('custom.pagination')));
+        }
+
         return view('discussion.index')->with('discussions',$discussions->paginate(config('custom.pagination')))->with('src', $src);
     }
 
@@ -71,7 +84,7 @@ class DiscussionController extends Controller
         ]);
         
         $discussion = new Discussion();
-        $discussion->user_id = auth()->user()->id;
+        $discussion->user_id = 1;
         if($request->exists('training')){
             $discussion->training_id = $request->training;
         }
@@ -84,6 +97,9 @@ class DiscussionController extends Controller
 
         event(new NewDiscussion($discussion));
         
+        if($this->isAPIRequest()){
+            return new DiscussionResource($discussion);
+        }
 		return redirect()->route('discussion.show',$discussion->slug)->with('success', 'Discussion '.$request->title.' started');
      }
 
@@ -96,10 +112,13 @@ class DiscussionController extends Controller
     public function show($id)
     {
         $discussion = $this->getDiscussion($id);
+        if($this->isAPIRequest()){
+            return new DiscussionResource($discussion);
+        }
         $contributor = null;
         $comments = $discussion->comments()->where('comment_id',null);
         $count = $discussion->comments->count();
-        //if you want to filter out only comments by a a particular contributor
+        // if you want to filter out only comments by a a particular contributor
         if(request()->get('contributor') != null){
             $contributor = User::where('username',request()->get('contributor'))->first();
             if($contributor != null){
@@ -113,6 +132,15 @@ class DiscussionController extends Controller
                                         ->with('contributor', $contributor);
     }
 
+    public function comments($discussion_id){
+        $discussion = $this->find(Discussion::class,$discussion_id);
+
+        if($this->isAPIRequest()){
+            return CommentResource::collection($discussion->comments()->orderby('created_at','desc')->paginate(config('custom.pagination')));
+        }
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -121,7 +149,11 @@ class DiscussionController extends Controller
      */
     public function edit($id)
     {
-        return view('discussion.edit')->with('discussion',$this->getDiscussion($id));
+        $discussion = $this->getDiscussion($id);
+        if($this->isAPIRequest()){
+            return new DiscussionResource($discussion);
+        }
+        return view('discussion.edit')->with('discussion', $discussion);
     }
 
     /**
@@ -147,7 +179,11 @@ class DiscussionController extends Controller
         $discussion->save();
         
         $discussion->tags()->sync($request->tags);
-        
+
+        if($this->isAPIRequest()){
+            return new DiscussionResource($discussion);
+        }
+
 		return redirect()->route('discussion.show',$discussion->slug)->with('success','Discussion updated');
 		}
 
@@ -183,6 +219,10 @@ class DiscussionController extends Controller
 
     public function userDiscussions($username){
         $user = User::where('username',$username)->firstorfail();
-        return view('discussion.index')->with('user',$user)->with('discussions', $user->discussions);
+        if($this->isAPIRequest()){
+            return DiscussionResource::collection($user->discussions->paginate(config('custom.pagination')));
+        }
+
+        return view('discussion.index')->with('user',$user)->with('discussions', $user->discussions->paginate(config('custom.pagination')));
 	}
 }

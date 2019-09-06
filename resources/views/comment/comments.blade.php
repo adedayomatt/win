@@ -1,5 +1,6 @@
+<comments target="discussion" discussion_id="{{$discussion->id}}" ></comments>
 
-<div class="list-group image-bullet">
+{{-- <div class="list-group image-bullet">
     <div class="infinite-scroll">
         @foreach($comments as $comment)
             <div class="list-group-item comment" id="{{$comment->user->username}}-comment-{{$comment->id}}" style="background-color: inherit">
@@ -27,4 +28,4 @@
         @endforeach
         {{$comments->appends($_GET)->links()}}
     </div>
-</div>
+</div> --}}

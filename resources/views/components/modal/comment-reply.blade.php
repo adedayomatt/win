@@ -24,7 +24,7 @@
     </div>
   </div>
 </div>
-
+{{-- 
 <script>
     $('#commentReply').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
@@ -40,4 +40,4 @@
     modal.find('.comment-snippet').html(comment);
     modal.find('.modal-body .card-body').html($(replyFormContainer).html());
     })
-</script>
+</script> --}}

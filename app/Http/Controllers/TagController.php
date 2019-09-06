@@ -7,6 +7,8 @@ use App\Tag;
 use App\Traits\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\Tag as TagResource;
+
 
 class TagController extends Controller
 {
@@ -15,8 +17,12 @@ class TagController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['search','index', 'show','trainings','discussions','followers']);
-        $this->middleware('verified')->except(['search','index', 'show','trainings','discussions','followers','follow']);
+        if($this->isAPIRequest()){
+            $middleware = ['auth:api','verified'];
+        }else{
+            $middleware = ['auth','verified'];
+        }
+        $this->middleware($middleware)->except(['search','index', 'show','trainings','discussions','followers']);
     }
 
     private function getTag($id){
@@ -25,8 +31,7 @@ class TagController extends Controller
 
     public function search(Request $request){
     return Tag::search($request->get('q'))
-                    ->with('trainings')
-                    ->with('discussions')
+                    ->with('user')
                     ->with('users')
                     ->get();
     }
@@ -38,7 +43,12 @@ class TagController extends Controller
      */
     public function index()
     {
-        return view('tag.index')->with('tags',Tag::orderby('name','asc')->paginate(config('custom.pagination')));
+        $tags = Tag::orderby('name','asc')->paginate(10);
+
+        if($this->isAPIRequest()){
+            return TagResource::collection($tags);
+        }
+        return view('tag.index')->with('tags',$tags);
     }
 
     /**
@@ -60,19 +70,24 @@ class TagController extends Controller
     public function store(Request $request)
     {
          $this->validate($request,[
-            'name' => 'required|unique:tags',
-         ],[
-             'unique' => 'Tag already exist'
+            'name' => 'required',
          ]);
-		$tag_format = str_replace('-','_',str_slug($request->name));
-		$tag = Tag::create([
-            'user_id' => Auth::id(),
-            'name' => $tag_format,
-            'description' => $request->description,
-            'slug' => str_slug($request->name)
-        ]);
-
-        Auth::user()->tagsFollowing()->attach($tag->id);
+        $tag_format = str_replace('-','_',str_slug($request->name));
+        $tag = Tag::where('name', $tag_format)->first();
+        if($tag == null){
+            $tag = Tag::create([
+                'user_id' => $request->user()->id,
+                'name' => $tag_format,
+                'description' => $request->description,
+                'slug' => str_slug($request->name)
+            ]);
+            $request->user()->tagsFollowing()->attach($tag->id);
+        }
+        
+        // return the newly created tag...
+        if($this->isAPIRequest()){
+            return new TagResource($tag);
+        }
 
 		return redirect()->route('tags')->with('success','Tag '.$tag_format.' created');
    
@@ -88,6 +103,11 @@ class TagController extends Controller
     {
         $tag = $this->getTag($id);
         $tagActivities = $tag->discussions->merge($tag->trainings)->sortByDesc('created_at')->paginate(config('custom.pagination'));
+        
+        if($this->isAPIRequest()){
+            return $this->find(Tag::class,$id);
+        }
+
         //dd($tagActivities);
         return view('tag.show')->with('tag', $tag)
                                 ->with('activities', $tagActivities);
@@ -112,25 +132,25 @@ class TagController extends Controller
 
     public function follow(Request $request, $id){
         $tag = $this->getTag($id);
-        if(Auth::user()->isFollowing($tag)){ //if already following
-            $tagsFollowingId = Auth::user()->interests();
+        if($request->user()->isFollowing($tag)){ //if already following
+            $tagsFollowingId = $request->user()->interests();
             $interests = [];
             foreach($tagsFollowingId as $id){
                 if($id != $tag->id){
                     array_push($interests, $id);
                 }
             }
-            Auth::user()->tagsFollowing()->sync($interests);
+            $request->user()->tagsFollowing()->sync($interests);
     
-            if($request->has('async')){//if submitted via ajax
-                return json_encode(['message' => 'You no longer follow #'.$tag->name]);
+            if($this->isAPIRequest()){
+                return json_encode(['action'=>'unfollow', 'message' => 'You no longer follow #'.$tag->name, 'tag' => $tag]);
             }
             return redirect()->route('tag.show',[$tag->slug])->with('success', 'You no longer follow #'.$tag->name);
 
         }else{ //if not following before
-            Auth::user()->tagsFollowing()->attach($tag->id);
-            if($request->has('async')){//if submitted via ajax
-                return json_encode(['message' => 'You are now following #'.$tag->name]);
+            $request->user()->tagsFollowing()->attach($tag->id);
+            if($this->isAPIRequest()){
+                return json_encode(['action'=>'follow', 'message' => 'You are now following #'.$tag->name, 'tag' => $tag]);
             }
             return redirect()->route('tag.show',[$tag->slug])->with('success', 'You are now following #'.$tag->name);
         }

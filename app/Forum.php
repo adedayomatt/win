@@ -12,6 +12,7 @@ class Forum extends Model
 	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id','name','description','slug'];
+
 	protected $searchable = [
         /**
          * Columns and their priority in search results.

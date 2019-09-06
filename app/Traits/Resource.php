@@ -22,5 +22,9 @@ trait Resource
     protected function updateSlug($resource,$string){
         return str_slug($string.' '.$resource->id);
     }
+    // check if a request is from API or web
+    protected function isAPIRequest(){
+        return request()->is('api/*') || request()->wantsJson();
+    }
 
 }

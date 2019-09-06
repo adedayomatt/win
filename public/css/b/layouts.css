@@ -12,50 +12,29 @@
 	padding-right: 2px !important;
 }
 /* Scrollbars */
-div::-webkit-scrollbar
+div::-webkit-scrollbar,
+.scroll-bar::-webkit-scrollbar
 {
-    width: 5px;
+	width: 5px;
+	height: 3px;
 }
-div::-webkit-scrollbar-track
+div::-webkit-scrollbar-track,
+.scroll-bar::-webkit-scrollbar-track
  {
     box-shadow: inset 0 0 5px grey; 
     border-radius: 3px;
 }
-div::-webkit-scrollbar-thumb
+div::-webkit-scrollbar-thumb,
+.scroll-bar::-webkit-scrollbar-thumb
  {
     background: grey; 
     border-radius: 3px;
 }
 
 
-.app .content,
-.app-center .content,
-.app-lhs .lhs-content,
-.app-lhs .content,
-.app-lhs-fixed .lhs-content,
-.app-lhs-fixed .content,
-.app-rhs .content,
-.app-rhs .lhs-content,
-.app-rhs-fixed .content,
-.app-rhs-fixed .rhs-content,
-.app-lhs-rhs .lhs-content,
-.app-lhs-rhs .content,
-.app-lhs-rhs .rhs-content,
-.app-lhs-fixed-rhs-fixed .lhs-content,
-.app-lhs-fixed-rhs-fixed .content,
-.app-lhs-fixed-rhs-fixed .rhs-content,
-.app-dashboard .lhs-content,
-.app-dashboard .content,
-.app-50-50-lhs-fixed .lhs-content,
-.app-50-50-lhs-fixed .rhs-content,
-.app-50-50-rhs-fixed .lhs-content,
-.app-50-50-rhs-fixed .rhs-content
-
-{
-	padding-top: 60px;
+main{
+	margin-top: 65px;
 }
-
-
 .lhs-fixed,.rhs-fixed{
 	z-index: 1;
 }
@@ -135,8 +114,8 @@ div::-webkit-scrollbar-thumb
 		padding-top: 10px;
 	}
 
-	.lhs-fixed,
-	.lhs-fixed-head,
+	.app-lhs-fixed .lhs-fixed,
+	.app-lhs-fixed .lhs-fixed-head,
 	.content-fixed-head,
 	.app-rhs-fixed .rhs-fixed,
 	.app-rhs-fixed .rhs-fixed-head,
@@ -147,20 +126,20 @@ div::-webkit-scrollbar-thumb
 		z-index: 10;
 	}
 
-	.lhs-fixed,
+	.app-lhs-fixed .lhs-fixed,
 	.app-rhs-fixed .rhs-fixed
 	{
-		max-height: 100vh;
+		max-height: 90vh;
 		overflow:hidden;
 
 	}
-	.lhs-fixed:hover,
+	.app-lhs-fixed .lhs-fixed:hover,
 	.app-rhs-fixed .rhs-fixed:hover{
 		overflow:auto;
 	}
 
-	.lhs-fixed,
-	.lhs-fixed-head
+	.app-lhs-fixed .lhs-fixed,
+	.app-lhs-fixed .lhs-fixed-head
 	{
 		width:25%;
 		right: 75%;
@@ -196,29 +175,25 @@ div::-webkit-scrollbar-thumb
 	}
 
 
-	.lhs-fixed .lhs-body,
-	.content .content-body,
-	.rhs-fixed .rhs-body
-	{
-		padding-top: 60px;
-	}
 
 	.no-padding-xs,.col-no-padding-xs{/*Return the padding in sm screen and above*/
 		padding-left: 10px !important;
 		padding-right: 10px !important;
 	}
 
+    .card.widget .card-body{
+        max-height: 80vh;
+        overflow: hidden;
+    }
+    .card.widget .card-body:hover{
+        overflow-y: auto;
+    }
+
 }
 
 /* md screen and above*/
 
 @media (min-width: 768px){
-	.app-lhs-fixed-rhs-fixed .rhs-content,
-	.app-50-50-lhs-fixed .rhs-content,
-	.app-50-50-rhs-fixed .rhs-content
-	{
-		padding-top: 60px; /* return thetop padding */
-	}
 
 	.app-lhs-fixed-rhs-fixed .rhs-fixed,
 	.app-lhs-fixed-rhs-fixed .rhs-fixed-head,
@@ -229,13 +204,15 @@ div::-webkit-scrollbar-thumb
 		position:fixed;
 		z-index: 10;
 	}
+	.app-lhs-fixed-rhs-fixed .lhs-fixed,
 	.app-lhs-fixed-rhs-fixed .rhs-fixed,
 	.app-50-50-lhs-fixed .lhs-fixed,
 	.app-50-50-rhs-fixed .rhs-fixed
 	{
-		max-height: 100vh;
+		max-height: 90vh;
 		overflow:hidden;
 	}
+	.app-lhs-fixed-rhs-fixed .lhs-fixed:hover,
 	.app-lhs-fixed-rhs-fixed .rhs-fixed:hover,
 	.app-50-50-lhs-fixed .lhs-fixed:hover,
 	.app-50-50-rhs-fixed .rhs-fixed:hover
@@ -270,6 +247,12 @@ div::-webkit-scrollbar-thumb
 	.app-50-50-rhs-fixed .rhs-fixed{
 		width: 50%;
 		left: 50%;
+	}
+	.rhs-content{
+		padding-right: 15px;
+	}
+	.lhs-content{
+		padding-left: 15px;
 	}
 
 }

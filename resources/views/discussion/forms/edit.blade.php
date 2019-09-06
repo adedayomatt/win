@@ -45,7 +45,7 @@
 
         <div class="form-group row justify-content-center">
             <div class="col-sm-8">
-                @include('tag.components.select', ['prev_tags' => $discussion->tags])
+                <tag-select :selected="{{$discussion->tags}}"></tag-select>
             </div>
         </div>
 

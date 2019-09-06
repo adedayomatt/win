@@ -97,13 +97,13 @@
         </div>
     </div>
     <div class="comment-seperator"></div>
-    @include('comment.create')
+    {{-- @include('comment.create') --}}
 
 @endsection
 
 @section('b-scripts')
     @include('layouts.components.ckeditor')
-    <script>
+    {{-- <script>
         $('.comments-container').on('submit','form.comment-like',function(e){
          e.preventDefault();
         var form = $(this);
@@ -138,5 +138,5 @@
         }
 	})
 
-    </script>
+    </script> --}}
 @endsection

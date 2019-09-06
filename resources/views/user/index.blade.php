@@ -1,7 +1,7 @@
 @extends('layouts.appLHSfixed')
-@section('h-scripts')
+{{-- @section('h-scripts')
     @include('layouts.components.typeahead.user')
-@endsection
+@endsection --}}
 
 @section('xs-styles')
 .after-fixed-head{
@@ -12,7 +12,10 @@
 @section('LHS')
     <div class="lhs-fixed-head bg-white p-2">
         <strong class="text-muted d-block">Users</strong>
-        @include('user.widgets.search')
+        <div id="user-search">
+            <user-search container="#user-search"></user-search>
+        </div>
+        
     </div>
 @endsection
 

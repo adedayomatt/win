@@ -22,6 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'firstname','lastname','username', 'email', 'password','avatar'
     ];
+    protected $appends = ['fullname','image'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -76,7 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Forum');
       }
 
-      public function commentsLikes(){
+    public function commentsLikes(){
         return $this->hasMany('App\CommentLike');
     }
 	public function watchings(){
@@ -99,6 +100,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->verified_at == null ? false : true;
     }
 
+    // custom attributes
+    public function getFullnameAttribute(){
+        return $this->firstname.' '.$this->lastname;
+    }
+    public function getImageAttribute(){
+        return $this->avatar === null ? asset('storage/images/users/default.png') : asset('storage/images/users/'.$this->avatar);
+    }
+
     public function fullname(){
         return $this->firstname.' '.$this->lastname;
     }
@@ -118,15 +127,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function interests(){
-        $tags = array();
-		foreach($this->tagsFollowing as $tag){
-			array_push($tags, $tag->id);
-		}
-		return $tags;
+       return $this->tagsFollowing->pluck('id');
     }
 
     public function isFollowing($tag){
-        return in_array($tag->id, $this->interests()) ? true : false;
+        return in_array($tag->id, $this->interests()->toArray()) ? true : false;
     }
 
     public function interestedDiscussions(){
@@ -143,6 +148,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return collect($discussions);
     }
 
+    public function commentsOnContributions(){
+       $discussions_id = $this->discussionContributions()->pluck('discussion_id');
+       return Comment::whereIn('discussion_id',$discussions_id)->get();
+    }
     public function interestedTrainings(){
 		$trainings = [];
 		foreach($this->interests() as $interest){//Get trainings that has the tags user is following
@@ -194,6 +203,9 @@ class User extends Authenticatable implements MustVerifyEmail
             $status .= ($this->work->position != null ? $this->work->position.' at ': 'Works at ').$this->work->company->name;
         }
         return $status;
+    }
+    public function tagSuggestions(){
+        return Tag::whereNotIn('id',$this->interests())->orderby('name','asc')->get();
     }
 
 }

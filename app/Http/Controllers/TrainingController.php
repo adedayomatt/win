@@ -14,6 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
 
+use App\Http\Resources\Training as TrainingResource;
+use App\Http\Resources\Discussion as DiscussionResource;
+
+
+
 class TrainingController extends Controller
 {
 	use Resource;
@@ -30,8 +35,6 @@ class TrainingController extends Controller
     public function search(Request $request){
         return Training::search($request->get('q'))
                             ->with('user')
-                            ->with('discussions')
-                            ->with('tags')
                             ->get();
         }
 
@@ -116,6 +119,10 @@ class TrainingController extends Controller
     public function show($id)
     {
         $training = $this->getTraining($id);
+        if($this->isAPIRequest()){
+            return new TrainingResource($training);
+        }
+
 		return view('training.show')->with('training',$training);
     }
 

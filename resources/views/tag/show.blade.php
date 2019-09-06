@@ -36,10 +36,10 @@
             </div>
         @if($activities->count() > 0)
             <div class="infinite-scroll">
-                @foreach($activities as $activity)
-                    @if($activity->type() == 'discussion')
+                @foreach($tag->feeds as $activity)
+                    @if($activity->type == 'discussion')
                         @include('discussion.widgets.snippet', ['discussion' => $activity])
-                    @elseif($activity->type() == 'training')
+                    @elseif($activity->type == 'training')
                         @include('training.widgets.snippet', ['training' => $activity])
                     @endif
                 @endforeach
@@ -66,7 +66,7 @@
                 @include('user.widgets.list', ['users_collection' => $tag->users()->take(10)->get()])
                 @if($tag->users()->count() > 10)
                     <div class="text-muted text-right">
-                        ...and {{$tag->users()->count() - 10 }} others, <a href="#">see all followers</a>
+                        + {{$tag->users()->count() - 10 }} others, <a href="#">see all followers</a>
                     </div>
                 @endif
             </div>

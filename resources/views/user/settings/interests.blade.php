@@ -1,4 +1,4 @@
-@if($update === true)
+{{-- @if($update === true)
     <form action="{{route('update.interests',[$user->username])}}" method="POST">
         @csrf
         @method('PUT')
@@ -15,4 +15,6 @@
         @include('tag.widgets.suggestions', ['suggestions' => $_tags::whereNotIn('id',$user->interests())->orderby('name','asc')->get()])
         <input type="submit" class="btn btn-primary" value="update interests">
     </form>
-@endif
+@endif --}}
+
+<tag-suggest></tag-suggest>

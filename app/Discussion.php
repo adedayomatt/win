@@ -15,6 +15,7 @@ class Discussion extends Model
 	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id', 'forum_id','training_id','title', 'content', 'slug'];
+	protected $appends = ['type','comments_count','on_training','createdat_timestamp'];
 
 	protected $searchable = [
         /**
@@ -30,9 +31,6 @@ class Discussion extends Model
 		],
   ];
 
-	public function type(){
-		return 'discussion';
-	}
 
 	public function forum(){
 		return $this->belongsTo('App\Forum');
@@ -58,6 +56,27 @@ class Discussion extends Model
 	public function invitedUsers(){
 		return $this->belongsToMany('App\User');
 	}
+// Attributes APIs
+	public function getTypeAttribute(){
+		$this->user;
+		$this->forum;
+		return 'discussion';
+	}
+
+	public function getOnTrainingAttribute(){
+		$training = $this->training();
+		return $training == null ? null : ['title' => $training->title, 'slug' => $training->slug];
+	}
+
+	public function getCommentsCountAttribute(){
+		return DB::table('comments')->where('discussion_id', $this->id)->count();
+	}
+
+	public function getCreatedatTimestampAttribute(){
+		return $this->created_at->getTimestamp();
+	}
+
+
 	public function isTrashed(){
 		return $this->deleted_at == null ? false : true;
 	}
@@ -76,6 +95,7 @@ class Discussion extends Model
 	public function fromTraining(){
 		return  $this->training() === null ? false : true;
 	}
+
 	public function tagIDs(){
 		$tags = array();
 		foreach($this->tags as $tag){

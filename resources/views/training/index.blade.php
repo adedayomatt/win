@@ -11,9 +11,9 @@
     min-height: 300px;
 }
 @endsection
-@section('h-scripts')
+{{-- @section('h-scripts')
     @include('layouts.components.typeahead.training')
-@endsection
+@endsection --}}
 @section('LHS')
     <div class="lhs-fixed-head bg-white">
         <div class="row py-1">
@@ -27,7 +27,9 @@
                 <a href="{{route('training.create')}}" class="btn btn-sm btn-theme ml-auto"><i class="fa fa-plus"></i> create new</a>
             </div>
             <div class="col-8">
-                @include('training.widgets.search')
+                <div id="search-training">
+                    <training-search container="#search-training"></training-search>
+                </div>
             </div>
             @auth
                 @if(isset($src))
@@ -104,10 +106,5 @@
 </div>
 @endsection
 @section('RHS')
-    <div class="card">
-        <div class="card-body">
         @include('tag.widgets.list')
-        </div>
-    </div>
-
 @endsection

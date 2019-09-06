@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('h-scripts')
-    @include('layouts.components.typeahead.company')
-    @include('layouts.components.typeahead.school')
+    {{-- @include('layouts.components.typeahead.company')
+    @include('layouts.components.typeahead.school') --}}
 @endsection
 @section('main')
 <div class="mt-50">

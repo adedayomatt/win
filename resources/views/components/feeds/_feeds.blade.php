@@ -1,7 +1,7 @@
 @if(isset($feeds) && $feeds->count() > 0)
     <div class="infinite-scroll">
         @foreach($feeds as $feed)
-            @switch($feed->type())
+            @switch($feed->type)
                 @case('training')
                     @include('components.feeds.training')
                 @break
@@ -15,12 +15,12 @@
             @if(($loop->index)%5 == 0)
             @include('components.ads.sample')
             @endif
-            @if($loop->index == 3)
+            {{-- @if($loop->index == 3)
                 @if($_comments::topContributors()->count() > 0)
                     <h6>Top Contributors</h6>
                     @include('components.owl-carousel', ['carousel_collection' => $_comments::topContributors() , 'carousel_template' => 'discussion.templates.carousel-contributor', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>3,'lg'=>3]])
                 @endif
-            @endif
+            @endif --}}
 
             @if($loop->index == 5)
                 <h6>Recently published trainings</h6>

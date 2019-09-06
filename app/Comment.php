@@ -11,10 +11,9 @@ class Comment extends Model
 	use softDeletes;
 	
 	protected $fillable = ['user_id', 'discussion_id','comment_id','content'];
-   
-	public function type(){
-		return 'comment';
-	}
+	protected $appends = ['type','comment_discussion', 'reply_to', 'comment_likes', 'replies_count', 'created_timestamp'];
+	
+
 	static function topContributors(){
 		return Comment::select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id')->get();
 	}
@@ -39,12 +38,42 @@ class Comment extends Model
 	public function replies(){
 		return $this->hasMany('App\Comment');
 	}
-
 	public function comment(){
 		return $this->belongsTo('App\Comment');
 	}
+
+	public function getTypeAttribute(){
+		$this->user;
+		return 'comment';
+	}
+	public function getCommentDiscussionAttribute(){
+		return $this->discussion();
+	}
+	public function getReplyToAttribute(){
+		// I am not returning the model instance because it would keep returning the reply chain and the response size becomes bigger
+		$reply_to = null;
+		$reply_to = DB::table('comments')->where('id', $this->comment_id)->first();
+		if($reply_to !== null){
+			$carbon = new \Carbon\Carbon($reply_to->created_at);
+			$reply_to->created_timestamp = $carbon->getTimestamp();
+			$reply_to->user = User::find($reply_to->user_id);
+		}
+		return $reply_to;
+	}
+
+	public function getRepliesCountAttribute(){
+		return $this->replies()->count();
+	}
+
+	public function getCommentLikesAttribute(){
+		return $this->likes()->orderby('created_at', 'desc')->get();
+	}
+	public function getCreatedTimestampAttribute(){
+		return $this->created_at->getTimestamp();
+	}
 	
 	public function isReply(){
+		$this->replies;
 		return $this->comment == null ? false : true;
 	}
 	public function content($mode = 'snippet'){

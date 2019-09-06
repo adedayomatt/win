@@ -2,7 +2,7 @@
     <div class="d-flex">
         <div class="mr-3">
             @auth()
-                <form action="{{route('comment.like',[$discussion->slug,$comment->id])}}" class="comment-like" method="POST">
+                <form action="{{route('comment.like',[$comment->id])}}" class="comment-like" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-link p-0 like-unlike" data-role="{{$comment->isLiked() ? 'unlike' : 'like'}}" data-count="{{$comment->likes->count()}}"><i class="fas fa-thumbs-up"></i></button>
                     <small class="ml-2 pt-1" data-toggle="tooltip" title="{{$comment->likes()->count().' person(s) liked this'.($comment->isLiked() ? ' (including You)' : '')}}"><strong class="theme-color likes-counter">{{$comment->likes->count()}}</strong> likes</small>
@@ -21,7 +21,7 @@
 
             <!--reply form-->
             <div class="ml-5" id="comment-{{$comment->id}}" style="display: none">
-                <form action="{{route('comment.reply',[$discussion->slug,$comment->id])}}" method="POST">
+                <form action="{{route('comment.reply',[$comment->id])}}" method="POST">
                     @csrf
                     <input type="hidden" name="parent_comment" value="{{$comment->id}}">
                     <div class="form-group">

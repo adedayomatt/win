@@ -1,22 +1,19 @@
-<!-- <link rel="stylesheet" href="{{asset('css/vendors/bootstrap-4.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/app.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/toastr.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/select2.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/vendors/owl.carousel.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/b/layouts.css')}}">
-<link rel="stylesheet" href="{{asset('css/b/styles.css')}}"> -->
+<link rel="stylesheet" href="{{asset('css/b/styles.css')}}"> 
 
- <!-- <link rel="stylesheet" href="http://wyzi.io/css/vendors/bootstrap-4.min.css">
-<link rel="stylesheet" href="http://wyzi.io/css/vendors/toastr.min.css">
-<link rel="stylesheet" href="http://wyzi.io/css/vendors/select2.min.css">
-<link rel="stylesheet" href="http://wyzi.io/css/vendors/owl.carousel.min.css">
-<link rel="stylesheet" href="http://wyzi.io/css/b/layouts.css">
-<link rel="stylesheet" href="http://wyzi.io/css/b/styles.css">  -->
-
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/bootstrap-4.min.css">
+<!--
+<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/app.css">
 <link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/toastr.min.css">
 <link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/select2.min.css">
 <link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/owl.carousel.min.css">
 <link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/layouts.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/styles.css"> 
+<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/styles.css">
+ -->
+
 <style>
     body{
         background-color: #fafafab8;
@@ -31,6 +28,7 @@
        left:0;
         right: 0;
     }
+  .global-search,
   .tag-search,
   .discussion-search,
   .training-search,
@@ -41,8 +39,9 @@
   {
         width: 300px !important;
     }
-  nav .tag-search{
+  nav .global-search{
     border: 0;
+    border-radius: 0;
   }
 .dropdown-toggle.no-icon::after{
   content: unset;
@@ -136,6 +135,12 @@ textarea.textarea{
 .owl-theme .owl-nav .owl-next {
   right: 0;
 }
+.closer{
+    font-size: 20px;
+    color: red;
+    font-weight: bolder;
+    cursor: pointer;
+}
 
     @yield('styles')
 
@@ -158,10 +163,10 @@ textarea.textarea{
     }
 
     @media (min-width: 768px){
-        nav .tag-search{
+        nav .global-search{
         width: 300px !important;
         }
-        nav .tag-search-wrapper{
+        nav .global-search-wrapper{
             margin-left: 50px
         }
         .top-alert{

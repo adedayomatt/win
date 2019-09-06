@@ -45,7 +45,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group justify-content-center">
-                    @include('tag.components.select')
+                    <tag-select :selected="[]"></tag-select>
                 </div>
             </div>
         </div>

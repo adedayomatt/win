@@ -83,8 +83,6 @@
 </div>
 @endsection
 @section('RHS')
-    <div class="content-box">
         @include('tag.widgets.list')
-    </div>
 @endsection
 

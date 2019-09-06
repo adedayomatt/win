@@ -54,10 +54,9 @@
 @section('main')
     <h6>Trending</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
-   
 
     @auth()
-        @include('components.feeds._feeds')
+        <feeds target="all" ></feeds>
     @endauth
 
     @guest()
@@ -68,16 +67,12 @@
 @endsection
 @section('RHS')
     <div class="">
-        <div style="max-height: 400px; overflow:auto" class="auto-page">
-            <div class="content">
-                @include('tag.widgets.list')
-            </div>
-        </div>
+        @include('tag.widgets.list')
         <div class="text-right">
             <a href="{{route('tags')}}">All tags</a>
         </div>
     </div>
-    @include('layouts.components.footer');
+    @include('layouts.components.footer')
 
 
     

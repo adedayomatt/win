@@ -2,7 +2,7 @@
 
 return [
         //amount of content to load at once for paginated contents
-        'pagination' => 1,
+        'pagination' => 10,
         // app primary color
         'primary_color' => '#4D551C',
         // app secondary color

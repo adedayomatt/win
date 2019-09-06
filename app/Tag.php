@@ -10,8 +10,8 @@ class Tag extends Model
 {
 	use SearchableTrait;
 	
-	protected $fillable = ['user_id','name','description','slug'];
-
+  protected $fillable = ['user_id','name','description','slug'];
+  protected $appends = ['type','trainings_count','discussions_count'];
 	  /**
      * Searchable rules.
      *
@@ -31,6 +31,8 @@ class Tag extends Model
         ],
   ];
   
+
+  // Static functions
   public static function trending(){
     $trendArray = array();
     foreach(Tag::all() as $tag){
@@ -55,7 +57,7 @@ class Tag extends Model
   public static function getFollowers($tags){
     $followers_id = [];
     foreach($tags as $tag){
-        foreach($tag->followers() as $user){
+        foreach($tag->users as $user){
             if(!in_array($user->id, $followers_id)){
                 array_push($followers_id, $user->id);
             }
@@ -63,6 +65,8 @@ class Tag extends Model
     }
     return User::whereIn('id', $followers_id)->get();
   }
+
+  // Relationships
   public function user(){
     return $this->belongsTo('App\User');
   }
@@ -79,21 +83,32 @@ class Tag extends Model
 		return $this->belongsToMany('App\User');
   }
 
+// Attributes
+public function getTypeAttribute(){
+    $this->user;
+    $this->users;
+}
+public function getTrainingsCountAttribute(){
+  return $this->trainings()->count();
+}
+
+public function getDiscussionsCountAttribute(){
+  return $this->discussions()->count();
+}
+function getFeedsAttribute(){
+  $feeds = new Feeds($this->discussions, $this->trainings);
+  return $feeds->feeds();
+}
+
+
   public function otherTags($raw = false){
     $builder = Tag::where('id','!=', $this->id);
     return $raw == true ? $builder : $builder->get();
   }
 
-  public function feeds(){
-    $feeds = new Feeds($this->discussions, $this->trainings);
-    return $feeds->feeds();
-  }
-  public function followers(){
-    return $this->users()->orderBy('created_at')->get();
-  }
   public function followersId(){
     $followers = [];
-    foreach($this->users as $user){
+    foreach($this->followers as $user){
       array_push($followers, $user->id);
     }
     return $followers;

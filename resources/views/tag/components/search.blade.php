@@ -1,1 +1,1 @@
-<input type="search" class="tag-search form-control" placeholder="search for tag...">
+<tag-select :selected="[{name:'one'},{name:'two'},{name:'three'}]"></tag-select>

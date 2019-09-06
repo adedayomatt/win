@@ -13,7 +13,10 @@
 @endsection
 
 @section('main')
-    @if($tags->count() > 0)
+
+<tags url="{{route('tags')}}" id="all-tags"></tags>
+
+    {{-- @if($tags->count() > 0)
         <div class="infinite-scroll has-tag-follow">
             @foreach($tags as $tag)
                 <div class="content-box">
@@ -27,7 +30,7 @@
                     <div class="pl-2">
                         @if($tag->users->count() > 0)
                             Followed by <span class="ml-2">@include('user.widgets.tiles',['users'=> $tag->users,'max' => 5])</span>
-                        @endif
+                        @endif 
                     </div>
                     <div class="d-flex">
                         <small class="m-1">{{$tag->discussions->count()}} discussions</small>
@@ -45,7 +48,7 @@
             <small>No tag created yet</small>
             <a href="{{route('tag.create')}}" class="btn btn-sm btn-theme">Create one now</a>
         </div>
-    @endif
+    @endif --}}
 @endsection
 @section('RHS')
     <h5>Forums</h5>

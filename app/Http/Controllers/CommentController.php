@@ -9,6 +9,9 @@ use App\Traits\Resource;
 use App\Events\NewComment;
 use App\Events\NewCommentReply;
 use App\Events\NewCommentLike;
+
+use App\Http\Resources\Comment as CommentResource;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +20,7 @@ class CommentController extends Controller
     use Resource;
 
     public function __construct(){
-        $this->middleware('verified');
+        $this->middleware('verified')->except(['index','show']);
     }
     /**
      * Display a listing of the resource.
@@ -26,7 +29,9 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        if($this->isAPIRequest()){
+            return CommentResource::collection(Comment::orderby('created_at','desc')->paginate(config('custom.pagination')));
+        }
     }
 
     /**
@@ -51,7 +56,7 @@ class CommentController extends Controller
         ]);
 
         $discussion = $this->find(Discussion::class,$discussion);
-
+        $user = $request->user();
         $comment = new Comment();
         $comment->user_id = Auth::id();
         $comment->discussion_id = $discussion->id;
@@ -60,56 +65,64 @@ class CommentController extends Controller
 
         event(new NewComment($comment));
 
+        if($this->isAPIRequest()){
+           return response(['message' => 'You commented on '.$discussion->title, 'comment' => $comment]);
+        }
+
         return redirect()->route('discussion.show',$discussion->slug)->with('success','comment added');
 
     }
 
-    public function reply(Request $request, $discussion,$comment){
+    public function reply(Request $request ,$comment){
         $this->validate($request,[ 
             'comment' => 'required',
             'parent_comment' => 'required'
         ]);
 
         $comment = $this->find(Comment::class,$comment);
-        $discussion = $this->find(Discussion::class,$discussion);
 
         $reply = new Comment();
         $reply->user_id = Auth::id();
         $reply->comment_id = $request->parent_comment;
-        $reply->discussion_id = $discussion->id;
+        $reply->discussion_id = $comment->discussion()->id;
         $reply->content = $request->comment;
         $reply->save();
 
         event(new NewCommentReply($reply));
 
+        if($this->isAPIRequest()){
+            return response(['message' => 'You replied to '.$comment->user->fullname, 'comment' => $reply]);
+        }
+
         return redirect()->back()->with('success','You replied to '.$comment->user->fullname().' comment on '.$comment->discussion()->title);
     }
 
 
-    public function like(Request $request, $discussion,$comment){
+    public function like(Request $request, $comment){
         $comment = $this->find(Comment::class,$comment);
+        $user = $request->user();
         if($comment->isLiked()){ //if already liked
             $like = CommentLike::where([
                 ['comment_id',$comment->id],
-                ['user_id',Auth::id()]
+                ['user_id',$user->id]
             ])->firstorfail();
             $like->delete();
-
-            if($request->has('async')){
-            return json_encode(['message' => 'you unliked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
+    
+            if($this->isAPIRequest()){
+                return json_encode(['message' => 'you unliked '.$comment->user->firstname.'\' comment', 'like' => $like, 'count' =>$comment->likes->count(),  'like' => $like, 'action' => 'unlike']);
             }
 
             return redirect()->back()->with('success','You unliked '.$like->comment->user->fullname().' comment on '.$like->comment->discussion()->title);
 
         }else{ //if not liked before
            $like =  CommentLike::create([
-                'user_id' => Auth::id(),
+                'user_id' => $user->id,
                 'comment_id' => $comment->id
             ]);
             event(new NewCommentLike($like));
 
-            if($request->has('async')){
-                return json_encode(['message' => 'you liked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count()]);
+            if($this->isAPIRequest()){
+                return json_encode(['message' => 'you liked '.$comment->user->firstname.'\' comment', 'count' =>$comment->likes->count(), 'like' => $like, 'action' => 'like']);
             }
             return redirect()->back()->with('success','You liked '.$comment->user->fullname().' comment on '.$comment->discussion()->title);
             }
@@ -125,7 +138,11 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        //
+        $comment = Comment::find($id);
+        if($this->isAPIRequest()){
+            return response(['comment' => $comment, 'replies' => $comment->replies]);
+        }
+
     }
 
     /**

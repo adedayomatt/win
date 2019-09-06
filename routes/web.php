@@ -17,6 +17,7 @@ Route::get('/', 'AppController@index')->name('home');
 Auth::routes(['verify' => true]);
 // search routes
 Route::group(['prefix' => 'search'], function(){
+    Route::get('/','AppController@search')->name('search');
     Route::get('user','UserController@search')->name('search.user');
     Route::get('tag', 'TagController@search')->name('search.tag');
     Route::get('discussion', 'DiscussionController@search')->name('search.discussion');
@@ -55,8 +56,8 @@ Route::resource('discussion','DiscussionController');
 Route::get('discussions','DiscussionController@index')->name('discussions');
 Route::post('discussion/{discussion}/invite/','DiscussionController@inviteUsers')->name('discussion.invite.users');
 Route::resource('discussion/{discussion}/comment','CommentController');
-Route::post('discussion/{discussion}/comment/{comment}/reply','CommentController@reply')->name('comment.reply');
-Route::post('discussion/{discussion}/comment/{comment}/like','CommentController@like')->name('comment.like');
+Route::post('comment/{comment}/reply','CommentController@reply')->name('comment.reply');
+Route::post('comment/{comment}/like','CommentController@like')->name('comment.like');
 Route::get('discussion/{discussion}/delete', 'DiscussionController@delete')->name('discussion.delete');
 
 Route::resource('training','TrainingController');
