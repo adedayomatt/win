@@ -2939,6 +2939,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
@@ -2961,7 +2963,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   props: ['container'],
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['is_following_tag'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['is_following_tag']), {
+    input: function input() {
+      return "".concat(this.container, " input.global-search");
+    }
+  }),
   methods: {
     search: function search() {
       var _this = this;
@@ -2989,11 +2995,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       $('body').css({
         'overflow': 'hidden'
       });
+      $(this.input).css({
+        'background-color': '#fff'
+      });
     },
     closeSearch: function closeSearch() {
       this.active = false;
       $('body').css({
         'overflow': 'auto'
+      });
+      $(this.input).css({
+        'background-color': 'inherit'
       });
     }
   },
@@ -3004,7 +3016,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     User: _User_User__WEBPACK_IMPORTED_MODULE_4__["default"],
     LoadingOne: _Assets_LoadingOne__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    this.closeSearch();
+  }
 });
 
 /***/ }),
@@ -3888,7 +3902,7 @@ __webpack_require__.r(__webpack_exports__);
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
           var avatarURL = baseURL() + '/storage/images/users/';
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions.length, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions_count, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -11309,7 +11323,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200;\n    border-radius: 7px;\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n.comment-textarea[data-v-03a0802f]{\n            left:50%;\n}\n}\n}\n", ""]);
+exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200;\n    border-radius: 7px;\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
 
 // exports
 
@@ -11347,7 +11361,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n        height: 100vh;\n        overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\ninput.global-search[data-v-59a3b596]{\n    border: 0;\n    border-bottom: 1px solid #4D551C;\n    border-radius: 0;\n}\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        z-index:1000000;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n}\n.search-results-container-header[data-v-59a3b596]{\n    position: fixed;\n    z-index:1000001;\n    left: 0;\n    right:0;\n    background-color: #fff;\n    border-bottom: 1px solid #f7f7f7\n}\n.search-results-container-body[data-v-59a3b596]{\n    padding-top: 60px;\n    height: 92vh;\n    overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -44523,11 +44537,11 @@ var render = function() {
       _vm._v(" "),
       _vm.active
         ? [
-            _c(
-              "div",
-              { staticClass: "search-results-container shadow-md" },
-              [
-                _c("div", { staticClass: "p-2" }, [
+            _c("div", { staticClass: "search-results-container shadow-md" }, [
+              _c(
+                "div",
+                { staticClass: "p-2 search-results-container-header" },
+                [
                   _c(
                     "span",
                     {
@@ -44537,134 +44551,142 @@ var render = function() {
                     [_vm._v("×")]
                   ),
                   _vm._v(" "),
-                  _c("p", [_vm._v(_vm._s(_vm.status))]),
-                  _vm._v(" "),
-                  _c("hr")
-                ]),
-                _vm._v(" "),
-                _vm.q !== ""
-                  ? [
-                      _vm.loading
-                        ? [
-                            _c(
-                              "div",
-                              { staticClass: "p-5" },
-                              [
-                                _c("loading-one", {
-                                  attrs: { message: "searching..." }
-                                })
-                              ],
-                              1
-                            )
-                          ]
-                        : [
-                            _c("div", { staticClass: "row" }, [
-                              _c("div", { staticClass: "col-md-2" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "result-header px-3 py-2" },
-                                  [
-                                    _vm._v(
-                                      "Tags (" + _vm._s(_vm.tags.length) + ")"
-                                    )
-                                  ]
-                                ),
+                  _c("p", [_vm._v(_vm._s(_vm.status))])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "search-results-container-body" },
+                [
+                  _vm.q !== ""
+                    ? [
+                        _vm.loading
+                          ? [
+                              _c(
+                                "div",
+                                { staticClass: "p-5" },
+                                [
+                                  _c("loading-one", {
+                                    attrs: { message: "searching..." }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          : [
+                              _c("div", { staticClass: "row" }, [
+                                _c("div", { staticClass: "col-lg-2" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-header px-3 py-2" },
+                                    [
+                                      _vm._v(
+                                        "Tags (" + _vm._s(_vm.tags.length) + ")"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-wrapper" },
+                                    _vm._l(_vm.tags, function(tag) {
+                                      return _c("tag", {
+                                        key: tag.id + Math.random(),
+                                        attrs: { data: tag }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ]),
                                 _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "result-wrapper" },
-                                  _vm._l(_vm.tags, function(tag) {
-                                    return _c("tag", {
-                                      key: tag.id + Math.random(),
-                                      attrs: { data: tag }
-                                    })
-                                  }),
-                                  1
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "col-md-4" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "result-header px-3 py-2" },
-                                  [
-                                    _vm._v(
-                                      "Discussions (" +
-                                        _vm._s(_vm.discussions.length) +
-                                        ")"
-                                    )
-                                  ]
-                                ),
+                                _c("div", { staticClass: "col-lg-4" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-header px-3 py-2" },
+                                    [
+                                      _vm._v(
+                                        "Discussions (" +
+                                          _vm._s(_vm.discussions.length) +
+                                          ")"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-wrapper" },
+                                    _vm._l(_vm.discussions, function(
+                                      discussion
+                                    ) {
+                                      return _c("discussion", {
+                                        key: discussion.id + Math.random(),
+                                        attrs: { data: discussion }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ]),
                                 _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "result-wrapper" },
-                                  _vm._l(_vm.discussions, function(discussion) {
-                                    return _c("discussion", {
-                                      key: discussion.id + Math.random(),
-                                      attrs: { data: discussion }
-                                    })
-                                  }),
-                                  1
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "col-md-4" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "result-header px-3 py-2" },
-                                  [
-                                    _vm._v(
-                                      "Trainings (" +
-                                        _vm._s(_vm.trainings.length) +
-                                        ")"
-                                    )
-                                  ]
-                                ),
+                                _c("div", { staticClass: "col-lg-4" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-header px-3 py-2" },
+                                    [
+                                      _vm._v(
+                                        "Trainings (" +
+                                          _vm._s(_vm.trainings.length) +
+                                          ")"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-wrapper" },
+                                    _vm._l(_vm.trainings, function(training) {
+                                      return _c("training", {
+                                        key: training.id + Math.random(),
+                                        attrs: { data: training }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ]),
                                 _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "result-wrapper" },
-                                  _vm._l(_vm.trainings, function(training) {
-                                    return _c("training", {
-                                      key: training.id + Math.random(),
-                                      attrs: { data: training }
-                                    })
-                                  }),
-                                  1
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "col-md-2" }, [
-                                _c(
-                                  "div",
-                                  { staticClass: "result-header px-3 py-2" },
-                                  [
-                                    _vm._v(
-                                      "Users (" + _vm._s(_vm.users.length) + ")"
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "result-wrapper" },
-                                  _vm._l(_vm.users, function(user) {
-                                    return _c("user", {
-                                      key: user.id + Math.random(),
-                                      attrs: { data: user }
-                                    })
-                                  }),
-                                  1
-                                )
+                                _c("div", { staticClass: "col-md-2" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-header px-3 py-2" },
+                                    [
+                                      _vm._v(
+                                        "Users (" +
+                                          _vm._s(_vm.users.length) +
+                                          ")"
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "result-wrapper" },
+                                    _vm._l(_vm.users, function(user) {
+                                      return _c("user", {
+                                        key: user.id + Math.random(),
+                                        attrs: { data: user }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ])
                               ])
-                            ])
-                          ]
-                    ]
-                  : _vm._e()
-              ],
-              2
-            )
+                            ]
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ])
           ]
         : _vm._e()
     ],

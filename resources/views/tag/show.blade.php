@@ -1,7 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
 @section('styles')
     .after-fixed-head{
-        padding-top: 72px;
+        padding-top: 82px;
     }
 @endsection
 @section('LHS')

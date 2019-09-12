@@ -87,27 +87,46 @@ main{
 }
 
 /**************************************************************************************/
-
 /* xs screens or lesser */
 @media(max-width: 576px){
+	.container-fluid
+		{
+			padding-left: 0;
+			padding-right: 0;
+        }
+}
+/* sm screens or lesser */
+@media(max-width: 768px){
+	.lhs-fixed-head{
+		position: fixed;
+		z-index: 1029;
+		left:0;
+		right: 0;
+	}
+	
+}
+
+/* sm screen and above*/
+@media (min-width: 576px){
+	.no-padding-xs,.col-no-padding-xs{/*Return the padding in sm screen and above*/
+		padding-left: 10px !important;
+		padding-right: 10px !important;
+	}
+
+
+}
+
+/* md screen and above*/
+
+@media (min-width: 768px){
+
+
 	.app-lhs .content,
 	.app-lhs-fixed .content,
 	.app-rhs .rhs-content,
 	.app-rhs-fixed .rhs-content,
 	.app-lhs-rhs .content,
 	.app-lhs-rhs .rhs-content,
-	.app-lhs-fixed-rhs-fixed .content,
-	.app-lhs-fixed-rhs-fixed .rhs-content,
-	.app-50-50-lhs-fixed .rhs-content,
-	.app-50-50-rhs-fixed .rhs-content
-	{
-		padding-top: 10px;
-	}
-}
-
-/* sm screen and above*/
-@media (min-width: 576px){
-	.app-lhs-fixed-rhs-fixed .rhs-content,
 	.app-50-50-lhs-fixed .rhs-content,
 	.app-50-50-rhs-fixed .rhs-content
 	{
@@ -118,9 +137,7 @@ main{
 	.app-lhs-fixed .lhs-fixed-head,
 	.content-fixed-head,
 	.app-rhs-fixed .rhs-fixed,
-	.app-rhs-fixed .rhs-fixed-head,
-	.app-lhs-fixed-rhs-fixed .lhs-fixed,
-	.app-lhs-fixed-rhs-fixed .lhs-fixed-head
+	.app-rhs-fixed .rhs-fixed-head
 	{
 		position:fixed;
 		z-index: 10;
@@ -159,27 +176,12 @@ main{
 		right: 25%;
 	}
 
-	.app-lhs-fixed .content-fixed-head,
-	.app-lhs-fixed-rhs-fixed .content-fixed-head
+	.app-lhs-fixed .content-fixed-head
 	{
 		width: 75%;
 		left: 25%;
 	}
 
-
-	.app-lhs-fixed-rhs-fixed .rhs-fixed,
-	.app-lhs-fixed-rhs-fixed .rhs-fixed-head
-	{
-		width:75%;
-		margin-left: 25%;
-	}
-
-
-
-	.no-padding-xs,.col-no-padding-xs{/*Return the padding in sm screen and above*/
-		padding-left: 10px !important;
-		padding-right: 10px !important;
-	}
 
     .card.widget .card-body{
         max-height: 80vh;
@@ -188,15 +190,11 @@ main{
     .card.widget .card-body:hover{
         overflow-y: auto;
     }
-
-}
-
-/* md screen and above*/
-
-@media (min-width: 768px){
-
+ 
 	.app-lhs-fixed-rhs-fixed .rhs-fixed,
 	.app-lhs-fixed-rhs-fixed .rhs-fixed-head,
+	.app-lhs-fixed-rhs-fixed .lhs-fixed,
+	.app-lhs-fixed-rhs-fixed .lhs-fixed-head,
 	.app-lhs-fixed-rhs-fixed .content-fixed-head,
 	.app-50-50-lhs-fixed .lhs-fixed,
 	.app-50-50-rhs-fixed .rhs-fixed

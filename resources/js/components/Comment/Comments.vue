@@ -157,14 +157,16 @@ import CommentTextarea from './CommentTextarea';
         .single-comment-container{
             left: 50%;
         }
+        .comment-textarea{
+            left:50%;
+        }
+
+    }
+
     @media (min-width: 992px){
         .single-comment-container{
                 left: 70%;
             }
-            .comment-textarea{
-                left:50%;
-            }
 
         }
-    }
 </style>

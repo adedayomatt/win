@@ -5,49 +5,51 @@
         >
         <template v-if="active">
             <div class="search-results-container shadow-md">
-                <div class="p-2">
+                <div class="p-2 search-results-container-header">
                     <span class="float-right closer" @click="closeSearch">&times;</span>
                     <p>{{status}}</p>
-                    <hr>
                 </div>
-                <template v-if="q !== ''">
-                    <template v-if="loading">
-                        <div class="p-5">
-                            <loading-one message="searching..."></loading-one>
-                        </div>
+                <div class="search-results-container-body">
+                    <template v-if="q !== ''">
+                        <template v-if="loading">
+                            <div class="p-5">
+                                <loading-one message="searching..."></loading-one>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="result-header px-3 py-2">Tags ({{tags.length}})</div>
+                                    <div class="result-wrapper">
+                                        <tag v-for="tag in tags" :key="tag.id+Math.random()" :data="tag"></tag>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="result-header px-3 py-2">Discussions ({{discussions.length}})</div>
+                                    <div class="result-wrapper">
+                                        <discussion v-for="discussion in discussions" :key="discussion.id+Math.random()" :data="discussion"></discussion>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="result-header px-3 py-2">Trainings ({{trainings.length}})</div>
+                                    <div class="result-wrapper">
+                                        <training v-for="training in trainings" :key="training.id+Math.random()" :data="training"></training>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="result-header px-3 py-2">Users ({{users.length}})</div>
+                                    <div class="result-wrapper">
+                                        <user v-for="user in users" :key="user.id+Math.random()" :data="user"></user>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                     </template>
-                    <template v-else>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="result-header px-3 py-2">Tags ({{tags.length}})</div>
-                                <div class="result-wrapper">
-                                    <tag v-for="tag in tags" :key="tag.id+Math.random()" :data="tag"></tag>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="result-header px-3 py-2">Discussions ({{discussions.length}})</div>
-                                <div class="result-wrapper">
-                                    <discussion v-for="discussion in discussions" :key="discussion.id+Math.random()" :data="discussion"></discussion>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="result-header px-3 py-2">Trainings ({{trainings.length}})</div>
-                                <div class="result-wrapper">
-                                    <training v-for="training in trainings" :key="training.id+Math.random()" :data="training"></training>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2">
-                                <div class="result-header px-3 py-2">Users ({{users.length}})</div>
-                                <div class="result-wrapper">
-                                    <user v-for="user in users" :key="user.id+Math.random()" :data="user"></user>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </template>
+                </div>
+                
             </div>
         </template>
     </div>
@@ -81,6 +83,9 @@
             ...mapGetters([
                 'is_following_tag'
             ]),
+            input(){
+                return `${this.container} input.global-search`
+            }
            
         },
         methods: {
@@ -112,32 +117,50 @@
             activateSearch(){
                 this.active = true;
                 $('body').css({'overflow':'hidden'});
+                $(this.input).css({'background-color': '#fff'});
             },
             closeSearch(){
                 this.active = false;
                 $('body').css({'overflow':'auto'});
+                $(this.input).css({'background-color': 'inherit'});
             }
         },
         components: {
         Tag, Discussion, Training, User, LoadingOne
         },
         mounted() {
-           
-
+           this.closeSearch();
         }
     }
 </script>
 
 <style scoped>
+    input.global-search{
+        border: 0;
+        border-bottom: 1px solid #4D551C;
+        border-radius: 0;
+    }
     .search-results-container{
             overflow: auto;
             position: absolute;
+            z-index:1000000;
             left: 0;
             right: 0;
             background-color: #fff;
-            height: 100vh;
-            overflow: auto;
-         }
+        }
+    .search-results-container-header{
+        position: fixed;
+        z-index:1000001;
+        left: 0;
+        right:0;
+        background-color: #fff;
+        border-bottom: 1px solid #f7f7f7
+        }
+    .search-results-container-body{
+        padding-top: 60px;
+        height: 92vh;
+        overflow: auto;
+    }
     .result-header{
         background-color: #f7f7f7;
     }

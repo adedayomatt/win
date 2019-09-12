@@ -1,6 +1,6 @@
 <init></init>
 <nav class="navbar navbar-expand-lg fixed-top">
-  <a class="navbar-brand white" href="{{route('home')}}">{{config('app.name')}}</a>
+  <a class="navbar-brand text-primary" href="{{route('home')}}">{{config('app.name')}}</a>
   
   <form class="form-inline my-2 my-lg-0" id="global-search-wrapper">
         <global-search container="#global-search-wrapper"></global-search>

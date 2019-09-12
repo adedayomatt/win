@@ -69,7 +69,7 @@
                                             </strong>
                                         </a>
                                         <div class="text-muted">
-                                            <small>${data.discussions.length} discussions</small>
+                                            <small>${data.discussions_count} discussions</small>
                                         </div>
                                         <div class="text-muted">
                                             ${data.snippet}

@@ -19,7 +19,7 @@
         background-color: #fafafab8;
     }
     nav.navbar{
-      background-color: #F1F1F1;
+      background-color: #fff;
       box-shadow: 0px 3px 3px rgba(0,0,0,.2)
     }
     .top-alert{
@@ -37,12 +37,12 @@
   .school-search,
   .company-search
   {
-        width: 300px !important;
+        width: 100% !important;
+        border: 0;
+        border-radius: 0;
+        border-bottom: 1px solid {{primaryColor()}};
     }
-  nav .global-search{
-    border: 0;
-    border-radius: 0;
-  }
+ 
 .dropdown-toggle.no-icon::after{
   content: unset;
 }
@@ -145,16 +145,7 @@ textarea.textarea{
     @yield('styles')
 
     @media(max-width: 576px){
-        .container-fluid{
-        padding-left: 0;
-        padding-right: 0;
-        }
-        .lhs-fixed-head{
-          position: fixed;
-          z-index: 1029;
-          left:0;
-          right: 0;
-}
+       
         @yield('xs-styles')
     }
 
