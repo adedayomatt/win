@@ -2,16 +2,13 @@ let actions = {
     
     getAuth({commit, dispatch}){ 
         return new Promise((resolve, reject) => {
-            if(auth() !== null){
+            if(window.user_token !== null){
                 axios.get(apiURL('/user'))
                 .then(res => {
                     console.log(res);
                     if(res.data != null){
                         commit('SET_AUTH_USER', res.data);
-                        dispatch('loadMyTags')
-                        .then(res => {
-                            commit('APP_READY', true);
-                        })
+                        commit('APP_READY', true);
                     }
                     resolve(res)
                 })
@@ -21,7 +18,7 @@ let actions = {
                 })
             }   
             else{
-                commit('APP_READY', true);
+                commit('APP_READY', true)
             } 
         });
 
@@ -40,12 +37,10 @@ let actions = {
          })
  
     },
-    loadMyTags({commit, dispatch}) {
+    loadMyTags({commit}) {
        return new Promise((resolve, reject) => {
                 axios.get(apiURL(`/my_tags`))
                 .then(res => {
-                    console.log(res);
-                    commit('LOAD_TAGS', res.data);
                     resolve(res);
                 }).catch(error => {
                     toastError(error.response);
@@ -83,12 +78,6 @@ let actions = {
         return new Promise((resolve, reject) => {
             axios.post(apiURL(`/tag/${tag.id}/follow`))
             .then(response => {
-                if(response.data.action == 'follow'){
-                    commit('ADD_TAG', response.data.tag)
-                }
-                else if(response.data.action == 'unfollow'){
-                    commit('REMOVE_TAG', response.data.tag)
-                }
                 resolve(response);  // Let the calling function know that http is done.
             })
             .catch(error => {

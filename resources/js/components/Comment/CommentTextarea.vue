@@ -7,7 +7,8 @@
                 <!-- if it's reply to a comment -->
                 <input v-if="comment !== null && comment !== undefined" type="hidden" name="comment_id" v-model="comment_id">
                 <img :src="auth.image" class="commenter-avatar" data-toggle="tooltip" title="Add comment">
-                <button type="submit" class="btn btn-theme submit">Post</button>
+                <button v-if="contentFilled" type="submit" class="no-outline btn primary-color submit">Post</button>
+                <button v-else type="submit" class="no-outline btn primary-color submit" disabled>Post</button>
                 <div>
                     <textarea name="content" class="form-control no-outline" placeholder="write here..." v-model="content"></textarea>
                 </div>
@@ -36,6 +37,9 @@ import {mapActions} from 'vuex';
                 'auth',
                 'is_authenticated'
             ]),
+            contentFilled(){
+                return this.content == '' ? false : true;
+            }
         },
         props: ['discussion','comment'],
         methods:{
@@ -56,7 +60,7 @@ import {mapActions} from 'vuex';
             }
         },
         mounted() {
-           // alert('mounted');
+          
         },
         watch: {
             comment: function(newComment, oldComment){
@@ -90,7 +94,6 @@ import {mapActions} from 'vuex';
     .commenter-avatar,
     button.submit{
         position:absolute;
-        bottom:0;
     }
     @media (min-width:992px) {
     }

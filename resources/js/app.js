@@ -6,7 +6,6 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
 
 import store from './store/index';
@@ -25,6 +24,7 @@ Vue.component('init', require('./components/init.vue').default);
 Vue.component('loading-one', require('./components/Assets/LoadingOne.vue').default);
 Vue.component('feeds', require('./components/Feed/Feeds.vue').default);
 Vue.component('global-search', require('./components/GlobalSearch.vue').default);
+Vue.component('forum-search', require('./components/Forum/ForumSearch.vue').default);
 
 Vue.component('tag', require('./components/Tag/Tag.vue').default);
 Vue.component('tags', require('./components/Tag/Tags.vue').default);
@@ -41,6 +41,7 @@ Vue.component('discussion', require('./components/Discussion/Discussion.vue').de
 Vue.component('discussions', require('./components/Discussion/Discussions.vue').default);
 Vue.component('discussion-meta', require('./components/Discussion/DiscussionMeta.vue').default);
 Vue.component('discussion-search', require('./components/Discussion/DiscussionSearch.vue').default);
+Vue.component('discussion-comments', require('./components/Discussion/DiscussionComments.vue').default);
 
 Vue.component('training', require('./components/Training/Training.vue').default);
 Vue.component('trainings', require('./components/Training/Trainings.vue').default);
@@ -52,6 +53,8 @@ Vue.component('comments', require('./components/Comment/Comments.vue').default);
 Vue.component('comment-reply', require('./components/Comment/CommentReply.vue').default);
 Vue.component('comment-textarea', require('./components/Comment/CommentTextarea.vue').default);
 
+Vue.component('school-search', require('./components/School/SchoolSearch.vue').default);
+Vue.component('company-search', require('./components/Company/CompanySearch.vue').default);
 
 
 /**

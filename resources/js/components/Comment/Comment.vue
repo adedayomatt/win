@@ -16,7 +16,7 @@
                 <!-- If the comment was a reply -->
                 <template v-if="comment.reply_to !== null">
                     <div>
-                        <small class="text-muted">replying to {{comment.reply_to.user.fullname}}</small>
+                        <p class="text-muted">Replying to {{comment.reply_to.user.fullname}} @{{comment.reply_to.user.username}}</p>
                         <div @click="loadSingleComment(comment.reply_to)" style="margin-left: 20px; border: 1px solid #eee; border-radius: 5px; padding: 5px">
                             <div class="d-flex">
                                 <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
@@ -35,10 +35,6 @@
                         <discussion :data="comment.comment_discussion"></discussion>
                     </div>
                 </template>
-
-                <!-- <div>
-                   <discussion :data="comment.comment_discussion"></discussion>
-                </div> -->
                 
                 <div class="d-flex">
                     <span class="mr-2" @click="commentLike">

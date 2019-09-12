@@ -12,6 +12,7 @@ class Forum extends Model
 	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id','name','description','slug'];
+	protected $appends = ['discussions_count'];
 
 	protected $searchable = [
         /**
@@ -34,6 +35,10 @@ class Forum extends Model
 		return $this->belongsTo('App\User');
 	}
 	
+	public function getDiscussionsCountAttribute(){
+		return $this->discussions()->count();
+	}
+	
 	public function description($mode = 'snippet'){
 		if($mode === 'snippet'){
 			return $this->description == null ? '': str_limit(strip_tags($this->description),50);
@@ -46,11 +51,7 @@ class Forum extends Model
 	}
 
 	public function discussionsId(){
-		$discussions = [];
-		foreach($this->discussions as $discussion){
-			array_push($discussions, $discussion->id);
-		}
-		return $discussions;
+		return $this->discussions->pluck('id');
 	}
 
 	public function contributions(){
@@ -67,14 +68,6 @@ class Forum extends Model
 
 	public function userDiscussions(){
 		return	Discussion::select(DB::raw('count(user_id) as discussions, user_id'))->whereIn('id',$this->discussionsId())->groupBy('user_id')->get();
-	}
-
-	public function trainingers(){
-		$trainingers = [];
-		foreach($this->trainingings() as $training){
-			array_push($trainingers, $training->user);
-		}
-		return collect($trainingers);
 	}
 
 }

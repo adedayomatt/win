@@ -213,8 +213,12 @@ a[role='tab']:hover{
     text-decoration: none;
     color: #000;
 }
-
+.tag{
+    margin: 5px;
+}
 .tag .closer{
+    margin-right: -15px;
+    margin-top: -20px;
     cursor: pointer;
     margin-left: 10px;
     color: red;

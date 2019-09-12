@@ -45,16 +45,12 @@
 
         <div class="form-group row justify-content-center">
             <div class="col-sm-8">
+                <label for="">Update tags</label>
                 <tag-select :selected="{{$discussion->tags}}"></tag-select>
             </div>
         </div>
 
 
     </fieldset>       
-    
-    <div class=" form-group row">
-        <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Update',['class' => 'btn btn-theme btn-block'])}}
-        </div>
-    </div>
+    {{Form::submit('Update',['class' => 'btn btn-theme'])}}
 {!! Form::close() !!}

@@ -19,17 +19,16 @@
                 </span>
             @endif
         </div>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="form-group ">
-                    @include('tag.components.select', ['prev_tags' => $training->tags])
+        <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group justify-content-center">
+                        <label for="">Update tags</label>
+                        <tag-select :selected="{{$training->tags}}"></tag-select>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-    <div class="row">
-        <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Update training',['class' => 'btn btn-theme btn-block'])}}
+           
+            {{Form::submit('Update training',['class' => 'btn btn-theme'])}}
         </div>
     </div>
 {!! Form::close() !!}

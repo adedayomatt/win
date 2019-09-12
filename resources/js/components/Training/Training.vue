@@ -27,6 +27,13 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                        {{training.snippet}}
+                    </div>
+                    <div>
+                        <a v-for="tag in training.training_tags" class="tag" :key="tag" :href="`/tag/${tag}`">{{tag}}</a>
+                    </div>
+
                 </div>
             </div>
         </template>

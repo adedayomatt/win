@@ -12,17 +12,19 @@
 @section('LHS')
     <div class="lhs-fixed-head bg-white">
         <div class="row py-1">
-            <div class="col-8 mb-2">
+            <div class="col-7 mb-2">
                 @if(isset($user))
                     @include('user.widgets.snippet')
                 @endif
                 <h6>Forums</h6>
             </div>
-            <div class="col-4 mb-2">
+            <div class="col-5 mb-2">
                 <a href="{{route('forum.create')}}" class="btn btn-sm btn-theme ml-auto"><i class="fa fa-plus"></i> create new</a>
             </div>
             <div class="col-12">
-                @include('forum.widgets.search')
+                <div id="forum-search-container">
+                    <forum-search container="#forum-search-container"></forum-search>
+                </div>
             </div>
         </div>
     </div>

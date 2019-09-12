@@ -17,7 +17,6 @@ class ForumController extends Controller
 
     public function search(Request $request){
         return Forum::search($request->get('q'))
-                            ->with('discussions')
                             ->with('user')
                             ->get();
         }

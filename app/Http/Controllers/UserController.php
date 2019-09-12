@@ -13,13 +13,16 @@ use App\Company;
 use App\Matto\Feeds;
 use App\Matto\FileUpload;
 use Illuminate\Http\Request;
+use App\Traits\Resource;
+use App\Http\Resources\Feed as FeedResource;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
+	use Resource;
 
 	public function __construct(){
-		$this->middleware('auth')->except(['search','index','show','contributions']);
+		$this->middleware('auth')->except(['search','index','show','feeds','contributions']);
 	}
 
 	public function search(Request $request){
@@ -44,8 +47,14 @@ class UserController extends Controller
 	
 	public function show($username){
 		$user = $this->find($username);
-		$feeds = new Feeds($user->discussions,$user->trainings,$user->comments);
-		return view('user.show')->with(['user'=>$user,'feeds'=>$feeds->feeds()]);
+		return view('user.show')->with(['user'=>$user]);
+	}
+	public function feeds($username){
+		$user = $this->find($username);
+		if($this->isAPIRequest()){
+			$feeds = new Feeds($user->discussions,$user->trainings,$user->comments);
+			return FeedResource::collection($feeds->feeds());
+		}
 	}
 
 	public function createInterests($username){
@@ -163,31 +172,21 @@ class UserController extends Controller
 		}
 		
 		$this->validate($request, [
+			'company' => 'required',
 			'started_at' => 'date'
         ]);
 		
-		if($request->has('company_id') && is_numeric($request->company_id)){
-			$company_id = $request->company_id;
-		}elseif($request->company !== ''){
-			$new_company = Company::create([
-				'name' => $request->company
-			]);
-			$company_id = $new_company->id;
-		}
-		else{
-			return redirect()->back()->with('error','company name is not filled');
-		}
 		if(!$user->hasWork()){
 			Work::create([
 				'user_id' => $user->id,
-				'company_id' => $company_id,
+				'company_id' => $request->company,
 				'position' => $request->position,
 				'job_description' => $request->job_description,
 				'started_at' => $request->started_at
 			]);
 		}else{
 			$user->work->position = $request->position;
-			$user->work->company_id = $company_id;
+			$user->work->company_id = $request->company;
 			$user->work->job_description = $request->job_description;
 			$user->work->started_at = $request->started_at;
 			$user->work->save();
@@ -203,33 +202,22 @@ class UserController extends Controller
 		}
 		
 		$this->validate($request, [
-            // 'school' => 'required',
-			// 'course' => 'required|string',
+            'school' => 'required',
 			'started_at' => 'date',
 			'finished_at' => 'date',
 		]);
 
-		if($request->has('school_id') && is_numeric($request->school_id)){
-			$school_id = $request->school_id;
-		}elseif($request->school !== ''){
-			$new_school = School::create([
-				'name' => $request->school
-			]);
-			$school_id = $new_school->id;
-		}
-		else{
-			return redirect()->back()->with('error','school name is not filled');
-		}
+
 		if(!$user->hasEducation()){
 			Education::create([
 				'user_id' => $user->id,
-				'school_id' => $school_id,
+				'school_id' => $request->school,
 				'course' => $request->course,
 				'started_at' => $request->start,
 				'finished_at' => $request->finish,
 			]);
 		}else{
-			$user->education->school_id = $school_id;
+			$user->education->school_id = $request->school;
 			$user->education->course = $request->course;
 			$user->education->started_at = $request->start;
 			$user->education->finished_at = $request->finish;

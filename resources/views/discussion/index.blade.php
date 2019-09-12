@@ -17,13 +17,13 @@
 @section('LHS')
     <div class="lhs-fixed-head bg-white">
         <div class="row py-1">
-            <div class="col-8 mb-2">
+            <div class="col-7 mb-2">
                 @if(isset($user))
                     @include('user.widgets.snippet')
                 @endif
                 <h6>Discussions</h6>
             </div>
-            <div class="col-4 mb-2">
+            <div class="col-5 mb-2">
                 <a href="{{route('discussion.create')}}" class="btn btn-sm btn-theme ml-auto"><i class="fa fa-plus"></i> create new</a>
             </div>
             <div class="col-8">
@@ -35,7 +35,7 @@
                 @if(isset($src))
                     <div class="col-4 col-md-12">
                         <div class="dropdown text-right">
-                            <a id="trainingsrc" class="dropdown-toggle btn btn-default" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a id="trainingsrc" class="dropdown-toggle btn btn-default no-outline" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{$src == 'interests' ? 'In my interest ('.Auth::user()->interestedDiscussions()->count().')' : 'All discussions' }}
                             </a>
                             <div class="dropdown-menu text-left" aria-labelledby="trainingsrc">                            

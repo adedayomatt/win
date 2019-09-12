@@ -39,9 +39,7 @@ class Tag extends Model
       $trend = 0;
       $trend += $tag->trainings->count();
       $trend += $tag->discussions->count();
-      foreach($tag->discussions as $discussion){
-        $trend += $discussion->comments->count();
-      }
+      $trend += Comment::whereIn('discussion_id', $tag->discussions->pluck('id'))->count();
       $trendArray[] = (object) [
         'tag' => $tag,
         'trend' => $trend,
@@ -50,7 +48,7 @@ class Tag extends Model
       ];
     }
     // dd(collect($trendArray));
-    return collect($trendArray)->sortByDesc('trend');
+    return collect(array_slice($trendArray,0,10))->sortByDesc('trend');
   }
 
   // return collection of users following an collection of tags

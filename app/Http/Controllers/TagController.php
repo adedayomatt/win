@@ -69,21 +69,22 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+
          $this->validate($request,[
             'name' => 'required',
          ]);
         $tag_format = str_replace('-','_',str_slug($request->name));
         $tag = Tag::where('name', $tag_format)->first();
-        if($tag == null){
-            $tag = Tag::create([
-                'user_id' => $request->user()->id,
-                'name' => $tag_format,
-                'description' => $request->description,
-                'slug' => str_slug($request->name)
-            ]);
-            $request->user()->tagsFollowing()->attach($tag->id);
+        if($tag !== null && !$this->isAPIRequest()){
+            return redirect()->back()->with('error', 'Tag <strong>'.$tag_format.'</strong> already exist');
         }
-        
+        $tag = Tag::create([
+            'user_id' => $request->user()->id,
+            'name' => $tag_format,
+            'description' => $request->description,
+            'slug' => str_slug($request->name)
+        ]);
+        $request->user()->tagsFollowing()->attach($tag->id);
         // return the newly created tag...
         if($this->isAPIRequest()){
             return new TagResource($tag);
@@ -143,14 +144,14 @@ class TagController extends Controller
             $request->user()->tagsFollowing()->sync($interests);
     
             if($this->isAPIRequest()){
-                return json_encode(['action'=>'unfollow', 'message' => 'You no longer follow #'.$tag->name, 'tag' => $tag]);
+                return response(['action'=>'unfollow', 'message' => 'You no longer follow #'.$tag->name, 'tag' => $tag]);
             }
             return redirect()->route('tag.show',[$tag->slug])->with('success', 'You no longer follow #'.$tag->name);
 
         }else{ //if not following before
             $request->user()->tagsFollowing()->attach($tag->id);
             if($this->isAPIRequest()){
-                return json_encode(['action'=>'follow', 'message' => 'You are now following #'.$tag->name, 'tag' => $tag]);
+                return response(['action'=>'follow', 'message' => 'You are now following #'.$tag->name, 'tag' => $tag]);
             }
             return redirect()->route('tag.show',[$tag->slug])->with('success', 'You are now following #'.$tag->name);
         }

@@ -76,9 +76,6 @@
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 2, 'md' => 2, 'lg' => 2] ])
 @endsection
 
-@section('b-scripts')
-    @include('tag.components.follow-script')
-@endsection
 
 
 

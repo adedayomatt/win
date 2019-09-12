@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 use App\Company;
+use App\Traits\Resource;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    use Resource;
+
     public function __construct(){
 
     }
@@ -43,9 +46,21 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        if($this->isAPIRequest()){
+            $company = null;
+            if($request->has('company') && $request->company != ''){
+                $company = Company::where('name', $request->company)->first();
+                if($company == null){
+                    $company = Company::create([
+                        'name' => $request->company
+                    ]);
+                }
+            }
+            return response($company);
+        }
+        
     }
-
     /**
      * Display the specified resource.
      *

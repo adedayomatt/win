@@ -3,7 +3,7 @@
          <template v-if="mode === 'single'">
             <div class="single-feed-container shadow-lg">
                 <div class="float-right"><span class="closer" @click="closeSingleFeed">&times;</span></div>
-                <comment :id="single_comment" :write_comment="true" :show_replies="true" @load-single-comment="getComment"></comment>
+                <comment :id="single_comment" :quote_discussion="true" :write_comment="true" :show_replies="true" @load-single-comment="getComment"></comment>
             </div>
         </template>
         <div id="feeds-container" :style="`max-height: ${container}`">
@@ -23,9 +23,15 @@
                     <template v-if="links !== null && links.next !== null">
                         <loading-one message="loading more feeds..."></loading-one>
                     </template>
+                    <template v-else>
+                        <div class="text-center">
+                            <h1>.</h1>
+                        </div>
+                    </template>
+
                 </template>
                 <template v-else>
-                    <loading-one message="loading your feeds..."></loading-one>
+                    <loading-one message="loading feeds..."></loading-one>
                 </template>
             </div>
         </div>
@@ -67,7 +73,7 @@ export default {
             }
             
         },
-        props: ['container'],
+        props: ['container', 'url'],
         methods:{
             ...mapActions([
                 'loadComment'
@@ -102,7 +108,7 @@ export default {
         },
         mounted() {
             let component = this;
-            this.getFeeds(apiURL('/feeds'));
+            this.getFeeds(apiURL(component.url));
             
             let container = component.container == null ? $(window) : $('#feeds-container');
             container.on('scroll',function(e){
@@ -135,7 +141,10 @@ export default {
             right: 25%;
         }
     @media (min-width: 992px){
-
+        .single-feed-container{
+            left: 30%;
+            right: 30%;
+        }
 
         }
     }

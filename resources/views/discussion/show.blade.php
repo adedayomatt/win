@@ -32,8 +32,10 @@
             @if($discussion->isMine())
                 <div class="float-right">
                     @include('discussion.widgets.options')
-                    <small data-toggle="tooltip" title="Number of users this discussion has potential of reaching according to the tags used">reachable: {{$discussion->reachableUsers()->count()}}</small>
-                </div>         
+                    <div>
+                        <small data-toggle="tooltip" title="Number of users this discussion has potential of reaching according to the tags used"><i class="fa fa-users"></i> {{$discussion->reachableUsers()->count()}}</small>
+                    </div>
+                </div>
              @endif
             <h5>{{$discussion->title}}</h5>
             @include('discussion.widgets.meta')
@@ -47,7 +49,7 @@
             @include('tag.widgets.inline', ['tags' => $discussion->tags])
         </div>
     </div>
-    <h6>Contributors ({{$discussion->contributions()->get()->count()}})</h6>
+    {{-- <h6>Contributors ({{$discussion->contributions()->get()->count()}})</h6>
     <div class="">
         @if($discussion->contributions()->count() > 0)
             @include('components.owl-carousel', ['carousel_collection' => $discussion->contributions()->get(), 'carousel_template'=> 'discussion.templates.carousel-contributor', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3]])
@@ -56,7 +58,7 @@
                 No contributor yet
             </div>
         @endif
-    </div>
+    </div> --}}
     <h6>Related Discussions</h6>
     @if($discussion->relatedDiscussions()->count() > 0)
         @include('components.owl-carousel', ['carousel_collection' => $discussion->relatedDiscussions(), 'carousel_template' => 'discussion.templates.carousel-default', 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3]])
@@ -73,23 +75,24 @@
         <div class="col-12 col-no-padding-xs">
             <div class="widget" style="background-color: inherit">
                 <div class="">
-                    <h6>Comments (<span class="figure">{{number_format($count)}}</span>)</h6>
+                    {{-- <h6>Comments (<span class="figure">{{number_format($count)}}</span>)</h6>
                     @if(isset($contributor))
                         <div class="text-muted">
                             @include('user.widgets.snippet', ['user' => $contributor])
                         </div>
                         <div class="text-right small"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">show all {{number_format($discussion->comments->count())}} comments</a></div>
                         <hr>
-                    @endif
+                    @endif --}}
                 </div>
                 <div class="comments-container">
-                    @if($discussion->comments->count() > 0)
+                    <discussion-comments discussion="{{$discussion->id}}"></discussion-comments>
+                    {{-- @if($discussion->comments->count() > 0)
                         @include('comment.comments')
                     @else
                         <div class="content-box text-muted text-center">
                             <small class="">No comment yet</small>
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>

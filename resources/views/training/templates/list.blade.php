@@ -4,7 +4,7 @@
     </div>
     <div class="mt-2 p-2">
         <div>
-            @if(!$discussion->isTrashed())
+            @if(!$training->isTrashed())
             <h6><a href="{{route('training.show',[$training->slug])}}">{{$training->title}}</a></h6>
             @else
                 <h6 class="text-muted" data-toggle="tooltip" title="training deleted">{{$training->title}}</h6>

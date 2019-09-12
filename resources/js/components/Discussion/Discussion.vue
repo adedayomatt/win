@@ -9,12 +9,12 @@
     <template v-else>
         <div class="snippet">
             <div class="float-right bg-info py-1 px-2 small" style="color:#fff">discussion</div>
-            <strong><a :href="`discussion/${discussion.slug}`">{{discussion.title}}</a></strong>
+            <strong><a :href="`/discussion/${discussion.slug}`">{{discussion.title}}</a></strong>
             <div class="pl-2">
                 <div>
                     <user :data="discussion.user"></user>
                     <small class="mr-2"> in <a :href="`/forum/${discussion.forum.slug}`">{{discussion.forum.name}}</a></small>
-                    <small class="mr-2"><a href="#">{{discussion.comments_count}} comments </a></small>
+                    <small class="mr-2"><a :href="`/discussion/${discussion.slug}#comments`">{{discussion.comments_count}} comments </a></small>
                     <small class="mr-2">{{time_diff(discussion.createdat_timestamp)}}</small>
                 </div> 
             </div>
@@ -23,6 +23,16 @@
                     On training <strong><a :href="`/training/${discussion.on_training.slug}`">{{discussion.on_training.title}}</a></strong>
                 </div>
             </template>
+            <div>
+                {{discussion.snippet}}
+            </div>
+            <div>
+                <a v-for="tag in discussion.discussion_tags" class="tag" :key="tag" :href="`/tag/${tag}`">{{tag}}</a>
+            </div>
+            <div class="text-muted">
+                Contributors:
+                <users :data="discussion.contributors"></users>
+            </div>
         </div>
     </template>
     </div>
@@ -32,6 +42,7 @@
 import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
 import User from './../User/User';
+import Users from './../User/Users';
 import Training from './../Training/Training';
 export default {
         data(){
@@ -53,7 +64,7 @@ export default {
 
         },
         components:{
-           User,Training
+           User,Users,Training
         },
         mounted() {
             console.warn(this.discussion)

@@ -23,9 +23,11 @@ Route::get('training/{training}/discussions','TrainerController@discussions');
 Route::get('discussions','DiscussionController@index');
 Route::get('discussion/{id}','DiscussionController@show');
 Route::get('discussion/{discussion}/comments','DiscussionController@comments');
+Route::get('discussion/{discussion}/contributors','DiscussionController@contributors');
 Route::get('comments','CommentController@index');
 Route::get('comment/{comment}','CommentController@show');
 Route::get('/feeds', 'AppController@index');
+Route::get('/{user}/feeds', 'UserController@feeds');
 
 Route::group(['middleware' => 'auth:api'], function(){
     // return the authenticated user
@@ -54,10 +56,11 @@ Route::group(['middleware' => 'auth:api'], function(){
     });
     // user tag suggestions
     Route::get('tag_suggestions',function(Request $request){
-        // return json_encode($request->user()->tagSuggestions());
-        return \App\Tag::all();
+        return response($request->user()->tagSuggestions());
     });
-    
+    Route::post('/school', 'SchoolController@store');
+    Route::post('/company', 'CompanyController@store');
+
 });
 
 

@@ -8,11 +8,15 @@
                 </div>
             </template>
 
+            <template v-if="target == `discussion` && meta !== null" >
+                Comments: {{total}}
+            </template>
+
             <div id="comments-container" :style="`max-height: ${container}`">
                 <div id="comments-wrapper">
                     <template v-if="loaded">
                         <div  class="list-group image-bullet">
-                            <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="list-group-item comment" style="background-color: inherit">
+                            <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="list-group-item comment mb-2" style="background-color: inherit">
                                 <comment :data="comment" :show_replies="false" @load-single-comment="loadSingleComment" @new-reply="newCommentPosted"></comment>
                             </div> 
                         </div>
@@ -23,6 +27,12 @@
                     <template v-if="links != null && links.next != null">
                         <loading-one message="Fetching more comments..."></loading-one>
                     </template>
+                    <template v-else>
+                        <div class="text-center">
+                            <h1>.</h1>
+                        </div>
+                    </template>
+
                 </div>
             </div>
             <template v-if="target == `discussion`" >
@@ -47,9 +57,11 @@ import CommentTextarea from './CommentTextarea';
             return {
                 comments:[],
                 links: null,
+                meta: null,
                 loaded: false,
                 single_comment: null,
                 mode: 'list',
+                total: 0
 
             }
         },
@@ -60,9 +72,9 @@ import CommentTextarea from './CommentTextarea';
             ]),
         sortedComments(){
             return this.comments.sort( (a,b) => b.id - a.id )
-        }
+        } 
         },
-        props: ['container','target','discussion_id'],
+        props: ['container','url', 'target', 'discussion_id'],
         methods:{
             ...mapActions([
                 'loadComments'
@@ -72,7 +84,9 @@ import CommentTextarea from './CommentTextarea';
                     .then(response => {
                         this.comments =  this.comments.concat(response.data.data);
                         this.links = response.data.links;
+                        this.meta = response.data.meta;
                         this.loaded = true;
+                        this.total = response.data.meta.total;
                         console.warn(response.data)
                     })
                     .catch(error => {
@@ -88,6 +102,8 @@ import CommentTextarea from './CommentTextarea';
             },
             newCommentPosted(comment){
                 this.comments.push(comment);
+                this.total++;
+                this.$emit('comment-posted', comment);
             }
         },
 
@@ -96,20 +112,8 @@ import CommentTextarea from './CommentTextarea';
         },
         mounted() {
             const component = this;
-             let endpoint = '';
-            switch(component.target){
-                // if loading comments on a discussion
-                case 'discussion':
-                    endpoint = `/discussion/${component.discussion_id}/comments`
-                break;
-                // by default load recent comments
-                default:
-                    endpoint = `/comments`
-                break;
-            }
 
-
-            this.loadComments(apiURL(endpoint));
+            this.loadComments(apiURL(this.url));
             let container = component.container == null ? $(window) : $('#comments-container');
             container.on('scroll',function(e){
             let content = $('#comments-wrapper');
@@ -122,6 +126,12 @@ import CommentTextarea from './CommentTextarea';
                 }
             }
             })
+        },
+        watch: {
+            url: function(newUrl, oldUrl){
+                this.comments = [];
+                this.loadComments(apiURL(newUrl))
+            }
         }
     }
 </script>
@@ -133,7 +143,7 @@ import CommentTextarea from './CommentTextarea';
         top: 10%;
         background-color: #fff;
         padding: 5px;
-        z-index: 1200000;
+        z-index: 1200;
         border-radius: 7px;
     }
     .comment-textarea{

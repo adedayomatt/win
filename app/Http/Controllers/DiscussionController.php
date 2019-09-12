@@ -24,7 +24,7 @@ class DiscussionController extends Controller
         }else{
             $middleware = ['auth','verified'];
         }
-        $this->middleware($middleware)->except(['search','index','show','comments','userDiscussions']);
+        $this->middleware($middleware)->except(['search','index','show','comments','userDiscussions','contributors']);
 
     }
 
@@ -84,7 +84,7 @@ class DiscussionController extends Controller
         ]);
         
         $discussion = new Discussion();
-        $discussion->user_id = 1;
+        $discussion->user_id = Auth::id();
         if($request->exists('training')){
             $discussion->training_id = $request->training;
         }
@@ -134,9 +134,25 @@ class DiscussionController extends Controller
 
     public function comments($discussion_id){
         $discussion = $this->find(Discussion::class,$discussion_id);
+        $comments = $discussion->comments();
+        if(request()->get('contributor') != null){
+            $contributor = User::where('username',request()->get('contributor'))->first();
+            if($contributor != null){
+                $comments = $comments->where('user_id', $contributor->id);
+            }
+        }
 
         if($this->isAPIRequest()){
-            return CommentResource::collection($discussion->comments()->orderby('created_at','desc')->paginate(config('custom.pagination')));
+            return CommentResource::collection($comments->orderby('created_at','desc')->paginate(config('custom.pagination'))->appends(Input::except('page')));
+        }
+
+    }
+
+    public function contributors($discussion_id){
+        $discussion = $this->find(Discussion::class,$discussion_id);
+
+        if($this->isAPIRequest()){
+            return response($discussion->contributors);
         }
 
     }

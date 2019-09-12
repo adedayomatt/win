@@ -1,5 +1,5 @@
 <li class="list-group-item">
-    <div class="d-flex">
+    <div class="d-flex shift-left">
         <span class="bullet"></span>
         <a class="mr-2 " href="{{route('forum.show',[$forum->slug])}}">{{$forum->name}}</a>
         <span class="ml-auto">{{$forum->discussions->count()}} discussions</span>

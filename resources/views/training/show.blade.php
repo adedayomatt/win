@@ -8,6 +8,7 @@
         background-color: #fff;
         border-top: 1px solid #f2f2f2;
     }
+
 @endsection
 @section('main')
     <div class="card border-0">
@@ -15,15 +16,18 @@
             <div class="card-title">
                 <div class="row">
                     <div class="col-md-8">
-                    @if($training->isMine())
-                        <div class="float-right">
-                            @include('training.widgets.options')
-                        </div>         
-                    @endif
                         <h5>{{$training->title}}</h5>
                     </div>
                     <div class="col-md-4">
+                        @if($training->isMine())
+                            <div class="float-right">
+                                @include('training.widgets.options')
+                            </div>         
+                        @endif
                          @include('training.widgets.meta')
+                         <div>
+                            <span data-toggle="tooltip" title="Number of users this discussion has potential of reaching according to the tags used"><i class="fa fa-users"> </i> {{$training->reachableUsers()->count()}}</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -44,7 +48,9 @@
                     @endforeach
                 </div>
             @endif
-            {!! $training->content('full') !!}
+            <div class="content-container">
+                {!! $training->content('full') !!}
+            </div>
         </div>
             @include('tag.widgets.inline', ['tags' => $training->tags])
 
@@ -70,4 +76,10 @@
 @section('RHS')
     <h6>Related trainings</h6>
     @include('training.widgets.list',['training_w_collection' => $training->relatedTrainings()])
+@endsection
+
+@section('b-scripts')
+    <script>
+            $('.content-container img').css({'width':'auto','max-width': '100%'})
+    </script>
 @endsection

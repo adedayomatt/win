@@ -13,7 +13,10 @@ class Training extends Model
 	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id','title','content','slug','cover'];
-	protected $appends = ['type','photos','videos','cover','discussions_count','createdat_timestamp'];
+	protected $hidden = ['content'];
+	protected $appends = ['type','photos','videos','cover','discussions_count','training_tags','snippet','createdat_timestamp'];
+	protected $snippet_length = 200;
+
 	protected $searchable = [
         /**
          * Columns and their priority in search results.
@@ -56,9 +59,15 @@ class Training extends Model
 	public function getVideosAttribute(){
 		return $this->videos();
 	}
+	public function getTrainingTagsAttribute(){
+		return $this->tags()->pluck('slug');
+	}
 
 	public function getDiscussionsCountAttribute(){
 		return $this->discussions()->count();
+	}
+	public function getSnippetAttribute(){
+		return str_limit(strip_tags($this->content),$this->snippet_length).(strlen(strip_tags($this->content)) > $this->snippet_length ? '...' : '');
 	}
 
 	public function getCreatedatTimestampAttribute(){
@@ -76,11 +85,7 @@ class Training extends Model
 		return $this->belongsToMany('App\Tag');
 	}
 	public function tagIDs(){
-		$tags = array();
-		foreach($this->tags as $tag){
-			array_push($tags, $tag->id);
-		}
-		return $tags;
+		return $this->tags->pluck('id');
 	}
 	
 	public function photos(){
@@ -116,22 +121,14 @@ class Training extends Model
 
 
 	public function relatedTrainings(){
-		$training_IDs = array();
-		foreach($this->tagIDs() as $tag){
-		   $IDs = DB::select("select training_id from tag_training where tag_id=$tag");
-		   foreach($IDs as $id){
-			if($this->id != $id->training_id) {
-				array_push($training_IDs,$id->training_id);
-			}  
-		   }
-		}
-	return  Training::whereIn('id',$training_IDs)->get();
+		$trainings = DB::table('tag_training')->whereIn('tag_id',$this->tagIDs())->pluck('training_id');
+		return Training::whereIn('id',$trainings)->where('id','!=',$this->id)->get();
 	}
 	
 
 	public function content($mode = 'snippet'){
 		if($mode === 'snippet'){
-			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': str_limit(strip_tags($this->content),200);
+			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': $this->snippet;
 		}
 		return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': $this->content;
 	}

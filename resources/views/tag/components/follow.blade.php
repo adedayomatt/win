@@ -1,4 +1,6 @@
 
+<tag-follow-btn v-bind:prop_tag="{{$tag}}"></tag-follow-btn>
+{{-- 
 @auth
     <form action="{{route('tag.follow', [$tag->id])}}" class="tag-follow" method="POST">
         @csrf
@@ -11,5 +13,5 @@
         @csrf
         <button type="submit" class="btn btn-sm btn-theme ml-auto float-right" data-role="follow"><i class="fa fa-plus-circle icon"></i> <span class="text"> follow</span></button>
     </form>
-@endguest
+@endguest --}}
 

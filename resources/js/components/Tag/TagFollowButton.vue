@@ -1,6 +1,7 @@
 <template>
-    <div>
-        <button type="button" :class="btn_class" @click="follow">{{text}}</button>
+    <div v-if="app_ready">
+        <button v-if="following" type="button" class="btn btn-sm btn-primary no-outline follow-btn" @click="follow">following</button>
+        <button v-else type="button" class="btn btn-sm btn-default no-outline follow-btn" @click="follow">follow</button>
         <div class="text-center">
             <small class="text-muted d-block">{{status}}</small>
         </div>
@@ -10,72 +11,71 @@
 <script>
 import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
+import { type } from 'os';
 
 export default {
     name: 'tag-follow-btn',
     data(){
         return {
             tag: this.prop_tag,
-            text: '...',
             status: '',
-            btn_class: 'btn btn-default'
         }
     },
     props:['prop_tag'],
     computed: {
         ...mapGetters([
-            'tags_following',
-            'is_following_tag'
+            'auth',
+            'app_ready',
+            'is_authenticated'
         ]),
+        following(){
+            if(this.auth !== null){
+                return itemExist(this.tag.users,this.auth)
+            }
+            return false;
+        }
     },
     methods: {
         ...mapActions([
             'followTag'
         ]),
-        checkFollow(){
-            if(itemExist(this.tags_following,this.tag)){
-                this.following()
-            }else{
-                 this.notFollowing()
-            }
-        },
+
         follow(){
             this.followTag(this.tag)
             .then(response => {
                 if(response.data.action == 'follow'){
-                    this.following();
+                    this.tag.users.push(this.auth);
                     toastr.success(`Now following ${this.tag.name}`);
                     this.$emit('tag-followed', response.data.tag);
                 }else if(response.data.action == 'unfollow'){
-                    this.notFollowing();
+                    this.tag.users.splice(getIndex(this.tag.users,this.auth),1);
                     toastr.success(`You no longer follow ${this.tag.name}`);
                     this.$emit('tag-unfollowed', response.data.tag);
                 }
             })
             .catch(error => {
-                this.failed('failed!');
+                this.status = 'failed!';
             })
             .finally(()=>{
                 //alert(response.message);
             })
             
         },
-        following(){ 
-            this.text = 'unfollow';
-            this.btn_class = 'btn btn-sm btn-default';
-            this.status = 'following';
-
-        },
-        notFollowing(){
-            this.text = 'follow';
-            this.btn_class = 'btn btn-sm btn-primary'
-        },
-        failed(status =''){
-            this.status = status;
-        }
     },
     mounted(){
-        this.checkFollow();
+            //this.checkFollow();
+    },
+    watch: {
+        prop_tag: function(newData, newdata){
+            this.checkFollow();
+        }
     }
 }
 </script>
+
+<style scoped>
+.follow-btn{
+    border: 1px solid #f7f7f7;
+    border-radius: 5px;
+}
+</style>

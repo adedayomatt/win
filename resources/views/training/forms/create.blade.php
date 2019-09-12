@@ -11,7 +11,7 @@
         </div>  
 
         <div class="form-group">
-            {{form::label('training_content', 'Post content')}}
+            {{form::label('training_content', 'Training content')}}
             {{form::textarea('training_content',old('training_content'),['class'=>'ckeditor form-control', 'placeholder'=>'content of your training...', 'required', 'autofocus'])}}
             @if ($errors->has('training_content'))
                 <span class="invalid-feedback" role="alert">
@@ -20,16 +20,17 @@
             @endif
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row">
             <div class="col-md-6">
-                <div class="form-group ">
-                        @include('tag.components.select')
+                <div class="form-group justify-content-center">
+                    <label for="">Select tags</label>
+                    <tag-select :selected="[]"></tag-select>
                 </div>
             </div>
         </div>
        
 
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-12 col-sm-8 col-md-6">
             <div class="text-center">
                 <img class="image-responsive" id="cover" src="" alt="" width="100%">
@@ -48,13 +49,7 @@
             </div>
         </div>
     </div>
-
-    
-    <div class="row">
-        <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Publish training',['class' => 'btn btn-theme btn-block'])}}
-        </div>
-    </div>
+        {{Form::submit('Publish training',['class' => 'btn btn-theme'])}}
     </fieldset>
 
 {!! Form::close() !!}

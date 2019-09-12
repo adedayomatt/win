@@ -1,12 +1,12 @@
-{!!Form::open(['route' => ['update.work',$user->username]])!!}
+<div>Company</div>
+<div class="content-box">
+    {!!Form::open(['route' => ['update.work',$user->username]])!!}
         @method('PUT')
         <div class="form-group">
-                {{form::label('company','Company')}}
-            <div class="company-selection">
-                {{form::text('company','',['class' =>'form-control company-search','placeholder'=>'where you currently work', 'autofocus'])}}
-                <input type="hidden" name="company_id" value="">
-            </div>
-
+                <div id="company-selection">
+                <company-search container="#company-selection" data="{{$user->work == null ? null : $user->work->company}}"></company-search>
+                </div>
+    
             @if ($errors->has('company'))
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $errors->first('company') }}</strong>
@@ -35,18 +35,19 @@
         </div>
 
         <div class="form-group">
-            {{form::label('start','started working here since...')}}
-            {{form::date('start',$user->work == null ? '' : $user->work->start,['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
-            @if ($errors->has('start'))
+            {{form::label('started_at','started working here since...')}}
+            {{form::date('started_at',$user->work->started_at == null ? '' : $user->work->started_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
+            @if ($errors->has('started_at'))
             <span class="invalid-feedback" role="alert">
-                <strong>{{ $errors->first('start') }}</strong>
+                <strong>{{ $errors->first('started_at') }}</strong>
             </span>
             @endif
         </div>
 
 
-    <div class="form-group">
-            {{form::submit('Save',['class'=>'btn btn-primary'])}}
-    </div>
+        <div class="form-group">
+                {{form::submit('Save',['class'=>'btn btn-primary'])}}
+        </div>
 
-{!!Form::close()!!}
+    {!!Form::close()!!}
+</div>

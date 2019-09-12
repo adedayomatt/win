@@ -15,8 +15,9 @@ class Discussion extends Model
 	use softDeletes, SearchableTrait;
 	
 	protected $fillable = ['user_id', 'forum_id','training_id','title', 'content', 'slug'];
-	protected $appends = ['type','comments_count','on_training','createdat_timestamp'];
-
+	protected $hidden = ['content'];
+	protected $appends = ['type','comments_count','on_training','discussion_tags','snippet','contributors','createdat_timestamp'];
+	protected $snippet_length = 200;
 	protected $searchable = [
         /**
          * Columns and their priority in search results.
@@ -72,6 +73,18 @@ class Discussion extends Model
 		return DB::table('comments')->where('discussion_id', $this->id)->count();
 	}
 
+	public function getDiscussionTagsAttribute(){
+		return $this->tags()->pluck('slug');
+	}
+
+	public function getSnippetAttribute(){
+		return str_limit(strip_tags($this->content),$this->snippet_length).(strlen(strip_tags($this->content)) > $this->snippet_length ? '...' : '');
+	}
+
+	public function getContributorsAttribute(){
+		$contributors = $this->contributions()->pluck('user_id');
+		return User::whereIn('id',$contributors)->get();
+	}
 	public function getCreatedatTimestampAttribute(){
 		return $this->created_at->getTimestamp();
 	}
@@ -97,25 +110,12 @@ class Discussion extends Model
 	}
 
 	public function tagIDs(){
-		$tags = array();
-		foreach($this->tags as $tag){
-			array_push($tags, $tag->id);
-		}
-		return $tags;
+		return $this->tags->pluck('id');
 	}
 
 	public function relatedDiscussions(){
-		$discussion_IDs = array();
-		foreach($this->tagIDs() as $tag){//Get other discussion that has the tags
-		   $IDs = DB::select("select discussion_id from discussion_tag where tag_id=$tag");
-		   foreach($IDs as $id){
-			if($this->id !== $id->discussion_id) {
-				array_push($discussion_IDs,$id->discussion_id);
-			}  
-		   }
-		}
-		 
-	return Discussion::whereIn('id',$discussion_IDs)->get();
+		$discussions = DB::table('discussion_tag')->whereIn('tag_id',$this->tagIDs())->pluck('discussion_id');
+		return Discussion::whereIn('id',$discussions)->where('id','!=',$this->id)->get();
 	}
 	
 	public function contributions(){
@@ -135,7 +135,7 @@ class Discussion extends Model
 	
 	public function content($mode = 'snippet'){
 		if($mode === 'snippet'){
-			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': str_limit(strip_tags($this->content),200);
+			return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': $this->snippet;
 		}
 		return $this->content == null ? '<small class="text-danger" ><i class="fa fa-exclamation-triangle"></i> No content </small>': $this->content;
 	}

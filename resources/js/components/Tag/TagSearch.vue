@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input type="search" class="tag-search form-control" placeholder="search for tag..."
+        <input type="search" class="tag-search form-control no-outline" placeholder="search for tag..."
         v-model.trim="q"
         >
     </div>
@@ -19,16 +19,14 @@
         data () {
             return {
             q: '',
+            tags_following: [],
             suggestions: null,
             selected: this.already_selected
             }
         },
         props: ['container','purpose', 'already_selected'],
         computed: {
-                ...mapGetters([
-                'tags_following',
-                'is_following_tag'
-            ]),
+           
             input(){
                 return `${this.container} .tag-search`
             }, 
@@ -52,10 +50,23 @@
             select(tag){
                 this.selected.push(tag);
                 this.$emit('tag-selected', tag);
+                $(this.input).typeahead('val','');
+            },
+            follow(tag){
+                this.followTag(tag)
+                .then(response => {
+                    this.tags_following.push(response.data.tag);
+                    this.$emit('tag-followed', response.data.tag)
+                })
+                .catch(error =>{
+
+                })
             },
             isSelected(tag){
-                console.log(itemExist(this.selected, {id: 100}));
                return itemExist(this.selected, tag);
+            },
+            isFollowing(tag){
+               return itemExist(this.tags_following, tag);
             }
             
         },
@@ -63,6 +74,13 @@
             TagFollowButton
         },
         mounted() {
+            this.loadMyTags()
+            .then(response => {
+                this.tags_following = response.data;
+            })
+            .catch(error => {
+
+            })
             let component = this;
             this.suggestions = new Bloodhound({
 				remote: {
@@ -107,7 +125,7 @@
                             var avatarURL = baseURL()+'/storage/images/users/';
                             followers = `<div class="text-muted">`;
                             for(var user of data.users.slice(0,5)){
-                                 followers += `<img src="${user.avatar == null ? avatarURL+'default.png' : avatarURL+user.avatar}"  style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="@${user.username}">`;
+                                 followers += `<img src="${user.image}"  style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="@${user.username}">`;
                             }
                             followers += `</div>`;
                         }
@@ -122,10 +140,10 @@
                                                     </strong>
                                                     <div class="text-muted">
                                                         <small class="m-1">
-                                                            ${data.trainings.length} trainings</a>
+                                                            ${data.trainings_count} trainings</a>
                                                         </small>
                                                         <small class="m-1">
-                                                            ${data.discussions.length} discussions
+                                                            ${data.discussions_count} discussions
                                                         </small>
                                                         <small class="m-1">
                                                             ${data.users.length} followers
@@ -149,15 +167,15 @@
                                                         </strong>
                                                     </div>
                                                     <div class="ml-auto">
-                                                        <small>${component.is_following_tag(data) ? 'already following' : 'select to follow'}</small>
+                                                        <small>${component.isFollowing(data) ? 'already following' : 'select to follow'}</small>
                                                     </div>
                                                 </div>
                                                 <div class="text-muted">
                                                     <small class="m-1">
-                                                        ${data.trainings.length} trainings</a>
+                                                        ${data.trainings_count} trainings</a>
                                                     </small>
                                                     <small class="m-1">
-                                                        ${data.discussions.length} discussions
+                                                        ${data.discussions_count} discussions
                                                     </small>
                                                     <small class="m-1">
                                                         ${data.users.length} followers
@@ -165,7 +183,7 @@
                                                 </div>
                                                 ${followers}
                                                 <div class="ml-auto">
-                                                    <small class="text-muted">${component.is_following_tag(data) ? 'Already following' : ''}</small>
+                                                    <small class="text-muted">${component.isFollowing(data) ? 'Already following' : ''}</small>
                                                 </div>
                                             </div>`;
                             break;
@@ -178,16 +196,16 @@
                                                         <a href="/tag/${data.name}">${data.name}</a>
                                                     </strong>
                                                     <div class="ml-auto">
-                                                        <small>${component.is_following_tag(data) ? 'following' : ''}</small>
+                                                        <small>${component.isFollowing(data) ? 'following' : ''}</small>
                                                     </div>
 
                                                 </div>
                                                 <div class="text-muted">
                                                     <small class="m-1">
-                                                        ${data.trainings.length} trainings</a>
+                                                        ${data.trainings_count} trainings</a>
                                                     </small>
                                                     <small class="m-1">
-                                                        ${data.discussions.length} discussions
+                                                        ${data.discussions_count} discussions
                                                     </small>
                                                     <small class="m-1">
                                                         ${data.users.length} followers
@@ -226,13 +244,7 @@
                     component.select(suggestion);
                 }
                 else if(component.isForFollow){
-                    component.followTag(suggestion)
-                    .then(response => {
-                        toastr.success(`Now following ${suggestion.name}`);
-                    })
-                    .catch(error => {
-                        toastError(error.response, message = `could not follow ${suggestion.name}`)
-                    });
+                    component.follow(suggestion)
                 }
             });
         }

@@ -55,14 +55,7 @@
     <h6>Trending</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
 
-    @auth()
-        <feeds target="all" ></feeds>
-    @endauth
-
-    @guest()
-        <h6>See what people are talking about</h6>
-        @include('components.feeds._feeds')
-    @endguest
+    <feeds url="/feeds" ></feeds>
   
 @endsection
 @section('RHS')

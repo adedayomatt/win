@@ -63,14 +63,14 @@
                     suggestion: function (data) {
                         var avatarURL = baseURL()+'/storage/images/users/';
                         return `<div class="list-group-item">
-                                        <a href="{{route('discussion.index')}}/${data.slug}">
+                                        <a href="/discussion/${data.slug}">
                                             <strong class="d-block">
                                                 ${data.title}
                                             </strong>
                                         </a>
                                         <small>in ${data.forum.name}</small>
                                         <div class="text-muted">
-                                            ${data.content.substring(0,200)}
+                                            ${data.snippet}
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div>

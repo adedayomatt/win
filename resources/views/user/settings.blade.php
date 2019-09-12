@@ -60,14 +60,14 @@
                                                 Course of study: <strong>{{$user->education->course}}</strong>
                                             </div>
                                             <div class="form-group">
-                                                From: {{$user->education->started_at == null ? 'N/A' : $user->education->started_at}}
+                                                From: {{$user->education->start == null ? 'N/A' : $user->education->start}}
                                             </div>
                                             <div class="form-group">
-                                                To: {{$user->education->finished_at == null ? 'N/A' : $user->education->finished_at}}
+                                                To: {{$user->education->finish == null ? 'N/A' : $user->education->finish}}
                                             </div>
                                             <div class="text-right">
                                                 <i class="fa pen operation" data-toggle="collapse" data-target="#edit-education"></i>
-                                                <i class="fa fa-times"></i> remove
+                                                {{-- <i class="fa fa-times"></i> remove --}}
                                             </div>
                                             <div class="collapse" id="edit-education">
                                                 @include('user.settings.education')
@@ -95,11 +95,11 @@
                                                </div>
                                             </div>
                                             <div class="form-group">
-                                                Since: {{$user->work->started_at == null ? 'N/A' : $user->work->started_at}}
+                                                Since: {{$user->work->start == null ? 'N/A' : $user->work->start}}
                                             </div>
                                             <div class="text-right">
-                                                <i class="fa pen operation" data-toggle="collapse" data-target="#edit-work"></i>
-                                                <i class="fa fa-times"></i> remove
+                                                <i class="fa fa-pen operation" data-toggle="collapse" data-target="#edit-work"></i>
+                                                {{-- <i class="fa fa-times"></i> remove --}}
                                             </div>
                                             <div class="collapse" id="edit-work">
                                                 @include('user.settings.work')

@@ -1814,10 +1814,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -2064,6 +2060,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2074,7 +2071,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       content: ''
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated']), {
+    contentFilled: function contentFilled() {
+      return this.content == '' ? false : true;
+    }
+  }),
   props: ['discussion', 'comment'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['postComment']), {
     addComment: function addComment() {
@@ -2092,8 +2093,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }),
-  mounted: function mounted() {// alert('mounted');
-  },
+  mounted: function mounted() {},
   watch: {
     comment: function comment(newComment, oldComment) {
       this.comment_id = newComment;
@@ -2159,6 +2159,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2169,9 +2179,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       comments: [],
       links: null,
+      meta: null,
       loaded: false,
       single_comment: null,
-      mode: 'list'
+      mode: 'list',
+      total: 0
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready']), {
@@ -2181,7 +2193,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }),
-  props: ['container', 'target', 'discussion_id'],
+  props: ['container', 'url', 'target', 'discussion_id'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComments']), {
     loadComments: function loadComments(url) {
       var _this = this;
@@ -2189,7 +2201,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       axios.get(url).then(function (response) {
         _this.comments = _this.comments.concat(response.data.data);
         _this.links = response.data.links;
+        _this.meta = response.data.meta;
         _this.loaded = true;
+        _this.total = response.data.meta.total;
         console.warn(response.data);
       })["catch"](function (error) {});
     },
@@ -2202,6 +2216,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     newCommentPosted: function newCommentPosted(comment) {
       this.comments.push(comment);
+      this.total++;
+      this.$emit('comment-posted', comment);
     }
   }),
   components: {
@@ -2211,21 +2227,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     var component = this;
-    var endpoint = '';
-
-    switch (component.target) {
-      // if loading comments on a discussion
-      case 'discussion':
-        endpoint = "/discussion/".concat(component.discussion_id, "/comments");
-        break;
-      // by default load recent comments
-
-      default:
-        endpoint = "/comments";
-        break;
-    }
-
-    this.loadComments(apiURL(endpoint));
+    this.loadComments(apiURL(this.url));
     var container = component.container == null ? $(window) : $('#comments-container');
     container.on('scroll', function (e) {
       var content = $('#comments-wrapper');
@@ -2238,6 +2240,128 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           }, 3000);
         }
       }
+    });
+  },
+  watch: {
+    url: function url(newUrl, oldUrl) {
+      this.comments = [];
+      this.loadComments(apiURL(newUrl));
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! corejs-typeahead/dist/bloodhound */ "./node_modules/corejs-typeahead/dist/bloodhound.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'company-search',
+  data: function data() {
+    return {
+      q: '',
+      suggestions: null,
+      company: JSON.parse(this.data)
+    };
+  },
+  props: ['container', 'data'],
+  computed: {
+    input: function input() {
+      return "".concat(this.container, " .company-search");
+    },
+    company_name: function company_name() {
+      return this.company == null ? '' : this.company.name;
+    },
+    company_id: function company_id() {
+      return this.company == null ? '' : this.company.id;
+    }
+  },
+  methods: {
+    selectCompany: function selectCompany(comp) {
+      this.company = comp;
+      $(this.input).typeahead('close');
+    },
+    createNewCompany: function createNewCompany(name) {
+      var _this = this;
+
+      axios.post(apiURL('/company'), {
+        company: name
+      }).then(function (response) {
+        _this.selectCompany(response.data);
+      })["catch"](function (error) {});
+    }
+  },
+  components: {},
+  mounted: function mounted() {
+    var component = this;
+    this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
+      remote: {
+        url: baseURL() + '/search/company?q=%QUERY%',
+        wildcard: '%QUERY%'
+      },
+      datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
+      queryTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace
+    });
+    var input = $(this.input);
+    input.typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    }, {
+      source: this.suggestions,
+      // This will bttAdaptere appended to "tt-dataset-" to form the class name of the suggestion menu.
+      name: 'company-suggestions',
+      templates: {
+        empty: function empty() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-company\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        pending: function pending() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-company\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        header: function header() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-company\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        // footer: '<div class="list-group-item text-center">Footer Content</div>',
+        suggestion: function suggestion(data) {
+          var avatarURL = baseURL() + '/storage/images/users/';
+          return "<div class=\"list-group-item\">\n                                        <strong class=\"d-block\">\n                                            ".concat(data.name, "\n                                        </strong>\n                                        <small class=\"m-1 d-block\">").concat(data.address == null ? '' : data.address, "</small>\n                                        ").concat(data.educations != null ? '<small class="m-1 d-block"> ' + data.educations.length + ' others attends</small>' : '', "\n                                </div>");
+        }
+      }
+    }).bind('typeahead:select', function (ev, suggestion) {
+      component.q = suggestion.name;
+      $(this).typeahead('val', suggestion.name);
+      component.selectCompany(suggestion);
+    });
+    $(this.container).on('click', '.new-company', function (e) {
+      component.createNewCompany($(this).text());
     });
   }
 });
@@ -2255,7 +2379,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _User_User__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../User/User */ "./resources/js/components/User/User.vue");
-/* harmony import */ var _Training_Training__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Training/Training */ "./resources/js/components/Training/Training.vue");
+/* harmony import */ var _User_Users__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../User/Users */ "./resources/js/components/User/Users.vue");
+/* harmony import */ var _Training_Training__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Training/Training */ "./resources/js/components/Training/Training.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2292,6 +2417,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2307,10 +2443,97 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {},
   components: {
     User: _User_User__WEBPACK_IMPORTED_MODULE_1__["default"],
-    Training: _Training_Training__WEBPACK_IMPORTED_MODULE_2__["default"]
+    Users: _User_Users__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Training: _Training_Training__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mounted: function mounted() {
     console.warn(this.discussion);
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _User_Users__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../User/Users */ "./resources/js/components/User/Users.vue");
+/* harmony import */ var _Comment_Comments__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../Comment/Comments */ "./resources/js/components/Comment/Comments.vue");
+/* harmony import */ var _Comment_CommentTextarea__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Comment/CommentTextarea */ "./resources/js/components/Comment/CommentTextarea.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      contributors: [],
+      contributor: null,
+      source: "/discussion/".concat(this.discussion, "/comments")
+    };
+  },
+  computed: {
+    all_comments: function all_comments() {
+      return "/discussion/".concat(this.discussion, "/comments");
+    }
+  },
+  props: ['discussion'],
+  methods: {
+    getContributors: function getContributors() {
+      var _this = this;
+
+      axios.get(apiURL("/discussion/".concat(this.discussion, "/contributors"))).then(function (response) {
+        _this.contributors = _this.contributors.concat(response.data);
+        console.log(response.data);
+      })["catch"](function (error) {});
+    },
+    loadUserContributions: function loadUserContributions(user) {
+      this.contributor = user;
+      this.source = "/discussion/".concat(this.discussion, "/comments?contributor=").concat(user.username);
+    },
+    addContributor: function addContributor(comment) {
+      this.contributors.push(comment.user);
+    },
+    loadAllComments: function loadAllComments() {
+      this.source = this.all_comments;
+      this.contributor = null;
+    }
+  },
+  components: {
+    Users: _User_Users__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Comments: _Comment_Comments__WEBPACK_IMPORTED_MODULE_2__["default"],
+    CommentTextarea: _Comment_CommentTextarea__WEBPACK_IMPORTED_MODULE_3__["default"]
+  },
+  mounted: function mounted() {
+    this.getContributors();
   }
 });
 
@@ -2384,7 +2607,7 @@ __webpack_require__.r(__webpack_exports__);
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
           var avatarURL = baseURL() + '/storage/images/users/';
-          return "<div class=\"list-group-item\">\n                                        <a href=\"{{route('discussion.index')}}/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.content.substring(0, 200), "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/discussion/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -2484,6 +2707,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2508,7 +2737,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.feeds;
     }
   }),
-  props: ['container'],
+  props: ['container', 'url'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment']), {
     getFeeds: function getFeeds(url) {
       var _this = this;
@@ -2539,7 +2768,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     var component = this;
-    this.getFeeds(apiURL('/feeds'));
+    this.getFeeds(apiURL(component.url));
     var container = component.container == null ? $(window) : $('#feeds-container');
     container.on('scroll', function (e) {
       var content = $('#feeds-wrapper');
@@ -2550,6 +2779,84 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           component.getFeeds(component.links.next);
         }
       }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! corejs-typeahead/dist/bloodhound */ "./node_modules/corejs-typeahead/dist/bloodhound.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'forum-search',
+  data: function data() {
+    return {
+      q: '',
+      suggestions: null
+    };
+  },
+  props: ['container'],
+  computed: {
+    input: function input() {
+      return "".concat(this.container, " .forum-search");
+    }
+  },
+  methods: {},
+  components: {},
+  mounted: function mounted() {
+    var component = this;
+    this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
+      remote: {
+        url: baseURL() + '/search/forum?q=%QUERY%',
+        wildcard: '%QUERY%'
+      },
+      datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
+      queryTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace
+    });
+    var input = $(this.input);
+    input.typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    }, {
+      source: this.suggestions,
+      // This will bttAdaptere appended to "tt-dataset-" to form the class name of the suggestion menu.
+      name: 'forum-suggestions',
+      templates: {
+        empty: '<div class="list-group-item text-center"><i class="fa fa-exclamation-triangle"></i> No forum found</div>',
+        pending: '<div class="list-group-item text-center">searching...</div>',
+        // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
+        // footer: '<div class="list-group-item text-center">Footer Content</div>',
+        suggestion: function suggestion(data) {
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/forum/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.name, "\n                                            </strong>\n                                        </a>\n                                        <small class=\"m-1\">in ").concat(data.discussions_count, " discussions</small>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.fullname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+        }
+      }
+    }).bind('typeahead:select', function (ev, suggestion) {
+      $(this).typeahead('val', suggestion.name);
     });
   }
 });
@@ -2629,6 +2936,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2646,7 +2956,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       trainings: [],
       users: [],
       active: false,
-      loading: false
+      loading: false,
+      status: 'Type above to search'
     };
   },
   props: ['container'],
@@ -2656,11 +2967,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var _this = this;
 
       if (this.q === '') {
-        this.active = false;
         this.loading = false;
+        this.status = "Type above to search";
       } else {
-        this.active = true;
         this.loading = true;
+        this.status = "Looking up \"".concat(this.q, "\"...");
         setTimeout(function () {
           axios.get("/search?q=".concat(_this.q)).then(function (response) {
             _this.tags = response.data.tags;
@@ -2668,12 +2979,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this.trainings = response.data.trainings;
             _this.users = response.data.users;
             _this.loading = false;
+            _this.status = "Search result for \"".concat(_this.q, "\"");
           })["catch"](function (error) {});
         }, 2000);
       }
     },
+    activateSearch: function activateSearch() {
+      this.active = true;
+      $('body').css({
+        'overflow': 'hidden'
+      });
+    },
     closeSearch: function closeSearch() {
       this.active = false;
+      $('body').css({
+        'overflow': 'auto'
+      });
     }
   },
   components: {
@@ -2684,6 +3005,120 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     LoadingOne: _Assets_LoadingOne__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   mounted: function mounted() {}
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! corejs-typeahead/dist/bloodhound */ "./node_modules/corejs-typeahead/dist/bloodhound.js");
+/* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
+/* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'school-search',
+  data: function data() {
+    return {
+      q: '',
+      suggestions: null,
+      school: JSON.parse(this.data)
+    };
+  },
+  props: ['container', 'data'],
+  computed: {
+    input: function input() {
+      return "".concat(this.container, " .school-search");
+    },
+    school_name: function school_name() {
+      return this.school == null ? '' : this.school.name;
+    },
+    school_id: function school_id() {
+      return this.school == null ? '' : this.school.id;
+    }
+  },
+  methods: {
+    selectSchool: function selectSchool(sch) {
+      this.school = sch;
+    },
+    createNewSchool: function createNewSchool(name) {
+      var _this = this;
+
+      axios.post(apiURL('/school'), {
+        school: name
+      }).then(function (response) {
+        _this.selectSchool(response.data);
+      })["catch"](function (error) {});
+    }
+  },
+  components: {},
+  mounted: function mounted() {
+    var component = this;
+    this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
+      remote: {
+        url: baseURL() + '/search/school?q=%QUERY%',
+        wildcard: '%QUERY%'
+      },
+      datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
+      queryTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace
+    });
+    var input = $(this.input);
+    input.typeahead({
+      hint: true,
+      highlight: true,
+      minLength: 1
+    }, {
+      source: this.suggestions,
+      // This will bttAdaptere appended to "tt-dataset-" to form the class name of the suggestion menu.
+      name: 'school-suggestions',
+      templates: {
+        empty: function empty() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-school\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        pending: function pending() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-school\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        header: function header() {
+          return "<div class=\"list-group-item\"><strong>\"<span class=\"new-school\">".concat(input.typeahead('val'), "</span>\"</strong></div>");
+        },
+        // footer: '<div class="list-group-item text-center">Footer Content</div>',
+        suggestion: function suggestion(data) {
+          var avatarURL = baseURL() + '/storage/images/users/';
+          return "<div class=\"list-group-item\">\n                                        <strong class=\"d-block\">\n                                            ".concat(data.name, "\n                                        </strong>\n                                        <small class=\"m-1 d-block\">").concat(data.address == null ? '' : data.address, "</small>\n                                        ").concat(data.educations != null ? '<small class="m-1 d-block"> ' + data.educations.length + ' others attends</small>' : '', "\n                                </div>");
+        }
+      }
+    }).bind('typeahead:select', function (ev, suggestion) {
+      component.q = suggestion.name;
+      $(this).typeahead('val', suggestion.name);
+      component.selectSchool(suggestion);
+    });
+    $(this.container).on('click', '.new-school', function (e) {
+      component.createNewSchool($(this).text());
+    });
+  }
 });
 
 /***/ }),
@@ -2725,35 +3160,49 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'tag-list',
+  name: 'tag',
   data: function data() {
     return {
-      tag: this.data
+      tag: null,
+      followers: []
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
-  props: ['data'],
+  props: ['data', 'url'],
   methods: {
     tagFollowed: function tagFollowed(tag) {
-      tag.followers.push(auth());
+      this.followers.push(this.auth);
+      this.$emit('tag-followed', tag);
     },
     tagUnfollowed: function tagUnfollowed(tag) {
-      removeItem(tag.followers, auth());
-    },
-    followers: function followers(tag) {
-      return tag.users;
+      removeItem(this.followers, this.auth);
+      this.$emit('tag-unfollowed', tag);
     }
   },
   components: {
     TagFollowButton: _TagFollowButton__WEBPACK_IMPORTED_MODULE_2__["default"],
     Users: _User_Users__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
-  mounted: function mounted() {}
+  mounted: function mounted() {
+    var _this = this;
+
+    if (this.data == undefined && this.url != undefined) {
+      axios.get(apiURL(this.url)).then(function (response) {
+        _this.tag = response.data;
+        _this.followers = response.data.users;
+      });
+    } else {
+      this.tag = this.data;
+      this.followers = this.data.users;
+    }
+  }
 });
 
 /***/ }),
@@ -2768,6 +3217,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! os */ "./node_modules/os-browserify/browser.js");
+/* harmony import */ var os__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(os__WEBPACK_IMPORTED_MODULE_1__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2783,6 +3234,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2790,59 +3243,49 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       tag: this.prop_tag,
-      text: '...',
-      status: '',
-      btn_class: 'btn btn-default'
+      status: ''
     };
   },
   props: ['prop_tag'],
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['tags_following', 'is_following_tag'])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['followTag']), {
-    checkFollow: function checkFollow() {
-      if (itemExist(this.tags_following, this.tag)) {
-        this.following();
-      } else {
-        this.notFollowing();
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready', 'is_authenticated']), {
+    following: function following() {
+      if (this.auth !== null) {
+        return itemExist(this.tag.users, this.auth);
       }
-    },
+
+      return false;
+    }
+  }),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['followTag']), {
     follow: function follow() {
       var _this = this;
 
       this.followTag(this.tag).then(function (response) {
         if (response.data.action == 'follow') {
-          _this.following();
+          _this.tag.users.push(_this.auth);
 
           toastr.success("Now following ".concat(_this.tag.name));
 
           _this.$emit('tag-followed', response.data.tag);
         } else if (response.data.action == 'unfollow') {
-          _this.notFollowing();
+          _this.tag.users.splice(getIndex(_this.tag.users, _this.auth), 1);
 
           toastr.success("You no longer follow ".concat(_this.tag.name));
 
           _this.$emit('tag-unfollowed', response.data.tag);
         }
       })["catch"](function (error) {
-        _this.failed('failed!');
+        _this.status = 'failed!';
       })["finally"](function () {//alert(response.message);
       });
-    },
-    following: function following() {
-      this.text = 'unfollow';
-      this.btn_class = 'btn btn-sm btn-default';
-      this.status = 'following';
-    },
-    notFollowing: function notFollowing() {
-      this.text = 'follow';
-      this.btn_class = 'btn btn-sm btn-primary';
-    },
-    failed: function failed() {
-      var status = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-      this.status = status;
     }
   }),
-  mounted: function mounted() {
-    this.checkFollow();
+  mounted: function mounted() {//this.checkFollow();
+  },
+  watch: {
+    prop_tag: function prop_tag(newData, newdata) {
+      this.checkFollow();
+    }
   }
 });
 
@@ -2887,12 +3330,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       q: '',
+      tags_following: [],
       suggestions: null,
       selected: this.already_selected
     };
   },
   props: ['container', 'purpose', 'already_selected'],
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['tags_following', 'is_following_tag']), {
+  computed: {
     input: function input() {
       return "".concat(this.container, " .tag-search");
     },
@@ -2903,25 +3347,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     isForFollow: function isForFollow() {
       return this.purpose === 'follow' ? true : false;
     }
-  }),
+  },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['getAuth', 'loadMyTags', 'followTag', 'createNewTag']), {
     select: function select(tag) {
       this.selected.push(tag);
       this.$emit('tag-selected', tag);
+      $(this.input).typeahead('val', '');
+    },
+    follow: function follow(tag) {
+      var _this = this;
+
+      this.followTag(tag).then(function (response) {
+        _this.tags_following.push(response.data.tag);
+
+        _this.$emit('tag-followed', response.data.tag);
+      })["catch"](function (error) {});
     },
     isSelected: function isSelected(tag) {
-      console.log(itemExist(this.selected, {
-        id: 100
-      }));
       return itemExist(this.selected, tag);
+    },
+    isFollowing: function isFollowing(tag) {
+      return itemExist(this.tags_following, tag);
     }
   }),
   components: {
     TagFollowButton: _TagFollowButton_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mounted: function mounted() {
-    var _templates;
+    var _this2 = this,
+        _templates;
 
+    this.loadMyTags().then(function (response) {
+      _this2.tags_following = response.data;
+    })["catch"](function (error) {});
     var component = this;
     this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
       remote: {
@@ -2968,7 +3426,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           try {
             for (var _iterator = data.users.slice(0, 5)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var user = _step.value;
-              followers += "<img src=\"".concat(user.avatar == null ? avatarURL + 'default.png' : avatarURL + user.avatar, "\"  style=\"width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff\" data-toggle=\"tooltip\" title=\"@").concat(user.username, "\">");
+              followers += "<img src=\"".concat(user.image, "\"  style=\"width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff\" data-toggle=\"tooltip\" title=\"@").concat(user.username, "\">");
             }
           } catch (err) {
             _didIteratorError = true;
@@ -2990,15 +3448,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         switch (component.purpose) {
           case 'selection':
-            return "<div class=\"list-group-item ".concat(component.isSelected(data) ? 'bg-primary text-light' : '', "\">\n                                            <div class=\"d-flex\">\n                                                <div>\n                                                    <strong class=\"d-block\">\n                                                        <strong>").concat(data.name, "</strong>\n                                                    </strong>\n                                                    <div class=\"text-muted\">\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.trainings.length, " trainings</a>\n                                                        </small>\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.discussions.length, " discussions\n                                                        </small>\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.users.length, " followers\n                                                        </small>\n                                                    </div>\n                                                    ").concat(followers, "\n                                                </div>\n                                                <div class=\"ml-auto\">\n                                                    <small class=\"text-muted\">").concat(component.isSelected(data) ? 'already selected' : '', "</small>\n                                                </div>\n                                            </div>\n                                        </div>");
+            return "<div class=\"list-group-item ".concat(component.isSelected(data) ? 'bg-primary text-light' : '', "\">\n                                            <div class=\"d-flex\">\n                                                <div>\n                                                    <strong class=\"d-block\">\n                                                        <strong>").concat(data.name, "</strong>\n                                                    </strong>\n                                                    <div class=\"text-muted\">\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.trainings_count, " trainings</a>\n                                                        </small>\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.discussions_count, " discussions\n                                                        </small>\n                                                        <small class=\"m-1\">\n                                                            ").concat(data.users.length, " followers\n                                                        </small>\n                                                    </div>\n                                                    ").concat(followers, "\n                                                </div>\n                                                <div class=\"ml-auto\">\n                                                    <small class=\"text-muted\">").concat(component.isSelected(data) ? 'already selected' : '', "</small>\n                                                </div>\n                                            </div>\n                                        </div>");
             break;
 
           case 'follow':
-            return "<div class=\"list-group-item\">\n                                                <div class=\"d-flex\">\n                                                    <div>\n                                                        <strong class=\"d-block\">\n                                                            <strong>".concat(data.name, "</strong>\n                                                        </strong>\n                                                    </div>\n                                                    <div class=\"ml-auto\">\n                                                        <small>").concat(component.is_following_tag(data) ? 'already following' : 'select to follow', "</small>\n                                                    </div>\n                                                </div>\n                                                <div class=\"text-muted\">\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.trainings.length, " trainings</a>\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.discussions.length, " discussions\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.users.length, " followers\n                                                    </small>\n                                                </div>\n                                                ").concat(followers, "\n                                                <div class=\"ml-auto\">\n                                                    <small class=\"text-muted\">").concat(component.is_following_tag(data) ? 'Already following' : '', "</small>\n                                                </div>\n                                            </div>");
+            return "<div class=\"list-group-item\">\n                                                <div class=\"d-flex\">\n                                                    <div>\n                                                        <strong class=\"d-block\">\n                                                            <strong>".concat(data.name, "</strong>\n                                                        </strong>\n                                                    </div>\n                                                    <div class=\"ml-auto\">\n                                                        <small>").concat(component.isFollowing(data) ? 'already following' : 'select to follow', "</small>\n                                                    </div>\n                                                </div>\n                                                <div class=\"text-muted\">\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.trainings_count, " trainings</a>\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.discussions_count, " discussions\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.users.length, " followers\n                                                    </small>\n                                                </div>\n                                                ").concat(followers, "\n                                                <div class=\"ml-auto\">\n                                                    <small class=\"text-muted\">").concat(component.isFollowing(data) ? 'Already following' : '', "</small>\n                                                </div>\n                                            </div>");
             break;
 
           default:
-            return "<div class=\"list-group-item\">\n                                           \n                                                <div class=\"d-flex\">\n                                                    <strong class=\"d-block\">\n                                                        <a href=\"/tag/".concat(data.name, "\">").concat(data.name, "</a>\n                                                    </strong>\n                                                    <div class=\"ml-auto\">\n                                                        <small>").concat(component.is_following_tag(data) ? 'following' : '', "</small>\n                                                    </div>\n\n                                                </div>\n                                                <div class=\"text-muted\">\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.trainings.length, " trainings</a>\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.discussions.length, " discussions\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.users.length, " followers\n                                                    </small>\n                                                </div>\n                                                    ").concat(followers, "\n                        \n                                            </div>\n                                        </div>");
+            return "<div class=\"list-group-item\">\n                                           \n                                                <div class=\"d-flex\">\n                                                    <strong class=\"d-block\">\n                                                        <a href=\"/tag/".concat(data.name, "\">").concat(data.name, "</a>\n                                                    </strong>\n                                                    <div class=\"ml-auto\">\n                                                        <small>").concat(component.isFollowing(data) ? 'following' : '', "</small>\n                                                    </div>\n\n                                                </div>\n                                                <div class=\"text-muted\">\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.trainings_count, " trainings</a>\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.discussions_count, " discussions\n                                                    </small>\n                                                    <small class=\"m-1\">\n                                                        ").concat(data.users.length, " followers\n                                                    </small>\n                                                </div>\n                                                    ").concat(followers, "\n                        \n                                            </div>\n                                        </div>");
             break;
         }
       }), _templates)
@@ -3019,11 +3477,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (component.isForSelection) {
         component.select(suggestion);
       } else if (component.isForFollow) {
-        component.followTag(suggestion).then(function (response) {
-          toastr.success("Now following ".concat(suggestion.name));
-        })["catch"](function (error) {
-          toastError(error.response, message = "could not follow ".concat(suggestion.name));
-        });
+        component.follow(suggestion);
       }
     });
   }
@@ -3095,28 +3549,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _TagSearch_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TagSearch.vue */ "./resources/js/components/Tag/TagSearch.vue");
-/* harmony import */ var _TagFollowButton_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TagFollowButton.vue */ "./resources/js/components/Tag/TagFollowButton.vue");
+/* harmony import */ var _Tag_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tag.vue */ "./resources/js/components/Tag/Tag.vue");
+/* harmony import */ var _TagSearch_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TagSearch.vue */ "./resources/js/components/Tag/TagSearch.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3158,34 +3598,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   name: 'tag-suggest',
   data: function data() {
     return {
+      tags_following: [],
       suggested_tag_status: 'loading my suggestions...',
       suggestions: []
     };
   },
   props: [],
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['app_ready', 'tags_following', 'is_following_tag'])),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadSuggestionTags']), {
-    tagFollowed: function tagFollowed(tag) {//console.log(`now following ${tag.name}`);
-      //this.$store.commit('ADD_TAG', tag);
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['app_ready'])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadMyTags', 'loadSuggestionTags']), {
+    tagFollowed: function tagFollowed(tag) {
+      this.tags_following.push(tag);
     },
-    tagUnfollowed: function tagUnfollowed(tag) {// console.log(`now unfollowing ${tag.name}`);
-      //this.$store.commit('REMOVE_TAG', tag);
+    tagUnfollowed: function tagUnfollowed(tag) {
+      this.tags_following.splice(getIndex(this.tags_following, tag), 1);
     }
   }),
   mounted: function mounted() {
     var _this = this;
 
-    this.loadSuggestionTags().then(function (response) {
-      console.log(response.data);
-      _this.suggestions = response.data;
-      _this.suggested_tag_status = "".concat(response.data.length, " suggestions");
-    })["catch"](function (error) {
-      _this.suggested_tag_status = "Failed to load suggestions: ".concat(error.response.statusText);
-    });
+    this.loadMyTags().then(function (response) {
+      _this.tags_following = response.data;
+
+      _this.loadSuggestionTags().then(function (response) {
+        console.log(response.data);
+        _this.suggestions = response.data;
+        _this.suggested_tag_status = "".concat(response.data.length, " suggestions");
+      })["catch"](function (error) {
+        _this.suggested_tag_status = "Failed to load suggestions: ".concat(error.response.statusText);
+      });
+    })["catch"](function (error) {});
   },
   components: {
-    TagSearch: _TagSearch_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    TagFollowButton: _TagFollowButton_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    TagSearch: _TagSearch_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    Tag: _Tag_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   }
 });
 
@@ -3201,8 +3646,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _User_Users__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../User/Users */ "./resources/js/components/User/Users.vue");
+/* harmony import */ var _Tag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Tag */ "./resources/js/components/Tag/Tag.vue");
 /* harmony import */ var _TagFollowButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TagFollowButton */ "./resources/js/components/Tag/TagFollowButton.vue");
+/* harmony import */ var _Assets_LoadingOne__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../Assets/LoadingOne */ "./resources/js/components/Assets/LoadingOne.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3235,27 +3681,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'tag-list',
+  name: 'tags',
   data: function data() {
     return {
       tags: [],
@@ -3265,15 +3697,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
   props: ['id', 'container', 'url', 'collection'],
   methods: {
-    tagFollowed: function tagFollowed(tag) {
-      tag.followers.push(auth());
-    },
-    tagUnfollowed: function tagUnfollowed(tag) {
-      removeItem(tag.followers, auth());
-    },
-    followers: function followers(tag) {
-      return tag.users;
-    },
     loadTags: function loadTags(url) {
       var _this = this;
 
@@ -3286,8 +3709,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   components: {
+    Tag: _Tag__WEBPACK_IMPORTED_MODULE_1__["default"],
     TagFollowButton: _TagFollowButton__WEBPACK_IMPORTED_MODULE_2__["default"],
-    Users: _User_Users__WEBPACK_IMPORTED_MODULE_1__["default"]
+    LoadingOne: _Assets_LoadingOne__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mounted: function mounted() {
     var component = this;
@@ -3332,6 +3756,13 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3457,7 +3888,7 @@ __webpack_require__.r(__webpack_exports__);
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
           var avatarURL = baseURL() + '/storage/images/users/';
-          return "<div class=\"list-group-item\">\n                                        <a href=\"{{route('training.index')}}/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions.length, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.content.substring(0, 200), "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions.length, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -3505,8 +3936,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   props: ['data'],
   methods: {},
   components: {},
-  mounted: function mounted() {
-    console.log(this.user);
+  mounted: function mounted() {},
+  watch: {
+    data: function data(newData, oldData) {
+      this.user = newData;
+    }
   }
 });
 
@@ -3617,17 +4051,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      users: this.prop_users
+      users: this.data
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['app_ready', 'auth'])),
-  props: ['prop_users'],
-  methods: {},
-  mounted: function mounted() {}
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['app_ready', 'auth', 'is_authenticated']), {
+    am_among: function am_among() {
+      var _this = this;
+
+      if (this.is_authenticated) {
+        return this.users.findIndex(function (user) {
+          return user.id == _this.auth.id;
+        }) < 0 ? false : true;
+      }
+
+      return false;
+    }
+  }),
+  props: ['data'],
+  methods: {
+    userClicked: function userClicked(user) {
+      this.$emit('user-clicked', user);
+    },
+    userPopover: function userPopover(user) {
+      return "\n                       <div class=\"d-flex py-1\">\n                            <img src=\"".concat(user.image, "\" class=\"avatar avatar-sm\">\n                            <div class=\"ml-2 pt-1\" >\n                                <strong class=\"d-block\">").concat(user.fullname, "</strong>\n                                <a href=\"/@").concat(user.username, "\">@").concat(user.username, "</a>\n                                ").concat(user.bio == null ? '' : '<div class="text-muted">' + user.bio + '</div>', "\n                            </div>\n                        </div>\n                  ");
+    }
+  },
+  mounted: function mounted() {
+    $('[data-toggle="popover"]').popover({
+      html: true,
+      trigger: 'click hover',
+      position: 'top'
+    });
+  },
+  watch: {
+    data: function data(newData, oldData) {
+      this.users = newData;
+    }
+  }
 });
 
 /***/ }),
@@ -10825,7 +11290,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.commenter-avatar[data-v-54dd51ce]{\n    width: 50px; \n    height: 50px;\n    border-radius: 50%; \n    border: 2px solid #fff;\n}\ntextarea[data-v-54dd51ce]{\n    height: 50px;\n    padding: 10px 60px;\n    padding-right:70px;\n    width: 100%;\n    border: none;\n    resize:none\n}\nbutton.submit[data-v-54dd51ce]{\n    right: 0;\n    height: 50px;\n    border-radius: 0\n}\n.commenter-avatar[data-v-54dd51ce],\nbutton.submit[data-v-54dd51ce]{\n    position:absolute;\n    bottom:0;\n}\n@media (min-width:992px) {\n}\n", ""]);
+exports.push([module.i, "\n.commenter-avatar[data-v-54dd51ce]{\n    width: 50px; \n    height: 50px;\n    border-radius: 50%; \n    border: 2px solid #fff;\n}\ntextarea[data-v-54dd51ce]{\n    height: 50px;\n    padding: 10px 60px;\n    padding-right:70px;\n    width: 100%;\n    border: none;\n    resize:none\n}\nbutton.submit[data-v-54dd51ce]{\n    right: 0;\n    height: 50px;\n    border-radius: 0\n}\n.commenter-avatar[data-v-54dd51ce],\nbutton.submit[data-v-54dd51ce]{\n    position:absolute;\n}\n@media (min-width:992px) {\n}\n", ""]);
 
 // exports
 
@@ -10844,7 +11309,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200000;\n    border-radius: 7px;\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n.comment-textarea[data-v-03a0802f]{\n            left:50%;\n}\n}\n}\n", ""]);
+exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200;\n    border-radius: 7px;\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n.comment-textarea[data-v-03a0802f]{\n            left:50%;\n}\n}\n}\n", ""]);
 
 // exports
 
@@ -10863,7 +11328,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200000;\n    border-radius: 7px;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n}\n}\n", ""]);
+exports.push([module.i, "\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    background-color: #fff;\n    padding: 5px;\n    z-index: 1200000;\n    border-radius: 7px;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n.single-feed-container[data-v-73c5f522]{\n        left: 30%;\n        right: 30%;\n}\n}\n}\n", ""]);
 
 // exports
 
@@ -10882,7 +11347,26 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow: auto;\n}\n@media (min-width:992px){\n.result-wrapper[data-v-59a3b596]{\n        max-height: 60vh;\n}\n}\n", ""]);
+exports.push([module.i, "\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n        height: 100vh;\n        overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.follow-btn[data-v-d28ba766]{\r\n    border: 1px solid #f7f7f7;\r\n    border-radius: 5px;\n}\r\n", ""]);
 
 // exports
 
@@ -38743,6 +39227,66 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/os-browserify/browser.js":
+/*!***********************************************!*\
+  !*** ./node_modules/os-browserify/browser.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.endianness = function () { return 'LE' };
+
+exports.hostname = function () {
+    if (typeof location !== 'undefined') {
+        return location.hostname
+    }
+    else return '';
+};
+
+exports.loadavg = function () { return [] };
+
+exports.uptime = function () { return 0 };
+
+exports.freemem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.totalmem = function () {
+    return Number.MAX_VALUE;
+};
+
+exports.cpus = function () { return [] };
+
+exports.type = function () { return 'Browser' };
+
+exports.release = function () {
+    if (typeof navigator !== 'undefined') {
+        return navigator.appVersion;
+    }
+    return '';
+};
+
+exports.networkInterfaces
+= exports.getNetworkInterfaces
+= function () { return {} };
+
+exports.arch = function () { return 'javascript' };
+
+exports.platform = function () { return 'browser' };
+
+exports.tmpdir = exports.tmpDir = function () {
+    return '/tmp';
+};
+
+exports.EOL = '\n';
+
+exports.homedir = function () {
+	return '/'
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -41964,6 +42508,36 @@ if(false) {}
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/init.vue?vue&type=style&index=0&id=a075204a&scoped=true&lang=css&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/init.vue?vue&type=style&index=0&id=a075204a&scoped=true&lang=css& ***!
@@ -42687,10 +43261,12 @@ var render = function() {
                 _vm.comment.reply_to !== null
                   ? [
                       _c("div", [
-                        _c("small", { staticClass: "text-muted" }, [
+                        _c("p", { staticClass: "text-muted" }, [
                           _vm._v(
-                            "replying to " +
-                              _vm._s(_vm.comment.reply_to.user.fullname)
+                            "Replying to " +
+                              _vm._s(_vm.comment.reply_to.user.fullname) +
+                              " @" +
+                              _vm._s(_vm.comment.reply_to.user.username)
                           )
                         ]),
                         _vm._v(" "),
@@ -43047,14 +43623,23 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-theme submit",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Post")]
-                ),
+                _vm.contentFilled
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "no-outline btn primary-color submit",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Post")]
+                    )
+                  : _c(
+                      "button",
+                      {
+                        staticClass: "no-outline btn primary-color submit",
+                        attrs: { type: "submit", disabled: "" }
+                      },
+                      [_vm._v("Post")]
+                    ),
                 _vm._v(" "),
                 _c("div", [
                   _c("textarea", {
@@ -43152,6 +43737,16 @@ var render = function() {
                 ]
               : _vm._e(),
             _vm._v(" "),
+            _vm.target == "discussion" && _vm.meta !== null
+              ? [
+                  _vm._v(
+                    "\n            Comments: " +
+                      _vm._s(_vm.total) +
+                      "\n        "
+                  )
+                ]
+              : _vm._e(),
+            _vm._v(" "),
             _c(
               "div",
               {
@@ -43173,7 +43768,7 @@ var render = function() {
                                 "div",
                                 {
                                   key: comment.id + Math.random(),
-                                  staticClass: "list-group-item comment",
+                                  staticClass: "list-group-item comment mb-2",
                                   staticStyle: { "background-color": "inherit" }
                                 },
                                 [
@@ -43207,7 +43802,7 @@ var render = function() {
                             attrs: { message: "Fetching more comments..." }
                           })
                         ]
-                      : _vm._e()
+                      : [_vm._m(0)]
                   ],
                   2
                 )
@@ -43234,6 +43829,91 @@ var render = function() {
     ],
     2
   )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center" }, [_c("h1", [_vm._v(".")])])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", [
+      _c("strong", [
+        _c("i", { staticClass: "fa fa-check" }),
+        _vm._v(" " + _vm._s(_vm.company_name))
+      ])
+    ]),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model.trim",
+          value: _vm.q,
+          expression: "q",
+          modifiers: { trim: true }
+        }
+      ],
+      staticClass: "company-search form-control no-outline",
+      attrs: { type: "search", placeholder: "search company..." },
+      domProps: { value: _vm.q },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.q = $event.target.value.trim()
+        },
+        blur: function($event) {
+          return _vm.$forceUpdate()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.company_id,
+          expression: "company_id"
+        }
+      ],
+      attrs: { type: "hidden", name: "company" },
+      domProps: { value: _vm.company_id },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.company_id = $event.target.value
+        }
+      }
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43296,7 +43976,7 @@ var render = function() {
                 _c("strong", [
                   _c(
                     "a",
-                    { attrs: { href: "discussion/" + _vm.discussion.slug } },
+                    { attrs: { href: "/discussion/" + _vm.discussion.slug } },
                     [_vm._v(_vm._s(_vm.discussion.title))]
                   )
                 ]),
@@ -43321,11 +44001,23 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("small", { staticClass: "mr-2" }, [
-                        _c("a", { attrs: { href: "#" } }, [
-                          _vm._v(
-                            _vm._s(_vm.discussion.comments_count) + " comments "
-                          )
-                        ])
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href:
+                                "/discussion/" +
+                                _vm.discussion.slug +
+                                "#comments"
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(_vm.discussion.comments_count) +
+                                " comments "
+                            )
+                          ]
+                        )
                       ]),
                       _vm._v(" "),
                       _c("small", { staticClass: "mr-2" }, [
@@ -43358,11 +44050,128 @@ var render = function() {
                         ])
                       ])
                     ]
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.discussion.snippet) +
+                      "\n        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  _vm._l(_vm.discussion.discussion_tags, function(tag) {
+                    return _c(
+                      "a",
+                      {
+                        key: tag,
+                        staticClass: "tag",
+                        attrs: { href: "/tag/" + tag }
+                      },
+                      [_vm._v(_vm._s(tag))]
+                    )
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "text-muted" },
+                  [
+                    _vm._v("\n            Contributors:\n            "),
+                    _c("users", {
+                      attrs: { data: _vm.discussion.contributors }
+                    })
+                  ],
+                  1
+                )
               ],
               2
             )
           ]
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true&":
+/*!********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        [
+          _c("strong", { staticClass: "mr-3" }, [_vm._v("All Contributors")]),
+          _vm._v(" "),
+          _c("users", {
+            attrs: { data: _vm.contributors },
+            on: { "user-clicked": _vm.loadUserContributions }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm.contributor != null
+        ? [
+            _c("div", { staticClass: "d-flex" }, [
+              _c(
+                "div",
+                [
+                  _vm._v("\n                Comments by:\n                "),
+                  _c("user", { attrs: { data: _vm.contributor } })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "ml-auto" }, [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.loadAllComments($event)
+                      }
+                    }
+                  },
+                  [_vm._v("show all comments")]
+                )
+              ])
+            ])
+          ]
+        : _vm._e(),
+      _vm._v(" "),
+      _c("comments", {
+        attrs: {
+          url: _vm.source,
+          target: "discussion",
+          discussion_id: _vm.discussion
+        },
+        on: { "comment-posted": _vm.addContributor }
+      })
     ],
     2
   )
@@ -43533,6 +44342,7 @@ var render = function() {
                 _c("comment", {
                   attrs: {
                     id: _vm.single_comment,
+                    quote_discussion: true,
                     write_comment: true,
                     show_replies: true
                   },
@@ -43585,11 +44395,11 @@ var render = function() {
                             attrs: { message: "loading more feeds..." }
                           })
                         ]
-                      : _vm._e()
+                      : [_vm._m(0)]
                   ]
                 : [
                     _c("loading-one", {
-                      attrs: { message: "loading your feeds..." }
+                      attrs: { message: "loading feeds..." }
                     })
                   ]
             ],
@@ -43600,6 +44410,63 @@ var render = function() {
     ],
     2
   )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center" }, [_c("h1", [_vm._v(".")])])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model.trim",
+          value: _vm.q,
+          expression: "q",
+          modifiers: { trim: true }
+        }
+      ],
+      staticClass: "forum-search form-control no-outline",
+      attrs: { type: "search", placeholder: "search for forum..." },
+      domProps: { value: _vm.q },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.q = $event.target.value.trim()
+        },
+        blur: function($event) {
+          return _vm.$forceUpdate()
+        }
+      }
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43637,10 +44504,11 @@ var render = function() {
           }
         ],
         staticClass: "global-search form-control no-outline",
-        attrs: { placeholder: "search for anything..." },
+        attrs: { placeholder: "search WIN..." },
         domProps: { value: _vm.q },
         on: {
           keyup: _vm.search,
+          focus: _vm.activateSearch,
           input: function($event) {
             if ($event.target.composing) {
               return
@@ -43669,119 +44537,131 @@ var render = function() {
                     [_vm._v("×")]
                   ),
                   _vm._v(" "),
-                  _c("h5", [
-                    _vm._v('Search result for "' + _vm._s(_vm.q) + '"')
-                  ])
+                  _c("p", [_vm._v(_vm._s(_vm.status))]),
+                  _vm._v(" "),
+                  _c("hr")
                 ]),
                 _vm._v(" "),
-                _vm.loading
+                _vm.q !== ""
                   ? [
-                      _c(
-                        "div",
-                        { staticClass: "p-5" },
-                        [
-                          _c("loading-one", {
-                            attrs: { message: "searching..." }
-                          })
-                        ],
-                        1
-                      )
+                      _vm.loading
+                        ? [
+                            _c(
+                              "div",
+                              { staticClass: "p-5" },
+                              [
+                                _c("loading-one", {
+                                  attrs: { message: "searching..." }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        : [
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col-md-2" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "result-header px-3 py-2" },
+                                  [
+                                    _vm._v(
+                                      "Tags (" + _vm._s(_vm.tags.length) + ")"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "result-wrapper" },
+                                  _vm._l(_vm.tags, function(tag) {
+                                    return _c("tag", {
+                                      key: tag.id + Math.random(),
+                                      attrs: { data: tag }
+                                    })
+                                  }),
+                                  1
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "result-header px-3 py-2" },
+                                  [
+                                    _vm._v(
+                                      "Discussions (" +
+                                        _vm._s(_vm.discussions.length) +
+                                        ")"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "result-wrapper" },
+                                  _vm._l(_vm.discussions, function(discussion) {
+                                    return _c("discussion", {
+                                      key: discussion.id + Math.random(),
+                                      attrs: { data: discussion }
+                                    })
+                                  }),
+                                  1
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-4" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "result-header px-3 py-2" },
+                                  [
+                                    _vm._v(
+                                      "Trainings (" +
+                                        _vm._s(_vm.trainings.length) +
+                                        ")"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "result-wrapper" },
+                                  _vm._l(_vm.trainings, function(training) {
+                                    return _c("training", {
+                                      key: training.id + Math.random(),
+                                      attrs: { data: training }
+                                    })
+                                  }),
+                                  1
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "col-md-2" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "result-header px-3 py-2" },
+                                  [
+                                    _vm._v(
+                                      "Users (" + _vm._s(_vm.users.length) + ")"
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "result-wrapper" },
+                                  _vm._l(_vm.users, function(user) {
+                                    return _c("user", {
+                                      key: user.id + Math.random(),
+                                      attrs: { data: user }
+                                    })
+                                  }),
+                                  1
+                                )
+                              ])
+                            ])
+                          ]
                     ]
-                  : [
-                      _c("div", { staticClass: "row" }, [
-                        _c("div", { staticClass: "col-md-2" }, [
-                          _c(
-                            "div",
-                            { staticClass: "result-header px-3 py-2" },
-                            [_vm._v("Tags (" + _vm._s(_vm.tags.length) + ")")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "result-wrapper" },
-                            _vm._l(_vm.tags, function(tag) {
-                              return _c("tag", {
-                                key: tag.id + Math.random(),
-                                attrs: { data: tag }
-                              })
-                            }),
-                            1
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-4" }, [
-                          _c(
-                            "div",
-                            { staticClass: "result-header px-3 py-2" },
-                            [
-                              _vm._v(
-                                "Discussions (" +
-                                  _vm._s(_vm.discussions.length) +
-                                  ")"
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "result-wrapper" },
-                            _vm._l(_vm.discussions, function(discussion) {
-                              return _c("discussion", {
-                                key: discussion.id + Math.random(),
-                                attrs: { data: discussion }
-                              })
-                            }),
-                            1
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-4" }, [
-                          _c(
-                            "div",
-                            { staticClass: "result-header px-3 py-2" },
-                            [
-                              _vm._v(
-                                "Trainings (" +
-                                  _vm._s(_vm.trainings.length) +
-                                  ")"
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "result-wrapper" },
-                            _vm._l(_vm.trainings, function(training) {
-                              return _c("training", {
-                                key: training.id + Math.random(),
-                                attrs: { data: training }
-                              })
-                            }),
-                            1
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-2" }, [
-                          _c(
-                            "div",
-                            { staticClass: "result-header px-3 py-2" },
-                            [_vm._v("Users (" + _vm._s(_vm.users.length) + ")")]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "result-wrapper" },
-                            _vm._l(_vm.users, function(user) {
-                              return _c("user", {
-                                key: user.id + Math.random(),
-                                attrs: { data: user }
-                              })
-                            }),
-                            1
-                          )
-                        ])
-                      ])
-                    ]
+                  : _vm._e()
               ],
               2
             )
@@ -43790,6 +44670,84 @@ var render = function() {
     ],
     2
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", [
+      _c("strong", [
+        _c("i", { staticClass: "fa fa-check" }),
+        _vm._v(" " + _vm._s(_vm.school_name))
+      ])
+    ]),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model.trim",
+          value: _vm.q,
+          expression: "q",
+          modifiers: { trim: true }
+        }
+      ],
+      staticClass: "school-search form-control no-outline",
+      attrs: { type: "search", placeholder: "search school..." },
+      domProps: { value: _vm.q },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.q = $event.target.value.trim()
+        },
+        blur: function($event) {
+          return _vm.$forceUpdate()
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.school_id,
+          expression: "school_id"
+        }
+      ],
+      attrs: { type: "hidden", name: "school" },
+      domProps: { value: _vm.school_id },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.school_id = $event.target.value
+        }
+      }
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43813,56 +44771,73 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "d-flex" }, [
-      _c("h6", [
-        _c(
-          "a",
-          { staticClass: "tag", attrs: { href: "/tag/" + _vm.tag.name } },
-          [_vm._v("#" + _vm._s(_vm.tag.name))]
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "ml-auto" },
-        [
-          _c("tag-follow-btn", {
-            attrs: { prop_tag: _vm.tag },
-            on: {
-              "tag-followed": _vm.tagFollowed,
-              "tag-unfollowed": _vm.tagUnfollowed
-            }
-          })
-        ],
-        1
-      )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "text-muted" },
-      [
-        _vm._v("\n        Followed by: "),
-        _vm.is_following_tag(_vm.tag)
-          ? _c("span", [_vm._v("You, ")])
-          : _vm._e(),
-        _vm._v(" "),
-        _c("users", { attrs: { prop_users: _vm.followers(_vm.tag) } }),
-        _vm._v(" "),
-        _c("div", { staticClass: "d-flex" }, [
-          _c("small", { staticClass: "m-1" }, [
-            _vm._v(_vm._s(_vm.tag.discussions_count) + " discussions")
-          ]),
-          _vm._v(" "),
-          _c("small", { staticClass: "m-1" }, [
-            _vm._v(_vm._s(_vm.tag.trainings_count) + " trainings")
-          ])
-        ])
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    [
+      _vm.tag != null
+        ? [
+            _c("div", { staticClass: "d-flex" }, [
+              _c("h6", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "tag",
+                    attrs: { href: "/tag/" + _vm.tag.name }
+                  },
+                  [_vm._v("#" + _vm._s(_vm.tag.name))]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "ml-auto" },
+                [
+                  _c("tag-follow-btn", {
+                    attrs: { prop_tag: _vm.tag },
+                    on: {
+                      "tag-followed": _vm.tagFollowed,
+                      "tag-unfollowed": _vm.tagUnfollowed
+                    }
+                  })
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "text-muted" },
+              [
+                _vm._v("\n            Followed by: \n            "),
+                _c("users", { attrs: { data: _vm.followers } }),
+                _vm._v(" "),
+                _c("div", { staticClass: "d-flex" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "m-1",
+                      attrs: { href: "/tag/" + _vm.tag.slug + "/discussions" }
+                    },
+                    [_vm._v(_vm._s(_vm.tag.discussions_count) + " discussions")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "m-1",
+                      attrs: { href: "/tag/" + _vm.tag.slug + "/trainings" }
+                    },
+                    [_vm._v(_vm._s(_vm.tag.trainings_count) + " trainings")]
+                  )
+                ])
+              ],
+              1
+            )
+          ]
+        : _vm._e()
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43871,10 +44846,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&":
-/*!**********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766& ***!
-  \**********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -43886,23 +44861,35 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "button",
-      {
-        class: _vm.btn_class,
-        attrs: { type: "button" },
-        on: { click: _vm.follow }
-      },
-      [_vm._v(_vm._s(_vm.text))]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "text-center" }, [
-      _c("small", { staticClass: "text-muted d-block" }, [
-        _vm._v(_vm._s(_vm.status))
+  return _vm.app_ready
+    ? _c("div", [
+        _vm.following
+          ? _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-primary no-outline follow-btn",
+                attrs: { type: "button" },
+                on: { click: _vm.follow }
+              },
+              [_vm._v("following")]
+            )
+          : _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-default no-outline follow-btn",
+                attrs: { type: "button" },
+                on: { click: _vm.follow }
+              },
+              [_vm._v("follow")]
+            ),
+        _vm._v(" "),
+        _c("div", { staticClass: "text-center" }, [
+          _c("small", { staticClass: "text-muted d-block" }, [
+            _vm._v(_vm._s(_vm.status))
+          ])
+        ])
       ])
-    ])
-  ])
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43937,7 +44924,7 @@ var render = function() {
           modifiers: { trim: true }
         }
       ],
-      staticClass: "tag-search form-control",
+      staticClass: "tag-search form-control no-outline",
       attrs: { type: "search", placeholder: "search for tag..." },
       domProps: { value: _vm.q },
       on: {
@@ -43991,8 +44978,6 @@ var render = function() {
               { staticClass: "mt-1" },
               _vm._l(_vm.tags, function(tag) {
                 return _c("span", { key: tag.id, staticClass: "tag" }, [
-                  _c("span", [_vm._v(_vm._s(tag.name))]),
-                  _vm._v(" "),
                   _c(
                     "span",
                     {
@@ -44006,9 +44991,27 @@ var render = function() {
                     [_vm._v("×")]
                   ),
                   _vm._v(" "),
+                  _c("span", [_vm._v(_vm._s(tag.name))]),
+                  _vm._v(" "),
                   _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: tag.id,
+                        expression: "tag.id"
+                      }
+                    ],
                     attrs: { type: "hidden", name: "tags[]" },
-                    domProps: { value: tag.id }
+                    domProps: { value: tag.id },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(tag, "id", $event.target.value)
+                      }
+                    }
                   })
                 ])
               }),
@@ -44057,7 +45060,8 @@ var render = function() {
     [
       _c("tag-search", {
         key: "2",
-        attrs: { container: "#tag-selection", purpose: "follow" }
+        attrs: { container: "#tag-selection", purpose: "follow" },
+        on: { "tag-followed": _vm.tagFollowed }
       }),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
@@ -44081,34 +45085,15 @@ var render = function() {
                 "div",
                 { key: tag.id, staticClass: "list-group-item" },
                 [
-                  _c("div", { staticClass: "d-flex p-1" }, [
-                    _c("div", [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "tag d-block",
-                          attrs: { href: "/tag/" }
-                        },
-                        [_vm._v("#" + _vm._s(tag.name))]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "ml-auto mr-1" },
-                      [
-                        _c("tag-follow-btn", {
-                          attrs: { prop_tag: tag },
-                          on: {
-                            "tag-followed": _vm.tagFollowed,
-                            "tag-unfollowed": _vm.tagUnfollowed
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                ]
+                  _c("tag", {
+                    attrs: { data: tag },
+                    on: {
+                      "tag-followed": _vm.tagFollowed,
+                      "tag-unfollowed": _vm.tagUnfollowed
+                    }
+                  })
+                ],
+                1
               )
             }),
             0
@@ -44143,34 +45128,15 @@ var render = function() {
                           staticClass: "list-group-item"
                         },
                         [
-                          _c("div", { staticClass: "d-flex p-1" }, [
-                            _c("div", [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "tag d-block",
-                                  attrs: { href: "/tag/" }
-                                },
-                                [_vm._v("#" + _vm._s(tag.name))]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "ml-auto mr-1" },
-                              [
-                                _c("tag-follow-btn", {
-                                  attrs: { prop_tag: tag },
-                                  on: {
-                                    "tag-followed": _vm.tagFollowed,
-                                    "tag-unfollowed": _vm.tagUnfollowed
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          ])
-                        ]
+                          _c("tag", {
+                            attrs: { data: tag },
+                            on: {
+                              "tag-followed": _vm.tagFollowed,
+                              "tag-unfollowed": _vm.tagUnfollowed
+                            }
+                          })
+                        ],
+                        1
                       )
                     }),
                     0
@@ -44227,71 +45193,27 @@ var render = function() {
                   return _c(
                     "div",
                     { key: tag.id + Math.random(), staticClass: "content-box" },
-                    [
-                      _c("div", { staticClass: "d-flex" }, [
-                        _c("h6", [
-                          _c(
-                            "a",
-                            {
-                              staticClass: "tag",
-                              attrs: { href: "/tag/" + tag.name }
-                            },
-                            [_vm._v("#" + _vm._s(tag.name))]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "ml-auto" },
-                          [
-                            _c("tag-follow-btn", {
-                              attrs: { prop_tag: tag },
-                              on: {
-                                "tag-followed": _vm.tagFollowed,
-                                "tag-unfollowed": _vm.tagUnfollowed
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "text-muted" },
-                        [
-                          _vm._v("\n                    Followed by: "),
-                          _vm.is_following_tag(tag)
-                            ? _c("span", [_vm._v("You, ")])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c("users", {
-                            attrs: { prop_users: _vm.followers(tag) }
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "d-flex" }, [
-                            _c("small", { staticClass: "m-1" }, [
-                              _vm._v(
-                                _vm._s(tag.discussions_count) + " discussions"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("small", { staticClass: "m-1" }, [
-                              _vm._v(_vm._s(tag.trainings_count) + " trainings")
-                            ])
-                          ])
-                        ],
-                        1
-                      )
-                    ]
+                    [_c("tag", { attrs: { data: tag } })],
+                    1
                   )
                 }),
                 _vm._v(" "),
                 _vm.links != null && _vm.links.next != null
-                  ? [_vm._m(0)]
-                  : [_vm._m(1)]
+                  ? [
+                      _c(
+                        "div",
+                        { staticClass: "text-center" },
+                        [
+                          _c("loading-one", {
+                            attrs: { message: "loading more..." }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  : [_vm._m(0)]
               ]
-            : [_vm._m(2)]
+            : [_c("loading-one", { attrs: { message: "loading tags" } })]
         ],
         2
       )
@@ -44303,25 +45225,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c("h1", [_vm._v("Loading more...")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c("h1", [_vm._v("That's all")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c("small", { staticClass: "text-muted" }, [_vm._v("hold on...")])
-    ])
+    return _c("div", { staticClass: "text-center" }, [_c("h1", [_vm._v(".")])])
   }
 ]
 render._withStripped = true
@@ -44456,7 +45360,31 @@ var render = function() {
                       1
                     )
                   ])
-                ])
+                ]),
+                _vm._v(" "),
+                _c("div", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.training.snippet) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  _vm._l(_vm.training.training_tags, function(tag) {
+                    return _c(
+                      "a",
+                      {
+                        key: tag,
+                        staticClass: "tag",
+                        attrs: { href: "/tag/" + tag }
+                      },
+                      [_vm._v(_vm._s(tag))]
+                    )
+                  }),
+                  0
+                )
               ])
             ])
           ]
@@ -44547,8 +45475,8 @@ var render = function() {
         _vm._v(_vm._s("" + _vm.user.fullname))
       ]),
       _vm._v(" "),
-      _c("a", { attrs: { href: "@" + _vm.user.username } }, [
-        _vm._v(_vm._s(_vm.user.username))
+      _c("a", { attrs: { href: "/@" + _vm.user.username } }, [
+        _vm._v("@" + _vm._s(_vm.user.username))
       ])
     ])
   ])
@@ -44627,31 +45555,64 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "span",
-    _vm._l(_vm.users, function(user) {
-      return _c("span", { key: user.id }, [
-        _vm.auth == null || user.id != _vm.auth.id
-          ? _c("a", { attrs: { href: "#" } }, [
-              _vm._v(", \n            "),
-              _c("img", {
-                staticStyle: {
-                  width: "30px",
-                  height: "30px",
-                  "border-radius": "50%",
-                  "margin-left": "-10px",
-                  border: "2px solid #fff"
-                },
-                attrs: {
-                  src: user.image,
-                  alt: "",
-                  "data-toggle": "tooltip",
-                  title: user.username
+    [
+      _vm.am_among
+        ? _c(
+            "span",
+            {
+              staticClass: "mr-2",
+              attrs: {
+                "data-toggle": "popover",
+                "data-content": _vm.userPopover(_vm.auth)
+              },
+              on: {
+                click: function($event) {
+                  return _vm.userClicked(_vm.auth)
                 }
-              })
-            ])
-          : _vm._e()
-      ])
-    }),
-    0
+              }
+            },
+            [_vm._v("You, ")]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.users, function(user) {
+        return _c("span", { key: user.id }, [
+          _vm.auth == null || user.id != _vm.auth.id
+            ? _c(
+                "a",
+                {
+                  attrs: { href: "/@" + user.username },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.userClicked(user)
+                    }
+                  }
+                },
+                [
+                  _vm._v(", \n            "),
+                  _c("img", {
+                    staticStyle: {
+                      width: "30px",
+                      height: "30px",
+                      "border-radius": "50%",
+                      "margin-left": "-15px",
+                      border: "2px solid #fff"
+                    },
+                    attrs: {
+                      src: user.image,
+                      alt: "",
+                      "data-toggle": "popover",
+                      "data-content": _vm.userPopover(user)
+                    }
+                  })
+                ]
+              )
+            : _vm._e()
+        ])
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -57886,6 +58847,7 @@ Vue.component('init', __webpack_require__(/*! ./components/init.vue */ "./resour
 Vue.component('loading-one', __webpack_require__(/*! ./components/Assets/LoadingOne.vue */ "./resources/js/components/Assets/LoadingOne.vue")["default"]);
 Vue.component('feeds', __webpack_require__(/*! ./components/Feed/Feeds.vue */ "./resources/js/components/Feed/Feeds.vue")["default"]);
 Vue.component('global-search', __webpack_require__(/*! ./components/GlobalSearch.vue */ "./resources/js/components/GlobalSearch.vue")["default"]);
+Vue.component('forum-search', __webpack_require__(/*! ./components/Forum/ForumSearch.vue */ "./resources/js/components/Forum/ForumSearch.vue")["default"]);
 Vue.component('tag', __webpack_require__(/*! ./components/Tag/Tag.vue */ "./resources/js/components/Tag/Tag.vue")["default"]);
 Vue.component('tags', __webpack_require__(/*! ./components/Tag/Tags.vue */ "./resources/js/components/Tag/Tags.vue")["default"]);
 Vue.component('tag-search', __webpack_require__(/*! ./components/Tag/TagSearch.vue */ "./resources/js/components/Tag/TagSearch.vue")["default"]);
@@ -57899,6 +58861,7 @@ Vue.component('discussion', __webpack_require__(/*! ./components/Discussion/Disc
 Vue.component('discussions', __webpack_require__(/*! ./components/Discussion/Discussions.vue */ "./resources/js/components/Discussion/Discussions.vue")["default"]);
 Vue.component('discussion-meta', __webpack_require__(/*! ./components/Discussion/DiscussionMeta.vue */ "./resources/js/components/Discussion/DiscussionMeta.vue")["default"]);
 Vue.component('discussion-search', __webpack_require__(/*! ./components/Discussion/DiscussionSearch.vue */ "./resources/js/components/Discussion/DiscussionSearch.vue")["default"]);
+Vue.component('discussion-comments', __webpack_require__(/*! ./components/Discussion/DiscussionComments.vue */ "./resources/js/components/Discussion/DiscussionComments.vue")["default"]);
 Vue.component('training', __webpack_require__(/*! ./components/Training/Training.vue */ "./resources/js/components/Training/Training.vue")["default"]);
 Vue.component('trainings', __webpack_require__(/*! ./components/Training/Trainings.vue */ "./resources/js/components/Training/Trainings.vue")["default"]);
 Vue.component('training-meta', __webpack_require__(/*! ./components/Training/TrainingMeta.vue */ "./resources/js/components/Training/TrainingMeta.vue")["default"]);
@@ -57907,6 +58870,8 @@ Vue.component('comment', __webpack_require__(/*! ./components/Comment/Comment.vu
 Vue.component('comments', __webpack_require__(/*! ./components/Comment/Comments.vue */ "./resources/js/components/Comment/Comments.vue")["default"]);
 Vue.component('comment-reply', __webpack_require__(/*! ./components/Comment/CommentReply.vue */ "./resources/js/components/Comment/CommentReply.vue")["default"]);
 Vue.component('comment-textarea', __webpack_require__(/*! ./components/Comment/CommentTextarea.vue */ "./resources/js/components/Comment/CommentTextarea.vue")["default"]);
+Vue.component('school-search', __webpack_require__(/*! ./components/School/SchoolSearch.vue */ "./resources/js/components/School/SchoolSearch.vue")["default"]);
+Vue.component('company-search', __webpack_require__(/*! ./components/Company/CompanySearch.vue */ "./resources/js/components/Company/CompanySearch.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -58413,6 +59378,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Company/CompanySearch.vue":
+/*!***********************************************************!*\
+  !*** ./resources/js/components/Company/CompanySearch.vue ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CompanySearch.vue?vue&type=template&id=662a2b78& */ "./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78&");
+/* harmony import */ var _CompanySearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CompanySearch.vue?vue&type=script&lang=js& */ "./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CompanySearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Company/CompanySearch.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CompanySearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CompanySearch.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Company/CompanySearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CompanySearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78&":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78& ***!
+  \******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CompanySearch.vue?vue&type=template&id=662a2b78& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Company/CompanySearch.vue?vue&type=template&id=662a2b78&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CompanySearch_vue_vue_type_template_id_662a2b78___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Discussion/Discussion.vue":
 /*!***********************************************************!*\
   !*** ./resources/js/components/Discussion/Discussion.vue ***!
@@ -58477,6 +59511,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Discussion_vue_vue_type_template_id_6d2d63b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Discussion_vue_vue_type_template_id_6d2d63b4_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Discussion/DiscussionComments.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/Discussion/DiscussionComments.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true& */ "./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true&");
+/* harmony import */ var _DiscussionComments_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DiscussionComments.vue?vue&type=script&lang=js& */ "./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DiscussionComments_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "8cf8c070",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Discussion/DiscussionComments.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DiscussionComments_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./DiscussionComments.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DiscussionComments_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true&":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true& ***!
+  \**************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Discussion/DiscussionComments.vue?vue&type=template&id=8cf8c070&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DiscussionComments_vue_vue_type_template_id_8cf8c070_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -58888,6 +59991,75 @@ component.options.__file = "resources/js/components/Feed/TrainingFeed.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/Forum/ForumSearch.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/Forum/ForumSearch.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ForumSearch.vue?vue&type=template&id=73d5f1c0& */ "./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0&");
+/* harmony import */ var _ForumSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ForumSearch.vue?vue&type=script&lang=js& */ "./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ForumSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Forum/ForumSearch.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ForumSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ForumSearch.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Forum/ForumSearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ForumSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ForumSearch.vue?vue&type=template&id=73d5f1c0& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Forum/ForumSearch.vue?vue&type=template&id=73d5f1c0&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ForumSearch_vue_vue_type_template_id_73d5f1c0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/GlobalSearch.vue":
 /*!**************************************************!*\
   !*** ./resources/js/components/GlobalSearch.vue ***!
@@ -58975,6 +60147,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/School/SchoolSearch.vue":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/School/SchoolSearch.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SchoolSearch.vue?vue&type=template&id=ad46b108& */ "./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108&");
+/* harmony import */ var _SchoolSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SchoolSearch.vue?vue&type=script&lang=js& */ "./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SchoolSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/School/SchoolSearch.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SchoolSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SchoolSearch.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/School/SchoolSearch.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SchoolSearch_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108& ***!
+  \****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SchoolSearch.vue?vue&type=template&id=ad46b108& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/School/SchoolSearch.vue?vue&type=template&id=ad46b108&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SchoolSearch_vue_vue_type_template_id_ad46b108___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Tag/Tag.vue":
 /*!*********************************************!*\
   !*** ./resources/js/components/Tag/Tag.vue ***!
@@ -59053,9 +60294,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TagFollowButton.vue?vue&type=template&id=d28ba766& */ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&");
+/* harmony import */ var _TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true& */ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true&");
 /* harmony import */ var _TagFollowButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TagFollowButton.vue?vue&type=script&lang=js& */ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& */ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -59063,13 +60306,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _TagFollowButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  null,
+  "d28ba766",
   null
   
 )
@@ -59095,19 +60338,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&":
-/*!****************************************************************************************!*\
-  !*** ./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766& ***!
-  \****************************************************************************************/
+/***/ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&":
+/*!******************************************************************************************************************!*\
+  !*** ./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& ***!
+  \******************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader??ref--6-1!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/src??ref--6-2!../../../../node_modules/vue-loader/lib??vue-loader-options!./TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=style&index=0&id=d28ba766&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_style_index_0_id_d28ba766_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true& ***!
+  \****************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TagFollowButton.vue?vue&type=template&id=d28ba766& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Tag/TagFollowButton.vue?vue&type=template&id=d28ba766&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TagFollowButton_vue_vue_type_template_id_d28ba766_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -59899,15 +61158,13 @@ var actions = {
     var commit = _ref.commit,
         dispatch = _ref.dispatch;
     return new Promise(function (resolve, reject) {
-      if (auth() !== null) {
+      if (window.user_token !== null) {
         axios.get(apiURL('/user')).then(function (res) {
           console.log(res);
 
           if (res.data != null) {
             commit('SET_AUTH_USER', res.data);
-            dispatch('loadMyTags').then(function (res) {
-              commit('APP_READY', true);
-            });
+            commit('APP_READY', true);
           }
 
           resolve(res);
@@ -59933,12 +61190,9 @@ var actions = {
     });
   },
   loadMyTags: function loadMyTags(_ref3) {
-    var commit = _ref3.commit,
-        dispatch = _ref3.dispatch;
+    var commit = _ref3.commit;
     return new Promise(function (resolve, reject) {
       axios.get(apiURL("/my_tags")).then(function (res) {
-        console.log(res);
-        commit('LOAD_TAGS', res.data);
         resolve(res);
       })["catch"](function (error) {
         toastError(error.response);
@@ -59978,12 +61232,6 @@ var actions = {
         dispatch = _ref6.dispatch;
     return new Promise(function (resolve, reject) {
       axios.post(apiURL("/tag/".concat(tag.id, "/follow"))).then(function (response) {
-        if (response.data.action == 'follow') {
-          commit('ADD_TAG', response.data.tag);
-        } else if (response.data.action == 'unfollow') {
-          commit('REMOVE_TAG', response.data.tag);
-        }
-
         resolve(response); // Let the calling function know that http is done.
       })["catch"](function (error) {
         toastError(error.response);
@@ -60068,14 +61316,6 @@ var getters = {
   is_authenticated: function is_authenticated(state) {
     return state.auth == null ? false : true;
   },
-  tags_following: function tags_following(state) {
-    return state.tags_following;
-  },
-  is_following_tag: function is_following_tag(state) {
-    return function (tag) {
-      return itemExist(state.tags_following, tag);
-    };
-  },
   // to compute time difference 
   time_diff: function time_diff(state) {
     return function (timestamp) {
@@ -60145,15 +61385,6 @@ var mutations = {
   },
   SET_AUTH_USER: function SET_AUTH_USER(state, user) {
     state.auth = user;
-  },
-  LOAD_TAGS: function LOAD_TAGS(state, tags) {
-    state.tags_following = tags;
-  },
-  ADD_TAG: function ADD_TAG(state, tag) {
-    state.tags_following.push(tag);
-  },
-  REMOVE_TAG: function REMOVE_TAG(state, tag) {
-    state.tags_following.splice(getIndex(state.tags_following, tag), 1);
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (mutations);
@@ -60171,8 +61402,7 @@ var mutations = {
 __webpack_require__.r(__webpack_exports__);
 var state = {
   app_ready: false,
-  auth: null,
-  tags_following: []
+  auth: null
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
 

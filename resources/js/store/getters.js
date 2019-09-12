@@ -8,12 +8,6 @@ let getters = {
     is_authenticated: state => {
         return state.auth == null ? false : true
     },
-    tags_following: state => {
-        return state.tags_following
-    },
-    is_following_tag: state => tag => {
-        return itemExist(state.tags_following, tag)
-    },
     // to compute time difference 
     time_diff: state => timestamp => {
         return timeDiff(timestamp);

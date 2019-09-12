@@ -45,19 +45,11 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group justify-content-center">
+                    <label for="">Select tags</label>
                     <tag-select :selected="[]"></tag-select>
                 </div>
             </div>
         </div>
-        
-
-        
-
-    
-    <div class="form-group row">
-        <div class="col-sm-6 offset-sm-3">
-            {{Form::submit('Create',['class' => 'btn btn-theme btn-block'])}}
-        </div>
-    </div>
+        {{Form::submit('Create',['class' => 'btn btn-theme'])}}
 </fieldset>
 {!! Form::close() !!}

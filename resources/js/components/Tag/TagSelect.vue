@@ -4,9 +4,9 @@
              <small class="text-muted">{{tags.length}} tag selected</small>
             <div class="mt-1">
                 <span class="tag" v-for="tag in tags" v-bind:key="tag.id">
-                    <span>{{tag.name}}</span>
                     <span class="float-right closer" @click="removeTag(tag)">&times;</span>
-                    <input type="hidden" name="tags[]" v-bind:value="tag.id">
+                    <span>{{tag.name}}</span>
+                    <input type="hidden" name="tags[]" v-model="tag.id">
                 </span>
             </div>
         </template>

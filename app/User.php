@@ -30,7 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','api_token',
     ];
 	protected $searchable = [
         /**
@@ -135,37 +135,19 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function interestedDiscussions(){
-		$discussions = [];
-		foreach($this->interests() as $interest){//Get discussions that has the tags user is following
-		   $IDs = DB::select("select discussion_id from discussion_tag where tag_id=$interest");
-           foreach($IDs as $id){
-                $discussion = Discussion::where('id',$id->discussion_id)->first();
-                if($discussion != null){
-                    array_push($discussions, $discussion);
-                }
-		   }
-        }
-        return collect($discussions);
+        $IDs = DB::table('discussion_tag')->whereIn('tag_id',$this->interests())->groupBy('discussion_id')->pluck('discussion_id');
+        return Discussion::whereIn('id',$IDs)->orderby('created_at','desc')->get();
+    }
+
+    public function interestedTrainings(){
+        $IDs = DB::table('tag_training')->whereIn('tag_id',$this->interests())->groupBy('training_id')->pluck('training_id');
+        return Training::whereIn('id',$IDs)->orderby('created_at','desc')->get();
     }
 
     public function commentsOnContributions(){
-       $discussions_id = $this->discussionContributions()->pluck('discussion_id');
-       return Comment::whereIn('discussion_id',$discussions_id)->get();
-    }
-    public function interestedTrainings(){
-		$trainings = [];
-		foreach($this->interests() as $interest){//Get trainings that has the tags user is following
-			$training_IDs = array();
-		   $IDs = DB::select("select training_id from tag_training where tag_id=$interest");
-		   foreach($IDs as $id){
-               $training = Training::where('id',$id->training_id)->first();
-               if($training != null){
-                array_push($trainings, $training);
-               }
-		   }
-		}
-	return collect($trainings);
-    }
+        $discussions_id = $this->discussionContributions()->pluck('discussion_id');
+        return Comment::whereIn('discussion_id',$discussions_id)->get();
+     }
 
     public function discussionContributions($raw = false){
         $query = Comment::select(DB::raw('count(discussion_id) as total_comments, discussion_id'))->where('user_id', $this->id)->groupBy('discussion_id')->orderBy('created_at', 'desc');

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\School;
+use App\Traits\Resource;
 use Illuminate\Http\Request;
 
 class SchoolController extends Controller
 {
+    use Resource;
     public function __construct(){
 
     }
@@ -45,7 +47,20 @@ class SchoolController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       
+        if($this->isAPIRequest()){
+            $school = null;
+            if($request->has('school') && $request->school != ''){
+                $school = School::where('name', $request->school)->first();
+                if($school == null){
+                    $school = School::create([
+                        'name' => $request->school
+                    ]);
+                }
+            }
+            return response($school);
+        }
+        
     }
 
     /**

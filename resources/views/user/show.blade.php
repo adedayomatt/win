@@ -112,9 +112,13 @@
                                     @if($user->hasWork())
                                         <div class="py-1">
                                            <i class="fa fa-briefcase color-primary" style="font-size: 25px"></i> {{$user->workStatus()}} 
-                                            @if($user->auth())
+                                            <div class="text-muted">
+                                                {{$user->work->job_description == null ? '' : $user->work->job_description }}
+                                            </div>
+                                           @if($user->auth())
                                                 <a href="{{route('user.settings',[$user->username])}}?tab=work" class="operation"><i class="fas fa-pen" title="edit work"></i></a>
                                             @endif
+                            
                                         </div>
                                        
                                     @else
@@ -371,7 +375,8 @@
                     <div class="text-muted text-center">
                         <strong>Activities</strong>
                     </div>
-                    @include('components.feeds._feeds',['feeds' => $feeds])
+                    {{-- @include('components.feeds._feeds',['feeds' => $feeds]) --}}
+                <feeds url="/{{$user->username}}/feeds"></feeds>
                 </div>
             </div>
         </div>

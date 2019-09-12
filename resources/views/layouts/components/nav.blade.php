@@ -28,11 +28,11 @@
                 Trainings
             </a>
       </li>
-      <li class="nav-item ">
+      {{-- <li class="nav-item ">
             <a href="{{route('users')}}" class="nav-link" >
                 Users
             </a>
-      </li>
+      </li> --}}
     </ul>
 
    
@@ -80,10 +80,9 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{route('tag.create')}}">create tag</a>
                     <div class="dropdown-divider"></div>
-                    @if(Auth::user()->isVerified())
-                      <a class="dropdown-item" href="{{route('training.create')}}">create training</a>
+
+                    <a class="dropdown-item" href="{{route('training.create')}}">create training</a>
                       <div class="dropdown-divider"></div>
-                    @endif
 
                       <a class="dropdown-item" href="{{route('forum.create')}}">create forum</a>
                       <div class="dropdown-divider"></div>

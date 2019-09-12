@@ -3,37 +3,22 @@
         <div :id="id" >
             <template v-if="app_ready">
                 <div v-for="tag in tags" v-bind:key="tag.id+Math.random()" class="content-box">
-                    <div class="d-flex">
-                        <h6><a :href="`/tag/${tag.name}`" class="tag">#{{tag.name}}</a></h6>
-                        <div class="ml-auto">
-                            <tag-follow-btn  v-bind:prop_tag="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed" ></tag-follow-btn>
-                        </div>
-                    </div>
-                    <div class="text-muted">
-                        Followed by: <span v-if="is_following_tag(tag)">You, </span>
-                        <users :prop_users="followers(tag)"></users>
-                        <div class="d-flex">
-                            <small class="m-1">{{tag.discussions_count}} discussions</small>
-                            <small class="m-1">{{tag.trainings_count}} trainings</small>
-                        </div>
-                    </div>
+                    <tag :data="tag"></tag>
                 </div>
             <template v-if="links != null && links.next != null">
                 <div class="text-center">
-                    <h1>Loading more...</h1>
+                     <loading-one message="loading more..."></loading-one>
                 </div>
             </template>
             <template v-else>
                 <div class="text-center">
-                    <h1>That's all</h1>
+                    <h1>.</h1>
                 </div>
             </template>
 
             </template>
             <template v-else>
-                <div class="text-center">
-                    <small class="text-muted">hold on...</small>
-                </div>
+                <loading-one message="loading tags"></loading-one>
             </template>
         </div>
     </div>
@@ -42,11 +27,11 @@
 <script>
 import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
-import Users from './../User/Users';
+import Tag from './Tag';
 import TagFollowButton from './TagFollowButton';
-
+import LoadingOne from './../Assets/LoadingOne';
     export default {
-        name: 'tag-list',
+        name: 'tags',
         data(){
             return {
                 tags: [],
@@ -64,15 +49,6 @@ import TagFollowButton from './TagFollowButton';
         },
         props: [ 'id', 'container','url', 'collection'],
         methods: {
-        tagFollowed(tag){
-            tag.followers.push(auth())
-        },
-        tagUnfollowed(tag){
-            removeItem(tag.followers,auth())
-        },
-        followers(tag){
-            return tag.users;
-        },
         loadTags(url){
                     axios.get(url)
                     .then(response => {
@@ -87,7 +63,7 @@ import TagFollowButton from './TagFollowButton';
         },
     },
         components: {
-            TagFollowButton,Users
+            Tag,TagFollowButton,LoadingOne
         },
         mounted() {
             const component = this;

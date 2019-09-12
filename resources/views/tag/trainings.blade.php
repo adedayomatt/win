@@ -55,7 +55,7 @@
             <h6>Followed by:</h6>
             <hr>
             <div style="max-height: 300px; overflow: auto">
-                @include('user.widgets.list', ['users_collection' => $tag->followers])
+                @include('user.widgets.list', ['users_collection' => $tag->users])
             </div>
         </div>
     </div>

@@ -1,19 +1,21 @@
 <template>
         <div>
-            <div class="d-flex">
-                <h6><a :href="`/tag/${tag.name}`" class="tag">#{{tag.name}}</a></h6>
-                <div class="ml-auto">
-                    <tag-follow-btn  v-bind:prop_tag="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed" ></tag-follow-btn>
-                </div>
-            </div>
-            <div class="text-muted">
-                Followed by: <span v-if="is_following_tag(tag)">You, </span>
-                <users :prop_users="followers(tag)"></users>
+            <template v-if="tag != null">
                 <div class="d-flex">
-                    <small class="m-1">{{tag.discussions_count}} discussions</small>
-                    <small class="m-1">{{tag.trainings_count}} trainings</small>
+                    <h6><a :href="`/tag/${tag.name}`" class="tag">#{{tag.name}}</a></h6>
+                    <div class="ml-auto">
+                        <tag-follow-btn  v-bind:prop_tag="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed" ></tag-follow-btn>
+                    </div>
                 </div>
-            </div>
+                <div class="text-muted">
+                    Followed by: 
+                    <users :data="followers"></users>
+                    <div class="d-flex">
+                        <a class="m-1" :href="`/tag/${tag.slug}/discussions`">{{tag.discussions_count}} discussions</a>
+                        <a class="m-1"  :href="`/tag/${tag.slug}/trainings`">{{tag.trainings_count}} trainings</a>
+                    </div>
+                </div>
+            </template>
         </div>
 </template>
 
@@ -24,10 +26,11 @@ import Users from './../User/Users';
 import TagFollowButton from './TagFollowButton';
 
     export default {
-        name: 'tag-list',
+        name: 'tag',
         data(){
             return {
-                tag: this.data
+                tag: null,
+                followers: [],
             }
         },
         computed: {
@@ -39,22 +42,31 @@ import TagFollowButton from './TagFollowButton';
                 'is_following_tag'
             ]),
         },
-        props: ['data'],
+        props: ['data','url'],
         methods: {
         tagFollowed(tag){
-            tag.followers.push(auth())
+            this.followers.push(this.auth);
+            this.$emit('tag-followed', tag);
         },
         tagUnfollowed(tag){
-            removeItem(tag.followers,auth())
-        },
-        followers(tag){
-            return tag.users;
+            removeItem(this.followers,this.auth);
+            this.$emit('tag-unfollowed', tag);
         },
     },
         components: {
             TagFollowButton,Users
         },
         mounted() {
+            if(this.data == undefined && this.url != undefined){
+                axios.get(apiURL(this.url))
+                .then(response => {
+                    this.tag = response.data;
+                    this.followers = response.data.users
+                })
+            }else{
+                this.tag = this.data;
+                this.followers = this.data.users
+            }
         }
     }
 </script>
