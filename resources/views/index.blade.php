@@ -10,7 +10,9 @@
             @if(auth()->user()->tagsFollowing->count() > 0)
                  @include('tag.widgets.inline', ['tags' => auth()->user()->tagsFollowing])
             @else
-                <span class="grey">You don't have any interest yet</span> <a href="{{route('create.interests',auth()->user()->username)}}">Add interests now</a>
+                <div class="text-muted p-2">
+                    You don't have any interest yet <a href="{{route('user.settings',['user'=> auth()->user()->username,'tab' => 'interests'])}}">Add interests now</a>
+                </div>
             @endif
         </div>
        @include('components.ads.sample')
