@@ -51,6 +51,7 @@ Vue.component('training-search', require('./components/Training/TrainingSearch.v
 Vue.component('comment', require('./components/Comment/Comment.vue').default);
 Vue.component('comments', require('./components/Comment/Comments.vue').default);
 Vue.component('comment-reply', require('./components/Comment/CommentReply.vue').default);
+Vue.component('comment-popup', require('./components/Comment/CommentPopup.vue').default);
 Vue.component('comment-textarea', require('./components/Comment/CommentTextarea.vue').default);
 
 Vue.component('school-search', require('./components/School/SchoolSearch.vue').default);

@@ -34,7 +34,7 @@
                
             </div>
             @if($training->media->count() > 0)
-                <div class="row">
+                <div class="row justify-content-center">
                     @foreach($training->media as $media)
                         <div class="col-sm-6 col-md-4 p-0">
                             <div class="p-1">

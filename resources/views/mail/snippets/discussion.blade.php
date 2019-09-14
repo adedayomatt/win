@@ -9,4 +9,6 @@
     <small>started {{$discussion->created_at->diffForHumans()}}</small>
 </div>
 {!!$discussion->content()!!}
-@include('mail.widgets.tags-tile',['tags' => $discussion->tags])
+<div style="margin: 5px 0">
+    @include('mail.widgets.tags-tile',['tags' => $discussion->tags])
+</div>

@@ -138,11 +138,12 @@ class CommentController extends Controller
      */
     public function show($id)
     {
-        $comment = Comment::find($id);
         if($this->isAPIRequest()){
+            $comment = Comment::find($id);
             return response(['comment' => $comment, 'replies' => $comment->replies]);
         }
-
+        $comment = Comment::findorfail($id);
+        return view('comment.show')->with('comment',$comment);
     }
 
     /**

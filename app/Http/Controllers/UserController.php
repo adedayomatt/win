@@ -14,6 +14,7 @@ use App\Matto\Feeds;
 use App\Matto\FileUpload;
 use Illuminate\Http\Request;
 use App\Traits\Resource;
+use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Feed as FeedResource;
 use Illuminate\Support\Facades\Input;
 
@@ -47,6 +48,9 @@ class UserController extends Controller
 	
 	public function show($username){
 		$user = $this->find($username);
+		if($this->isAPIRequest()){
+			return new UserResource($user);
+		}
 		return view('user.show')->with(['user'=>$user]);
 	}
 	public function feeds($username){

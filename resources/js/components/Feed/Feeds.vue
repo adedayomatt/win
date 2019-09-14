@@ -2,13 +2,17 @@
     <div>
          <template v-if="mode === 'single'">
             <div class="single-feed-container shadow-lg">
-                <div class="float-right"><span class="closer" @click="closeSingleFeed">&times;</span></div>
-                <comment :id="single_comment" :quote_discussion="true" :write_comment="true" :show_replies="true" @load-single-comment="getComment"></comment>
+                <comment-popup :id="single_comment" @close-popup="closeSingleFeed"></comment-popup>
             </div>
         </template>
         <div id="feeds-container" :style="`max-height: ${container}`">
             <div id="feeds-wrapper">
                 <template v-if="loaded">
+                    <template v-if="feeds.length == 0">
+                        <div class="text-muted text-center">
+                            <p>There is nothing in this feed yet</p>
+                        </div>
+                    </template>
                     <div v-for="feed in computedFeeds" :key="generateKey(feed)">
                         <template  v-if="feed.type == 'comment'">
                             <comment :data="feed" @load-single-comment="getComment" :quote_discussion="true"></comment>
@@ -129,10 +133,7 @@ export default {
         right: 10px;
         left: 10px;
         top: 10%;
-        background-color: #fff;
-        padding: 5px;
         z-index: 1200000;
-        border-radius: 7px;
     }
 
     @media (min-width: 768px){

@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col-6">
                         {{form::label('start','started')}}
-                        {{form::date('start',$user->education == null ? '' : $user->education->started_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
+                        {{form::date('start',$user->education == null || $user->education->started_at == null ? '' : $user->education->started_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
                         @if ($errors->has('start'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('start') }}</strong>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-6">
                         {{form::label('finish','Finished')}}
-                        {{form::date('finish',$user->education == null ? '' : $user->education->finished_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
+                        {{form::date('finish',$user->education == null || $user->education->finished_at == null? '' : $user->education->finished_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
                         @if ($errors->has('finish'))
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $errors->first('finish') }}</strong>

@@ -1,11 +1,14 @@
 <template>
-    <span >
-        <span v-if="am_among" class="mr-2" @click="userClicked(auth)" data-toggle="popover" :data-content="userPopover(auth)">You, </span>
-        <span v-for="user in users" :key="user.id" >
-            <a v-if="auth == null || user.id != auth.id" :href="`/@${user.username}`" @click.prevent="userClicked(user)">, 
-                <img :src="user.image" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -15px; border: 2px solid #fff"  data-toggle="popover" :data-content="userPopover(user)">
-            </a>
+    <span>
+        <span class="ml-2">
+            <span v-if="am_among" class="mr-3" @click="userClicked(auth)">You, </span>
+            <span v-for="user in showing" :key="user.id" >
+                <a v-if="!is_authenticated || (auth.id != user.id)" class="users-component" :href="`/@${user.username}`" @click.prevent="userClicked(user)" data-toggle="tooltip" :data-content="userPopover(user)" :title="user.fullname">
+                    <img :src="user.image" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" >
+                </a>
+            </span>
         </span>
+        <a href="#" class="text-muted" v-if="others > 0" @click.prevent="showMore"> +{{others}} others</a>
     </span>
 </template> 
 
@@ -16,6 +19,8 @@ import {mapGetters} from 'vuex';
         data(){
             return{
             users: this.data,
+            showing: [],
+            max: this.chunk || 3,
             } 
         },
         computed: {
@@ -29,12 +34,27 @@ import {mapGetters} from 'vuex';
                     return this.users.findIndex(user =>  user.id == this.auth.id) < 0 ? false : true;
                 }
                 return false;
-            }
+            },
+            others(){
+                return this.users.length - this.showing.length
+            },
         },
-        props:['data'],
+        props:['data','chunk'],
         methods: { 
             userClicked(user){
                 this.$emit('user-clicked',user);
+            },
+            computeData(data){
+                this.users = data;
+                this.showing = this.showing.concat(this.loadBatch())
+            },
+            loadBatch(){
+                let start = this.showing.length;
+                let end = start+this.max;
+                return this.users.slice(start,end);
+            },
+            showMore(){
+               this.showing = this.showing.concat(this.loadBatch())
             },
             userPopover(user){
                     return `
@@ -50,18 +70,24 @@ import {mapGetters} from 'vuex';
             }
         },
         mounted(){
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                trigger: 'click hover',      
-                position: 'top'  
-            })
-
+            this.computeData(this.data);
+              $('[data-toggle="popover"]').popover({
+                    html: true,
+                    trigger: 'hover',
+                    placement: 'top'        
+                })
         },
         watch: {
             data: function(newData,oldData){
-                this.users = newData;
+                this.computeData(newData);
             }
         }
         
 }
 </script>
+
+<style scoped>
+    .users-component{
+        cursor: pointer;
+    }
+</style>

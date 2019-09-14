@@ -32,29 +32,9 @@
 
 @section('main')
             <div class="text-muted text-center py-1">
-                <strong>Activities in <span class="tag">#{{$tag->name}}</span></strong>
+                <strong>Feeds in <span class="tag">#{{$tag->name}}</span></strong>
             </div>
-        @if($activities->count() > 0)
-            <div class="infinite-scroll">
-                @foreach($tag->feeds as $activity)
-                    @if($activity->type == 'discussion')
-                        @include('discussion.widgets.snippet', ['discussion' => $activity])
-                    @elseif($activity->type == 'training')
-                        @include('training.widgets.snippet', ['training' => $activity])
-                    @endif
-                @endforeach
-                {{$activities->links()}}
-            </div>
-        @else
-            <div class="text-center text-muted py-2">
-                No activity in {{$tag->name}} yet
-                <div>
-                    <a href="{{route('discussion.create')}}" class="">create discussion</a> or 
-                    <a href="{{route('training.create')}}" class="">create training</a>
-                </div>
-            </div>
-        @endif    
-                
+            <feeds url="{{"/tag/$tag->id/feeds"}}"></feeds>
 @endsection
 
 @section('RHS')

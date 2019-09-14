@@ -1,14 +1,14 @@
 
 <script>
-    window.user_token = "{{Auth::check() ? Auth::user()->api_token : null}}";
+    window.tkn = "{{Auth::check() ? Auth::user()->api_token : ''}}";
 
   function baseURL(){
       return "{{url('/')}}";
   }
   function apiURL(endpoint = ''){
     let url = `/api${endpoint}`;
-    if(window.user_token !== null){
-      return `${url}${endpoint.split('?').length > 1 ? '&' : '?'}api_token=${window.user_token}`
+    if(window.tkn !== null){
+      return `${url}${endpoint.split('?').length > 1 ? '&' : '?'}api_token=${window.tkn}`
     }
     return url;
   }
@@ -55,7 +55,6 @@
   }
 
   function toastError(err,message=''){
-    toastr.error(`${err.status}:${err.statusText}. ${message}`);
       switch(err.status){
           case 401:
               toastr.error(`${message} <a href="/login">Login first</a>`);

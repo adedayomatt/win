@@ -8,7 +8,7 @@ use App\Traits\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\Tag as TagResource;
-
+use App\Http\Resources\Feed as FeedResource;
 
 class TagController extends Controller
 {
@@ -22,7 +22,7 @@ class TagController extends Controller
         }else{
             $middleware = ['auth','verified'];
         }
-        $this->middleware($middleware)->except(['search','index', 'show','trainings','discussions','followers']);
+        $this->middleware($middleware)->except(['search','index', 'show','trainings','discussions','followers','feeds']);
     }
 
     private function getTag($id){
@@ -82,7 +82,7 @@ class TagController extends Controller
             'user_id' => $request->user()->id,
             'name' => $tag_format,
             'description' => $request->description,
-            'slug' => str_slug($request->name)
+            'slug' => $tag_format
         ]);
         $request->user()->tagsFollowing()->attach($tag->id);
         // return the newly created tag...
@@ -103,15 +103,16 @@ class TagController extends Controller
     public function show($id)
     {
         $tag = $this->getTag($id);
-        $tagActivities = $tag->discussions->merge($tag->trainings)->sortByDesc('created_at')->paginate(config('custom.pagination'));
-        
         if($this->isAPIRequest()){
-            return $this->find(Tag::class,$id);
+            return new TagResource($tag);
         }
-
-        //dd($tagActivities);
-        return view('tag.show')->with('tag', $tag)
-                                ->with('activities', $tagActivities);
+        return view('tag.show')->with('tag', $tag);
+    }
+    public function feeds($id){
+        $tag = $this->getTag($id);
+        if($this->isAPIRequest()){
+           return FeedResource::collection($tag->feeds);
+        }
     }
 
     public function discussions($id){

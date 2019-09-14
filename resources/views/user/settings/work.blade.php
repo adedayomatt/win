@@ -36,7 +36,7 @@
 
         <div class="form-group">
             {{form::label('started_at','started working here since...')}}
-            {{form::date('started_at',$user->work->started_at == null ? '' : $user->work->started_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
+            {{form::date('started_at',$user->work == null || $user->work->started_at == null ? '' : $user->work->started_at->format('Y-m-d'),['class' =>'form-control','placeholder'=>'', 'autofocus'])}}
             @if ($errors->has('started_at'))
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $errors->first('started_at') }}</strong>

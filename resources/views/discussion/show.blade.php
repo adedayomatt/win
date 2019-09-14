@@ -74,25 +74,8 @@
     <div class="row">
         <div class="col-12 col-no-padding-xs">
             <div class="widget" style="background-color: inherit">
-                <div class="">
-                    {{-- <h6>Comments (<span class="figure">{{number_format($count)}}</span>)</h6>
-                    @if(isset($contributor))
-                        <div class="text-muted">
-                            @include('user.widgets.snippet', ['user' => $contributor])
-                        </div>
-                        <div class="text-right small"><a href="{{route('discussion.show',[$discussion->slug])}}#comments">show all {{number_format($discussion->comments->count())}} comments</a></div>
-                        <hr>
-                    @endif --}}
-                </div>
                 <div class="comments-container">
-                    <discussion-comments discussion="{{$discussion->id}}"></discussion-comments>
-                    {{-- @if($discussion->comments->count() > 0)
-                        @include('comment.comments')
-                    @else
-                        <div class="content-box text-muted text-center">
-                            <small class="">No comment yet</small>
-                        </div>
-                    @endif --}}
+                    <discussion-comments discussion="{{$discussion->id}}" user="{{request()->get('contributor') == null ? '' : request()->get('contributor')}}"></discussion-comments>
                 </div>
             </div>
         </div>
@@ -100,46 +83,9 @@
         </div>
     </div>
     <div class="comment-seperator"></div>
-    {{-- @include('comment.create') --}}
 
 @endsection
 
 @section('b-scripts')
     @include('layouts.components.ckeditor')
-    {{-- <script>
-        $('.comments-container').on('submit','form.comment-like',function(e){
-         e.preventDefault();
-        var form = $(this);
-        var btn = $(this).find('[type = "submit"]');
-        var counter = $(this).find('.likes-counter');
-        if(auth()){
-            request(
-                url = form.attr('action'),
-                method = 'POST',
-                data =  {
-                    _token: form.find('[name="_token"]').val(),
-                    async: 1,
-                    },
-                success = function(response){
-                    if(btn.data('role') == 'like'){
-                        btn.attr('data-role','unlike');
-                        btn.attr('title','unlike');
-                    }
-                    else if(btn.data('role') == 'unlike'){
-                        btn.attr('data-role','like');
-                        btn.attr('title','like');
-                    }
-                    toastr.success(response.message);
-                    counter.text(response.count);
-                },
-                fail = function(status){
-                    toastr.error(`failed: ${status}`);
-            })
-        }
-        else{
-            toastr.info('Sign in first!');
-        }
-	})
-
-    </script> --}}
 @endsection

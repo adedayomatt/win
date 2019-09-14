@@ -23,7 +23,7 @@
             return {
             q: '',
             suggestions: null,
-            school: JSON.parse(this.data),
+            school: this.data == '' ? null : JSON.parse(this.data),
             }
         },
         props: ['container','data'],
@@ -49,7 +49,7 @@
                     this.selectSchool(response.data)
                 })
                 .catch(error => {
-
+                    toastError(error.response)
                 })
             }
         },

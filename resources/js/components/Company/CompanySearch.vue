@@ -24,7 +24,7 @@
             return {
             q: '',
             suggestions: null,
-            company: JSON.parse(this.data),
+            company: this.data == '' ? null : JSON.parse(this.data),
             }
         },
         props: ['container','data'],

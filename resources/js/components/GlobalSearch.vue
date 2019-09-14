@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2">
+                                <div class="col-lg-2">
                                     <div class="result-header px-3 py-2">Users ({{users.length}})</div>
                                     <div class="result-wrapper">
                                         <user v-for="user in users" :key="user.id+Math.random()" :data="user"></user>

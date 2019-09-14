@@ -15,7 +15,9 @@
             </form>
         </template>
         <template v-else>
-                <div class="alert alert-warning">sign up to add comment</div>
+                <div class="alert alert-info mb-0">
+                    <a href="/login">sign in</a>  to add comment or <a href="/register">Sign up</a>
+                </div>
         </template>
     </div>
 </template>
@@ -87,7 +89,7 @@ import {mapActions} from 'vuex';
         resize:none
     }
     button.submit{
-        right: 0;
+        right: 10px;
         height: 50px;
         border-radius: 0
     }

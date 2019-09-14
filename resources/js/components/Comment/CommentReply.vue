@@ -7,6 +7,7 @@
                     <strong class="d-block">{{comment.user.fullname}}</strong>
                     <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>
                     <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
+                    <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
                 </div> 
             </div>
             {{comment.content}}

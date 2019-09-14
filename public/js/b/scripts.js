@@ -12,7 +12,8 @@ $('document').ready(function(){
 $(function () {
     $('[data-toggle="popover"]').popover({
         html: true,
-        trigger: 'hover',        
+        trigger: 'hover',
+        placement: 'top'        
     })
   });
   $('select').select2(); //use the select2 for all selects

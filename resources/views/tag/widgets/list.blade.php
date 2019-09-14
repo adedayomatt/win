@@ -1,5 +1,5 @@
 <?php 
-    $tags_collection = isset($tags) ? $tags : $_tags::orderby('name','asc')->take(10)->get();
+    $tags_collection = isset($tags) ? $tags : \App\Tag::recent();
 ?>
 <tags collection="{{$tags_collection}}" id="side-tags" type="list"></tags>
 

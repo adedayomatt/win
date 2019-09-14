@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use DB;
 use App\User;
 use App\Matto\Feeds;
 use Illuminate\Database\Eloquent\Model;
@@ -50,6 +51,12 @@ class Tag extends Model
     // dd(collect($trendArray));
     return collect(array_slice($trendArray,0,10))->sortByDesc('trend');
   }
+  public static function recent(){
+    $from_discussions = DB::table('discussion_tag')->orderby('created_at','desc')->take(10)->pluck('tag_id');
+    $from_trainings = DB::table('tag_training')->orderby('created_at','desc')->take(10)->pluck('tag_id');
+   $id = $from_discussions->merge($from_trainings);
+   return Tag::whereIn('id',$id)->get();
+  }
 
   // return collection of users following an collection of tags
   public static function getFollowers($tags){
@@ -94,8 +101,11 @@ public function getDiscussionsCountAttribute(){
   return $this->discussions()->count();
 }
 function getFeedsAttribute(){
-  $feeds = new Feeds($this->discussions, $this->trainings);
+  $feeds = new Feeds($this->discussions, $this->trainings, $this->comments);
   return $feeds->feeds();
+}
+function getCommentsAttribute(){
+  return Comment::whereIn('discussion_id',$this->discussions->pluck('id'))->get();
 }
 
 

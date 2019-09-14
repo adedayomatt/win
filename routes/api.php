@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('/user/{username}', 'UserController@show');
 
 Route::get('tags', 'TagController@index');
 Route::get('tag/{tag}', 'TagController@show');
@@ -28,6 +29,7 @@ Route::get('comments','CommentController@index');
 Route::get('comment/{comment}','CommentController@show');
 Route::get('/feeds', 'AppController@index');
 Route::get('/{user}/feeds', 'UserController@feeds');
+Route::get('/tag/{tag}/feeds', 'TagController@feeds');
 
 Route::group(['middleware' => 'auth:api'], function(){
     // return the authenticated user

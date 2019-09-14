@@ -7,8 +7,8 @@
 
 @section('body')
     @include('mail.snippets.discussion',['discussion' => $comment_like->comment->discussion()])
-    <div style="margin-left: 100px">
+    <div style="margin-left: 20px">
         @include('mail.snippets.user',['user' => $comment_like->comment->user])
-        <q>{{$comment_like->comment->content}}</q>
+        @include('mail.snippets.comment', ['comment' => $comment_like->comment])
     </div>
 @endsection

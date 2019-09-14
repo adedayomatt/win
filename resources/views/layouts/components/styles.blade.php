@@ -16,7 +16,7 @@
 
 <style>
     body{
-        background-color: #fafafab8;
+        background-color: #fdfdfd;
     }
     nav.navbar{
       background-color: #fff;
@@ -67,6 +67,24 @@ a.btn-secondary,
 .btn-secondary{
   background-color: {{secondaryColor()}} !important;
 }
+
+a[role='tab'],
+a[role='tab']:hover,
+a.btn-primary,
+a.btn-theme,
+a.btn-theme:hover,
+.btn-primary,
+.btn-theme
+{
+  color: #fff !important;
+}
+a[role='tab'].active,
+.btn-default
+{
+  background-color: #fff !important;
+}
+a[role='tab'].active,
+a[role='tab'].active:hover,
 .color-primary,
 nav.navbar .nav-link,
 h1,h2,h3,h4,h5,h6,
@@ -78,19 +96,6 @@ a.btn-secondary,
 .btn-secondary
 {
   color: {{primaryColor()}} !important;
-}
-a[role='tab'],
-a.btn-primary,
-a.btn-theme,
-.btn-primary,
-.btn-theme
-{
-  color: #fff !important;
-}
-a[role='tab'].active,
-.btn-default
-{
-  background-color: #fff !important;
 }
 textarea.textarea{
   height: 100px !important;

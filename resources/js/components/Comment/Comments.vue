@@ -1,10 +1,9 @@
 <template>
     <div>
         <template v-if="app_ready">
-            <template v-if="mode === 'single'">
+            <template v-if="mode === 'popup'">
                 <div class="single-comment-container shadow-lg">
-                    <div class="float-right"><span class="closer" @click="closeSingleComment">&times;</span></div>
-                    <comment :id="single_comment" :write_comment="true" :show_replies="true" @load-single-comment="loadSingleComment" @new-reply="newCommentPosted"></comment>
+                    <comment-popup :id="popup_comment"  @new-reply="newCommentPosted" @close-popup="closeSingleComment"></comment-popup>
                 </div>
             </template>
 
@@ -17,7 +16,7 @@
                     <template v-if="loaded">
                         <div  class="list-group image-bullet">
                             <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="list-group-item comment mb-2" style="background-color: inherit">
-                                <comment :data="comment" :show_replies="false" @load-single-comment="loadSingleComment" @new-reply="newCommentPosted"></comment>
+                                <comment :data="comment" @load-single-comment="loadSingleComment" @new-reply="newCommentPosted"></comment>
                             </div> 
                         </div>
                     </template>
@@ -59,7 +58,7 @@ import CommentTextarea from './CommentTextarea';
                 links: null,
                 meta: null,
                 loaded: false,
-                single_comment: null,
+                popup_comment: null,
                 mode: 'list',
                 total: 0
 
@@ -80,6 +79,7 @@ import CommentTextarea from './CommentTextarea';
                 'loadComments'
             ]),
             loadComments(url){
+                if(url !== '' && url !== null){
                     axios.get(url)
                     .then(response => {
                         this.comments =  this.comments.concat(response.data.data);
@@ -91,11 +91,12 @@ import CommentTextarea from './CommentTextarea';
                     })
                     .catch(error => {
 
-                })
+                    })
+                }
             },
             loadSingleComment(comment){
-                this.mode = 'single';
-                this.single_comment = comment.id;          
+                this.mode = 'popup';
+                this.popup_comment = comment.id;          
                 },
             closeSingleComment(){
                 this.mode = 'list';
@@ -141,10 +142,7 @@ import CommentTextarea from './CommentTextarea';
         right: 10px;
         left: 10px;
         top: 10%;
-        background-color: #fff;
-        padding: 5px;
         z-index: 1200;
-        border-radius: 7px;
     }
     .comment-textarea{
         position: fixed;

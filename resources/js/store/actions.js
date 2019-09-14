@@ -2,7 +2,7 @@ let actions = {
     
     getAuth({commit, dispatch}){ 
         return new Promise((resolve, reject) => {
-            if(window.user_token !== null){
+            if(window.user_token !== ''){
                 axios.get(apiURL('/user'))
                 .then(res => {
                     console.log(res);
@@ -23,11 +23,26 @@ let actions = {
         });
 
     },
+    loadUser({commit}, username){
+        return new Promise((resolve, reject) => {
+
+            axios.get(apiURL(`/user/${username}`))
+                .then(response => {
+                   resolve(response);
+                })
+                .catch(error => {
+                    if(error.response.status == 404){
+                        toastr.error(`user <strong>@${username}</strong> not found`)
+                    }
+                    reject(error)
+                })
+         })
+ 
+    },   
     loadFeeds({commit}, url){
         return new Promise((resolve, reject) => {
             axios.get(url)
                 .then(response => {
-                    console.log(response.data);
                    resolve(response);
                 })
                 .catch(error => {

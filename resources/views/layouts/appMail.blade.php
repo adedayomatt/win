@@ -9,7 +9,7 @@
         <style>
             body{
                 margin: 0;
-                font-family: 'Open Sans', Arial, sans-serif !important;
+                font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
                 line-height: 25px;
             }
             .mail-head,
@@ -88,7 +88,7 @@
             .tag{
                 color: #000;
                 display: inline-block;
-                padding: 3px 7px;
+                padding: 0 7px;
                 background-color: #f7f7f7;
                 border: 1px solid #f2f2f2;
                 border-radius: 3px;

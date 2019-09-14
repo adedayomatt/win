@@ -30,7 +30,7 @@ export default {
             return {
                 contributors: [],
                 contributor: null,
-                source: `/discussion/${this.discussion}/comments`,
+                source: '',
             }
         },
         computed: {
@@ -38,13 +38,15 @@ export default {
                 return `/discussion/${this.discussion}/comments`;
             }
         },
-        props: ['discussion'],
+        props: ['discussion', 'user'],
         methods:{
+            ...mapActions([
+                'loadUser'
+            ]),
             getContributors(){
                 axios.get(apiURL(`/discussion/${this.discussion}/contributors`))
                 .then(response => {
                     this.contributors = this.contributors.concat(response.data);
-                    console.log(response.data)
                 })
                 .catch(error => {
 
@@ -55,7 +57,9 @@ export default {
                 this.source = `/discussion/${this.discussion}/comments?contributor=${user.username}`
             },
             addContributor(comment){
-                this.contributors.push(comment.user);
+                if(this.contributors.findIndex(user => user.id == comment.user.id) < 0){
+                    this.contributors.push(comment.user);
+                }
             },
             loadAllComments(){
                 this.source = this.all_comments;
@@ -67,6 +71,17 @@ export default {
         },
         mounted() {
             this.getContributors();
+            if(this.user !== ''){
+                this.loadUser(this.user)
+                .then(response => {
+                    this.loadUserContributions(response.data.data)
+                })
+                .catch(error => {
+                    this.source = `/discussion/${this.discussion}/comments`
+                })
+            }else{
+                this.source = `/discussion/${this.discussion}/comments`
+            }
         }
     }
 </script>

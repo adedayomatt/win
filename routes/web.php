@@ -11,6 +11,9 @@
 |
 */
 Route::get('mail',function(){
+    return view('mail.notification.new-comment-like',['subject' => "New Comment Like", 'comment_like' => \App\CommentLike::find(1)]);
+    return view('mail.notification.new-comment-reply',['subject' => "New Comment Reply", 'reply' => \App\Comment::find(82)]);
+    return view('mail.notification.new-comment-for-author',['subject' => "New Comment", 'comment' => \App\Comment::find(82)]);
     return view('mail.password-reset-mail',['token' => 1234]);
 });
 Route::get('/', 'AppController@index')->name('home');
@@ -56,6 +59,7 @@ Route::resource('discussion','DiscussionController');
 Route::get('discussions','DiscussionController@index')->name('discussions');
 Route::post('discussion/{discussion}/invite/','DiscussionController@inviteUsers')->name('discussion.invite.users');
 Route::resource('discussion/{discussion}/comment','CommentController');
+Route::get('comment/{comment}','CommentController@show')->name('comment.show');
 Route::post('comment/{comment}/reply','CommentController@reply')->name('comment.reply');
 Route::post('comment/{comment}/like','CommentController@like')->name('comment.like');
 Route::get('discussion/{discussion}/delete', 'DiscussionController@delete')->name('discussion.delete');
