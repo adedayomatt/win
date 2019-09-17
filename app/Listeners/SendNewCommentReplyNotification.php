@@ -31,11 +31,13 @@ class SendNewCommentReplyNotification
      */
     public function handle(NewCommentReply $event)
     {
-        $recipients = [];
+        //notification for other users aside the parent comment owner and the replier
         foreach($event->reply->comment->repliers() as $replier){
             // if it's not the parent comment owner and not the person that is replying
-            if($replier->id != $event->reply->comment->user->id && $replier->id != Auth::id()){
-                array_push($recipients, $replier);
+            if($replier->id != $event->reply->comment->user->id && $replier->id != $event->reply->user->id){
+                SendNotificationEmails::dispatch($replier, new NewCommentReplyNotification($event->reply))
+                                        ->onQueue(config('custom.notification_mail_queue'))
+                                        ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
             }
         }
         
@@ -50,16 +52,6 @@ class SendNewCommentReplyNotification
                                     ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
 
         }
-        //notification for other users aside the parent comment owner and the replier
-        if(count($recipients) > 0){
-            
-           // Notification::send(collect($recipients), new NewCommentReplyNotification($event->reply));
-            
-           // queue the mailing job instead...
-            SendNotificationEmails::dispatch(collect($recipients), new NewCommentReplyNotification($event->reply))
-                                    ->onQueue(config('custom.notification_mail_queue'))
-                                    ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
 
-        }
     }
 }

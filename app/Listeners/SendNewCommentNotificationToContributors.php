@@ -35,10 +35,12 @@ class SendNewCommentNotificationToContributors
 
         // Notification::send($recipients, $notification);
 
-        // queue the mailing job instead...
-        SendNotificationEmails::dispatch($recipients, $notification)
+        foreach($recipients as $recipient){
+            // queue the mailing job instead...
+            SendNotificationEmails::dispatch($recipient, $notification)
                             ->onQueue(config('custom.notification_mail_queue'))
                             ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+        }
 
     }
 }

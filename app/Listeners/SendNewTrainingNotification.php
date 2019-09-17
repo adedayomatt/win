@@ -34,9 +34,10 @@ class SendNewTrainingNotification
         // Notification::send($event->training->reachableUsers(),new NewTrainingNofication($event->training));
         
         // queue the mailing job instead...
-        SendNotificationEmails::dispatch($event->training->reachableUsers(), new NewTrainingNotification($event->training))
+        foreach($event->training->reachableUsers() as $recipient){
+            SendNotificationEmails::dispatch($recipient, new NewTrainingNotification($event->training))
                             ->onQueue(config('custom.notification_mail_queue'))
                             ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
-
+        }
     }
 }

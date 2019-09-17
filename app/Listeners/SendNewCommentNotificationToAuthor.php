@@ -30,12 +30,12 @@ class SendNewCommentNotificationToAuthor
      */
     public function handle(NewComment $event)
     {
-        $recipients = collect([$event->comment->discussion()->user]);
+        $recipient = $event->comment->discussion()->user;
         $notification = new NewCommentNotificationForAuthor($event->comment);
         // Notification::send($recipients, $notification);
 
         // queue the mailing job instead...
-        SendNotificationEmails::dispatch($recipients, $notification)
+        SendNotificationEmails::dispatch($recipient, $notification)
                             ->onQueue(config('custom.notification_mail_queue'))
                             ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
     }
