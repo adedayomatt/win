@@ -77,7 +77,14 @@ Route::get('companies', 'CompanyController@index')->name('companies');
 Route::resource('school', 'SchoolController');
 Route::get('schools', 'SchoolController@index')->name('schools');
 
-Route::group(['prefix' => 'async'],function(){
 
+
+// System routes
+Route::get('system/login', 'Auth\SystemLoginController@systemLoginForm')->name('system.login');
+Route::post('system/login', 'Auth\SystemLoginController@login')->name('system.auth');
+Route::group(['middleware' => 'auth:admin','prefix' => 'system'], function(){
+    Route::get('/','SystemController@index')->name('system');
+    Route::post('/cache','SystemController@clearSystemCache')->name('system.cache.clear');
+    Route::post('/artisan','SystemController@runArtisan')->name('system.artisan.run');
 });
 

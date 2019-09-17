@@ -62,13 +62,13 @@ class Tag extends Model
   public static function getFollowers($tags){
     $followers_id = [];
     foreach($tags as $tag){
-        foreach($tag->users as $user){
-            if(!in_array($user->id, $followers_id)){
-                array_push($followers_id, $user->id);
-            }
-        }
+      $user_ids = DB::table('tag_user')
+          ->where('tag_id', $tag->id)
+          ->groupby('user_id')
+          ->pluck('user_id');
+      $followers_id = array_unique(array_merge($followers_id,$user_ids->toArray()), SORT_REGULAR);
     }
-    return User::whereIn('id', $followers_id)->get();
+   return User::whereIn('id', $followers_id)->get();
   }
 
   // Relationships

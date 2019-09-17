@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::group(['middlewre' => 'auth:admin','prefix' => 'system'], function(){
+    Route::get('/','SystemController@index')->name('system');
+    Route::post('/cache','SystemController@clearSystemCache')->name('system.cache.clear');
+    Route::post('/artisan','SystemController@runArtisan')->name('system.artisan.run');
+});
 Route::get('/user/{username}', 'UserController@show');
 
 Route::get('tags', 'TagController@index');
@@ -19,7 +24,7 @@ Route::get('tag/{tag}', 'TagController@show');
 
 Route::get('trainings','TrainingController@index');
 Route::get('training/{id}','TrainingController@show');
-Route::get('training/{training}/discussions','TrainerController@discussions');
+Route::get('training/{training}/discussions','TrainingController@discussions');
 
 Route::get('discussions','DiscussionController@index');
 Route::get('discussion/{id}','DiscussionController@show');

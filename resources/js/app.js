@@ -57,6 +57,8 @@ Vue.component('comment-textarea', require('./components/Comment/CommentTextarea.
 Vue.component('school-search', require('./components/School/SchoolSearch.vue').default);
 Vue.component('company-search', require('./components/Company/CompanySearch.vue').default);
 
+// System components
+Vue.component('system-console', require('./components/System/SystemConsole.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
