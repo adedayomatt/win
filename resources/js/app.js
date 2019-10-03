@@ -51,6 +51,8 @@ Vue.component('training-search', require('./components/Training/TrainingSearch.v
 Vue.component('comment', require('./components/Comment/Comment.vue').default);
 Vue.component('comments', require('./components/Comment/Comments.vue').default);
 Vue.component('comment-reply', require('./components/Comment/CommentReply.vue').default);
+Vue.component('comment-thread', require('./components/Comment/CommentThread.vue').default);
+Vue.component('comment-actions', require('./components/Comment/CommentActions.vue').default);
 Vue.component('comment-popup', require('./components/Comment/CommentPopup.vue').default);
 Vue.component('comment-textarea', require('./components/Comment/CommentTextarea.vue').default);
 

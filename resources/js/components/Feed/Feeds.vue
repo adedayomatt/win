@@ -15,7 +15,9 @@
                     </template>
                     <div v-for="feed in computedFeeds" :key="generateKey(feed)">
                         <template  v-if="feed.type == 'comment'">
-                            <comment :data="feed" @load-single-comment="getComment" :quote_discussion="true"></comment>
+                            <div>
+                                <comment :data="feed" @load-single-comment="getComment" :quote_discussion="true" :quote_comment="true"></comment>
+                            </div>
                         </template>
                         <template v-else-if="feed.type == 'discussion'">
                             <discussion  :data="feed"></discussion>

@@ -16,7 +16,7 @@
 
 <style>
     body{
-        background-color: #fdfdfd;
+        background-color: #fff;
     }
     nav.navbar{
       background-color: #fff;

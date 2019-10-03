@@ -14,9 +14,12 @@
             <div id="comments-container" :style="`max-height: ${container}`">
                 <div id="comments-wrapper">
                     <template v-if="loaded">
-                        <div  class="list-group image-bullet">
-                            <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="list-group-item comment mb-2" style="background-color: inherit">
-                                <comment :data="comment" @load-single-comment="loadSingleComment" @new-reply="newCommentPosted"></comment>
+                        <div>
+                            <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="comment" style="background-color: inherit">
+                                <div>
+                                    <comment :data="comment" :quote_comment="true" @load-single-comment="loadSingleComment"></comment>
+                                </div>
+                               
                             </div> 
                         </div>
                     </template>
@@ -143,6 +146,10 @@ import CommentTextarea from './CommentTextarea';
         left: 10px;
         top: 10%;
         z-index: 1200;
+    }
+    .list-group-item.comment{
+        border: 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
     .comment-textarea{
         position: fixed;

@@ -5,14 +5,23 @@ use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Collection;
 
 class Comment extends Model
 {
 	use softDeletes;
 	
-	protected $fillable = ['user_id', 'discussion_id','comment_id','content'];
-	protected $appends = ['type','comment_discussion', 'reply_to', 'comment_likes', 'replies_count', 'created_timestamp'];
+	protected $fillable = ['user_id', 'discussion_id','comment_id','thread_id','content'];
+	protected $appends = ['type','comment_discussion', 'reply_to', 'thread', 'likes_count', 'replies_count', 'created_timestamp'];
 	
+	// sort collection of comments
+	static function sort($comments){
+		$sorted = [];
+		foreach($comments as $comment){
+			$thread = [];
+
+		}
+	}
 
 	static function topContributors(){
 		return Comment::select(DB::raw('count(user_id) as contributions, user_id'))->groupBy('user_id')->get();
@@ -60,9 +69,39 @@ class Comment extends Model
 		}
 		return $reply_to;
 	}
+	// return other reply to the comment by the comment owner
+	public function getThreadAttribute(){
+		return $this->getThread($this, collect([]));
+	}
 
+	// A recursive function to get self replies
+	public function getThread($comment,$threads)
+	{	 
+		// if($threads->count() > 2){
+		// 	return $threads->paginate(2);
+		// }
+		$first_reply = DB::table('comments')->where('comment_id',$comment->id)->first();
+		if($first_reply == null){
+			return $threads;
+		}else{
+			$carbon = new \Carbon\Carbon($first_reply->created_at);
+			$first_reply->user = User::find($first_reply->user_id);
+			$first_reply->likes_count = DB::table('comment_likes')->where('comment_id',$first_reply->id)->count();
+			$first_reply->replies_count = DB::table('comments')->where('comment_id',$first_reply->id)->count();
+			$first_reply->likes = DB::table('comment_likes')->where('comment_id',$first_reply->id)->get();
+			$first_reply->created_timestamp = $carbon->getTimestamp();
+			$newThread = $threads->merge(collect([$first_reply]));
+			return $this->getThread($first_reply,$newThread);
+		}
+	}
+	
 	public function getRepliesCountAttribute(){
 		return $this->replies()->count();
+	}
+
+	public function getLikesCountAttribute(){
+		$this->likes;
+		return $this->likes()->count();
 	}
 
 	public function getCommentLikesAttribute(){
@@ -71,9 +110,9 @@ class Comment extends Model
 	public function getCreatedTimestampAttribute(){
 		return $this->created_at->getTimestamp();
 	}
-	
+
+
 	public function isReply(){
-		$this->replies;
 		return $this->comment == null ? false : true;
 	}
 	public function content($mode = 'snippet'){

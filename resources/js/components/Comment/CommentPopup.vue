@@ -26,11 +26,14 @@
 
                 <div class="comment-body p-2">
                     <div style="background-color: #fff; border-radius: 5px; padding: 5px; margin-bottom: 5px;">
+                        <div class="quoted-discussion">
+                            <discussion :data="comment.comment_discussion"></discussion>
+                        </div>
                         <!-- If the comment was a reply -->
                         <template v-if="comment.reply_to !== null">
-                            <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
+                            <!-- <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div> -->
                             <div class="reply_to">
-                                <div @click="getComment(comment.reply_to.id)" style="">
+                                <div  style="">
                                     <div class="d-flex">
                                         <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                         <div class="ml-2 pt-1" >
@@ -39,47 +42,54 @@
                                             <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
                                         </div> 
                                     </div>
-                                    {{comment.reply_to.content}}
+                                    <div class="ml-5">
+                                        <div class="replied-comment" @click="getComment(comment.reply_to.id)">
+                                            {{comment.reply_to.content}}
+                                        </div>
+                                        <comment-actions :data="comment" :write_comment="false" :comment_writable="false"></comment-actions>
+                                    </div>
                                 </div>
                             </div>
                         </template>
-                        <div class="quoted-discussion">
-                            <discussion :data="comment.comment_discussion"></discussion>
+                    </div>
+                            
+                    <div class="d-flex">
+                        <img :src="comment.user.image" class="avatar avatar-sm">
+                        <div class="ml-2 pt-1" >
+                            <strong class="d-block">{{`${comment.user.fullname}`}}</strong>
+                            <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>
+                            <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
                         </div>
-                        <div>
-                            {{comment.content}}
-                        </div>
-
                     </div>
 
                     <div>
+                        <div class="main-comment">
+                            {{comment.content}}
+                        </div>
+                        <div class="main-comment-actions">
+                            <comment-actions :data="comment" :write_comment="false" :comment_writable="false"></comment-actions>
+                        </div>
+                    
+                    </div>
+                        
+                    <div>
                         <div class="replies-container">
-                            <div  class="list-group image-bullet">
-                                <div v-for="reply in sortedReplies" v-bind:key="reply.id+Math.random()" class="list-group-item">
+                            <div v-for="reply in sortedReplies" v-bind:key="reply.id+Math.random()">
+                                <comment :data="reply" @load-single-comment="getComment(reply.id)" :quote_comment="false"></comment>
+
+                                <!-- <div v-if="reply.thread_id != comment.id">
                                     <comment-reply :reply="reply" @load-reply="getComment(reply.id)"></comment-reply>
-                            </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="comment-footer">
                     <div class="px-2">
                         <div class="d-flex">
                             <div class="text-muted">Reply to {{comment.user.fullname}}</div>
-                            <div class="ml-auto">
-                                <div class="d-flex">
-                                    <span class="mr-2" @click="commentLike">
-                                        <span class="mr-1">{{likes.length}} </span> 
-                                        <span v-if="isLiked"><i class="fas fa-heart text-danger"></i></span>
-                                        <span v-else><i class="far fa-heart"></i></span>
-                                    </span> 
-                                    <span class="ml-2">
-                                        <span class="">{{replies_count}}</span> 
-                                        <span><i class="fa fa-reply text-primary"></i></span>
-                                    </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                    
@@ -122,7 +132,7 @@ export default {
                 'time_diff',
             ]),
             sortedReplies(){
-                return this.replies.length > 0 ? this.replies.sort( (a,b) => b.id - a.id ) : null;
+                return this.replies.length > 0 ? this.replies.sort( (a,b) => a.id - b.id ) : null;
             },
             isLiked(){
                 if(this.is_authenticated){
@@ -154,6 +164,7 @@ export default {
                 this.loadComment(id)
                .then(response => {
                         this.comment =  response.data.comment;
+                        this.threads =  response.data.comment.thread;
                         this.likes =  response.data.comment.comment_likes;
                         this.replies = response.data.replies;
                         this.replies_count = response.data.comment.replies_count;
@@ -169,24 +180,10 @@ export default {
                         }
                     })
             },
-             commentLike(){
-                this.likeComment(this.comment)
-                .then((response) => {
-                    if(response.data.action == 'like'){
-                        this.likes.push(response.data.like)
-                    }else if(response.data.action == 'unlike'){
-                        this.likes.splice(getIndex(this.likes, response.data.like), 1);
-                    }
-                })
-                .catch(error => {
-
-                })
-               
-            },
 
             newReplyPosted(reply){
-                this.replies.push(reply)
                 this.replies_count++;
+                this.replies.push(reply)
                 this.$emit('new-reply', reply);
             },
             goBack(){
@@ -235,12 +232,24 @@ export default {
     .comment-footer{
         
     }
+    .replied-comment{
+        /* font-size: 12px; */
+    }
     .reply_to{
-        border-left:2px solid #eee;
-        margin-left: 20px;
-        border: 1px solid #eee;
+        background-color: #f7f7f7;
+        padding: 5px;
         border-radius: 5px;
-        padding: 5px
+        border-left: 5px solid #eee;
+        margin: 5px 0;
+    }
+    .main-comment{
+        font-size: 18px;
+    }
+    .main-comment-actions{
+        font-size: 22px;
+        padding: 5px 0;
+        border-top: 1px solid rgba(0,0,0,.125);
+        border-bottom: 1px solid rgba(0,0,0,.125)
     }
     .replies-container{
         margin-left: 10px;

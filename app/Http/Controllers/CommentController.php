@@ -79,13 +79,16 @@ class CommentController extends Controller
             'parent_comment' => 'required'
         ]);
 
-        $comment = $this->find(Comment::class,$comment);
-
+        $comment = Comment::find($request->parent_comment);
+        $user = $request->user();
         $reply = new Comment();
-        $reply->user_id = Auth::id();
-        $reply->comment_id = $request->parent_comment;
+        $reply->user_id = $user->id;
+        $reply->comment_id = $comment->id;
         $reply->discussion_id = $comment->discussion()->id;
         $reply->content = $request->comment;
+        if($comment->user_id == $user->id){ //if it's a self reply, form a thread
+            $reply->thread_id = $comment->id;
+        }
         $reply->save();
 
         event(new NewCommentReply($reply));
@@ -143,6 +146,7 @@ class CommentController extends Controller
             return response(['comment' => $comment, 'replies' => $comment->replies]);
         }
         $comment = Comment::findorfail($id);
+        dd($comment->thread);
         return view('comment.show')->with('comment',$comment);
     }
 

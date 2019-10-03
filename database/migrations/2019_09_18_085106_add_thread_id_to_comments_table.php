@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTrainingLikesTable extends Migration
+class AddThreadIdToCommentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateTrainingLikesTable extends Migration
      */
     public function up()
     {
-        Schema::create('training_likes', function (Blueprint $table) {
-            $table->increments('id');
-			$table->integer('user_id')->unsigned();
-			$table->integer('training_id')->unsigned();
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('comments', function (Blueprint $table) {
+			$table->integer('thread_id')->nullable()->unsigned()->after('comment_id'); //for self replies that form a thread
         });
     }
 
@@ -29,6 +25,8 @@ class CreateTrainingLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('training_likes');
+        Schema::table('comments', function (Blueprint $table) {
+            $table->dropColumn('thread_id');
+        });
     }
 }

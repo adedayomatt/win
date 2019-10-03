@@ -15,7 +15,9 @@
                 </div>
             </div>
         </template>
-        <comments :url="source" target="discussion" :discussion_id="discussion" @comment-posted="addContributor"></comments>
+        <div>
+            <comments :url="source" target="discussion" :discussion_id="discussion" @comment-posted="addContributor"></comments>
+        </div>
     </div>
 </template>
 

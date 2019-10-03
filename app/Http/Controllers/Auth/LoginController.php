@@ -61,6 +61,8 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        //
+        // refresh api token
+        $user->api_token = SHA1($user->username.time());
+        $user->save();
     }
 }

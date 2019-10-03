@@ -14,7 +14,7 @@
 
 @section('main')
 
-<tags url="{{route('tags')}}" id="all-tags"></tags>
+<tags url="/tags" id="all-tags"></tags>
 
     {{-- @if($tags->count() > 0)
         <div class="infinite-scroll has-tag-follow">

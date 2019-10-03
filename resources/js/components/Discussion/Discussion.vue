@@ -2,8 +2,9 @@
     <div>
     <template v-if="is_trashed(discussion)">
         <div class="content-box text-muted" data-toggle="tooltip" title="discussion deleted">
-            <strong class="d-block">{{discussion.title}}</strong>
-            <small>{{snippet(discussion.content)}}</small>
+            <!-- <strong class="d-block">{{discussion.title}}</strong>
+            <small>{{discussion.snippet}}</small> -->
+            <strong>Discussion not available</strong>
         </div>
     </template>
     <template v-else>

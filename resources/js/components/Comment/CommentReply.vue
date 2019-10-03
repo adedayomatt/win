@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div @click="loadReply">
+        <div>
             <div class="d-flex shift-left">
                 <img :src="comment.user.image" :alt="comment.user.username" class="avatar avatar-sm">
                 <div class="ml-2 pt-1" >
@@ -10,19 +10,14 @@
                     <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
                 </div> 
             </div>
-            {{comment.content}}
+            <div class="ml-5">
+                <div  @click="loadReply">
+                    {{comment.content}}
+                </div>
+                <comment-actions :data="comment" :comment_writable="true" :write_comment="false"></comment-actions>
+            </div>
         </div>
-        <div class="d-flex">
-            <span class="mr-2" @click="commentLike">
-                <span class="mr-1">{{likes.length}} </span> 
-                <span v-if="isLiked"><i class="fas fa-heart text-danger"></i></span>
-                <span v-else><i class="far fa-heart"></i></span>
-            </span> 
-            <span class="ml-2" @click="loadReply">
-                 <span class="">{{replies_count}} </span> 
-                <span><i class="fa fa-reply text-primary"></i></span>
-            </span>
-        </div>
+
                 
     </div>
       
@@ -46,15 +41,6 @@ export default {
                 'is_authenticated',
                 'time_diff'
             ]),
-            isLiked(){
-                if(this.is_authenticated){
-                    return this.likes.findIndex(like =>  like.user_id == this.auth.id) < 0 ? false : true;
-                }
-                return false;
-            },
-            timeDiff(){
-                return this.comment.created_at
-            }
         },
         props: ['reply'],
         methods:{
@@ -64,16 +50,6 @@ export default {
             loadReply(){
                 this.$emit('load-reply',this.comment);
             },
-             commentLike(){
-                this.likeComment(this.comment)
-                .then((response) => {
-                    if(response.data.action == 'like'){
-                        this.likes.push(response.data.like)
-                    }else if(response.data.action == 'unlike'){
-                        this.likes.splice(getIndex(this.likes, response.data.like), 1);
-                    }
-                })
-             },
         },
         mounted() {
 

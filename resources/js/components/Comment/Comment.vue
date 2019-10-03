@@ -1,62 +1,72 @@
 <template>
     <div>
-            <div class="comment-scrollable">
-                <div style="background-color: #fff; border-radius: 5px; padding: 5px; margin-bottom: 5px;">
-                    <div class="d-flex shift-left">
-                        <img :src="comment.user.image" :alt="comment.user.username" class="avatar avatar-sm">
-                        <div class="ml-2 pt-1" >
-                            <strong class="d-block">{{comment.user.fullname}}</strong>
-                            <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a> 
-                            <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
-                            <div v-if="comment.reply_to !== null" class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
-                        </div> 
-                    </div>
-                    <!-- If the comment was a reply -->
-                    <template v-if="comment.reply_to !== null">
-                        <div class="reply_to">
-                            <div @click="loadSingleComment(comment.reply_to)" style="">
+            <div style="padding-bottom: 7px; border-bottom: 1px solid rgba(0,0,0,.125);">
+                <div :class="threads.length > 0 ? `list-group image-bullet`: ``" style="padding-top: 0">
+                    <div :class="threads.length > 0 ? `list-group-item`: ``" style="background-color: inherit; border-radius: 5px; padding: 5px;">
+                        <div class="d-flex shift-left">
+                            <img :src="comment.user.image" :alt="comment.user.username" class="avatar avatar-sm">
+                            <div class="ml-2 pt-1" >
+                                <strong class="d-block">{{comment.user.fullname}}</strong>
+                                <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a> 
+                                <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
+                                <div v-if="comment.reply_to !== null && quote_comment == true" class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
+                            </div> 
+                        </div>
+                        <div class="ml-4">
+                        <!-- If the comment was a reply -->
+                            <template v-if="comment.reply_to !== null && quote_comment == true">
+                                <div class="reply_to">
+                                    <div @click="loadSingleComment(comment.reply_to)" style="">
+                                        <div class="d-flex">
+                                            <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
+                                            <div class="pt-1" >
+                                                <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
+                                                <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
+                                                <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
+                                            </div> 
+                                        </div>
+                                        {{comment.reply_to.content}}
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="quote_discussion">
+                                <div class="quoted-discussion">
+                                    <discussion :data="comment.comment_discussion"></discussion>
+                                </div>
+                            </template>
+                            <div @click="loadComment">
+                                {{comment.content}}
+                            </div>
+                            <comment-actions :data="comment" :write_comment="write_comment" :comment_writable="true" @new-reply="newReply"></comment-actions>
+                           
+                            <!-- Replies add now -->
+                            <div v-for="reply in replies" :key="reply.id" class="my-1" style="padding: 5px; border:1px solid #f7f7f7; border-radius: 5px">
                                 <div class="d-flex">
-                                    <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
+                                    <img :src="reply.user.image" :alt="reply.user.username" class="avatar avatar-xs">
                                     <div class="ml-2 pt-1" >
-                                        <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
-                                        <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
-                                        <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
+                                        <strong class="d-block">{{reply.user.fullname}}</strong>
+                                        <a :href="`/@${reply.user.username}`">@{{reply.user.username}}</a>
+                                        <span class="text-muted ml-2">{{time_diff(reply.created_timestamp)}}</span>
                                     </div> 
                                 </div>
-                                {{comment.reply_to.content}}
+                                <div @click="loadSingleComment(reply)">
+                                    {{reply.content}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <template v-if="threads.length > 0">
+                        <div class="list-group-item" style="background-color: inherit;">
+                            <div v-for="thread in threads" :key="thread.id">
+                                <comment-thread :comment="thread" @load-thread="loadThread"></comment-thread>
                             </div>
                         </div>
                     </template>
-                    <template v-if="quote_discussion">
-                        <div class="quoted-discussion">
-                            <discussion :data="comment.comment_discussion"></discussion>
-                        </div>
-                    </template>
-                    <div @click="loadSingleComment(comment)">
-                        {{comment.content}}
-                    </div>
-                    <div class="d-flex">
-                        <span class="mr-2" @click="commentLike">
-                            <span class="mr-1">{{likes.length}} </span> 
-                            <span v-if="isLiked"><i class="fas fa-heart text-danger"></i></span>
-                            <span v-else><i class="far fa-heart"></i></span>
-                        </span> 
-                        <span class="ml-2" @click="replyComment">
-                            <span class="">{{replies_count}}</span> 
-                            <span v-if="allow_comment"><i class="fa fa-reply text-primary"></i></span>
-                            <span v-else><i class="fa fa-reply"></i></span>
-                        </span>
-                    </div>
+
                 </div>
             </div>
-            <div>
-                <template v-if="allow_comment">
-                    <div class="reply-textarea mb-1">
-                        <div class="text-muted">Reply to {{comment.user.fullname}}</div>
-                        <comment-textarea :comment="comment.id" @comment-posted="newReplyPosted"></comment-textarea>
-                    </div>
-                </template>
-            </div>
+            
 
     </div>
 </template>
@@ -67,15 +77,16 @@ import {mapActions} from 'vuex';
 import LoadingOne from './../Assets/LoadingOne'
 import Discussion from './../Discussion/Discussion'
 import CommentReply from './CommentReply'
+import CommentThread from './CommentThread'
+import CommentActions from './CommentActions'
 import CommentTextarea from './CommentTextarea.vue'
 
 export default {
         data(){
             return {
-                comment: this.data || null,
-                replies_count: this.data.replies_count,
-                likes:  this.data.comment_likes,
-                allow_comment: this.write_comment
+                comment: this.data,
+                threads: this.data.thread,
+                replies: [],
             }
         },
         computed: {
@@ -84,53 +95,28 @@ export default {
                 'is_authenticated',
                 'time_diff',
             ]),
-            isLiked(){
-                if(this.is_authenticated){
-                    return this.likes.findIndex(like =>  like.user_id == this.auth.id) < 0 ? false : true;
-                }
-                return false;
-            },
-            timeDiff(){
-                return this.comment.created_at
-            }
             
         },
-        props: ['data','quote_discussion','write_comment'],
-        methods:{
-            ...mapActions([
-                'likeComment'
-            ]),
-             commentLike(){
-                this.likeComment(this.comment)
-                .then((response) => {
-                    if(response.data.action == 'like'){
-                        this.likes.push(response.data.like)
-                    }else if(response.data.action == 'unlike'){
-                        this.likes.splice(getIndex(this.likes, response.data.like), 1);
-                    }
-                })
-                .catch(error => {
-
-                })
-               
-            },
+        props: ['data','quote_discussion','quote_comment','write_comment'],
+        methods:{               
             loadSingleComment(comment){
                 this.$emit('load-single-comment', comment);
             },
-            replyComment(){
-                    this.allow_comment = this.allow_comment == true ? false : true;
+            loadComment(){
+                this.loadSingleComment(this.comment)
             },
-            disallowComment(){
-                this.allow_comment = false;
+            loadThread(thread){
+                this.loadSingleComment(thread)
             },
-            newReplyPosted(reply){
-                this.replies_count++;
-                // pass the new reply to the list
-                this.$emit('new-reply', reply);
+            loadReply(reply){
+                this.loadSingleComment(reply)
+            },
+            newReply(reply){
+                this.replies.push(reply);
             }
         },
         components:{
-            LoadingOne,Discussion,CommentReply, CommentTextarea
+            LoadingOne, Discussion, CommentReply, CommentThread, CommentActions, CommentTextarea
         },
         mounted() {
            
@@ -145,14 +131,11 @@ export default {
 
 <style scoped>
     .reply_to{
-        border-left:2px solid #eee;
-        margin-left: 20px;
         border: 1px solid #eee;
         border-radius: 5px;
         padding: 5px
     }
     .quoted-discussion{
-        margin-left: 20px
     }
 
 </style>

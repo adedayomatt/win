@@ -50,7 +50,7 @@ import LoadingOne from './../Assets/LoadingOne';
         props: [ 'id', 'container','url', 'collection'],
         methods: {
         loadTags(url){
-                    axios.get(url)
+                    axios.get(apiURL(url))
                     .then(response => {
                       this.tags =  this.tags.concat(response.data.data);
                         this.links = response.data.links
