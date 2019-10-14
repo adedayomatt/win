@@ -18,9 +18,9 @@ class TagController extends Controller
     public function __construct()
     {
         if($this->isAPIRequest()){
-            $middleware = ['auth:api','verified'];
+            $middleware = ['auth:api'];
         }else{
-            $middleware = ['auth','verified'];
+            $middleware = ['auth'];
         }
         $this->middleware($middleware)->except(['search','index', 'show','trainings','discussions','followers','feeds']);
     }

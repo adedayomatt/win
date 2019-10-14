@@ -1,6 +1,6 @@
 <template>
     <div>
-            <div style="padding-bottom: 7px; border-bottom: 1px solid rgba(0,0,0,.125);">
+            <div>
                 <div :class="threads.length > 0 ? `list-group image-bullet`: ``" style="padding-top: 0">
                     <div :class="threads.length > 0 ? `list-group-item`: ``" style="background-color: inherit; border-radius: 5px; padding: 5px;">
                         <div class="d-flex shift-left">
@@ -15,8 +15,8 @@
                         <div class="ml-4">
                         <!-- If the comment was a reply -->
                             <template v-if="comment.reply_to !== null && quote_comment == true">
-                                <div class="reply_to">
-                                    <div @click="loadSingleComment(comment.reply_to)" style="">
+                                <div class="reply_to single-comment">
+                                    <div @click="loadSingleComment(comment.reply_to)" class="">
                                         <div class="d-flex">
                                             <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                             <div class="pt-1" >
@@ -34,7 +34,7 @@
                                     <discussion :data="comment.comment_discussion"></discussion>
                                 </div>
                             </template>
-                            <div @click="loadComment">
+                            <div @click="loadComment" class="single-comment">
                                 {{comment.content}}
                             </div>
                             <comment-actions :data="comment" :write_comment="write_comment" :comment_writable="true" @new-reply="newReply"></comment-actions>
@@ -56,6 +56,7 @@
 
                         </div>
                     </div>
+
                     <template v-if="threads.length > 0">
                         <div class="list-group-item" style="background-color: inherit;">
                             <div v-for="thread in threads" :key="thread.id">
@@ -132,8 +133,6 @@ export default {
 <style scoped>
     .reply_to{
         border: 1px solid #eee;
-        border-radius: 5px;
-        padding: 5px
     }
     .quoted-discussion{
     }

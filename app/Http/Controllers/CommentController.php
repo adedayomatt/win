@@ -20,7 +20,7 @@ class CommentController extends Controller
     use Resource;
 
     public function __construct(){
-        $this->middleware('verified')->except(['index','show']);
+        //$this->middleware('verified')->except(['index','show']);
     }
     /**
      * Display a listing of the resource.

@@ -9,7 +9,7 @@
                     </div> 
                 </div>
                 <div class="ml-5">
-                    <div @click="loadThread(thread)">
+                    <div @click="loadThread(thread)" class="single-comment">
                         {{thread.content}}
                     </div>
                     <comment-actions :data="thread" :write_comment="false" :comment_writable="true" @new-reply="newReply"></comment-actions>

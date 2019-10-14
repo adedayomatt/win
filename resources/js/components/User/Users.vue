@@ -2,7 +2,7 @@
     <span>
         <span class="ml-2">
             <span v-if="am_among" class="mr-3" @click="userClicked(auth)">You, </span>
-            <span v-for="user in showing" :key="user.id" >
+            <span v-for="user in showing" :key="user.id+Math.random()" >
                 <a v-if="!is_authenticated || (auth.id != user.id)" class="users-component" :href="`/@${user.username}`" @click.prevent="userClicked(user)" data-toggle="tooltip" :data-content="userPopover(user)" :title="user.fullname">
                     <img :src="user.image" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" >
                 </a>

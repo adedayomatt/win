@@ -1,24 +1,17 @@
 <template>
     <div>
         <div class="d-flex">
-            <span class="mr-2" @click="commentLike">
+            <span class="mr-2 comment-like-btn" @click="commentLike">
                 <span class="mr-1">{{likes_count}} </span> 
                 <span v-if="isLiked"><i class="fas fa-heart text-danger"></i></span>
                 <span v-else><i class="far fa-heart"></i></span>
             </span> 
-            <span class="ml-2" @click="replyComment">
+            <span class="ml-2 comment-reply-btn" @click="replyComment">
                 <span class="">{{replies_count}}</span> 
                 <span v-if="allow_comment"><i class="fa fa-reply text-primary"></i></span>
                 <span v-else><i class="fa fa-reply"></i></span>
             </span>
         </div>
-
-        <!-- <div v-for="reply in recent_replies" :key="reply.id">
-            <div class="recent-reply">
-                <comment-reply :reply="reply"></comment-reply>
-            </div>
-        </div> -->
-
         <div>
             <template v-if="allow_comment && comment_writable">
                 <div class="reply-textarea mb-1">
@@ -115,5 +108,8 @@ export default {
 </script>
 
 <style scoped>
-
+    .comment-like-btn,
+    .comment-reply-btn{
+        cursor: pointer;
+    }
 </style>

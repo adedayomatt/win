@@ -146,6 +146,15 @@ textarea.textarea{
     font-weight: bolder;
     cursor: pointer;
 }
+.single-comment{
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 5px
+
+}
+.single-comment:hover{
+    background-color: #fdfdfd;
+}
 
     @yield('styles')
 
