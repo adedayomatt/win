@@ -1,10 +1,10 @@
 <template>
     <div>
-            <div>
-                <div :class="threads.length > 0 ? `list-group image-bullet`: ``" style="padding-top: 0">
-                    <div :class="threads.length > 0 ? `list-group-item`: ``" style="background-color: inherit; border-radius: 5px; padding: 5px;">
+            <div :class="threads.length > 0 ? `comment-wrapper threaded`: `comment-wrapper`" style="">
+                <div :class="threads.length > 0 ? `list-group image-bullet`: ``" style="padding-top: 0;">
+                    <div :class="threads.length > 0 ? `list-group-item`: ``" style="background-color: inherit; border-radius: 5px; padding: 5px; ">
                         <div class="d-flex shift-left">
-                            <img :src="comment.user.image" :alt="comment.user.username" class="avatar avatar-sm">
+                            <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                             <div class="ml-2 pt-1" >
                                 <strong class="d-block">{{comment.user.fullname}}</strong>
                                 <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a> 
@@ -18,7 +18,7 @@
                                 <div class="reply_to single-comment">
                                     <div @click="loadSingleComment(comment.reply_to)" class="">
                                         <div class="d-flex">
-                                            <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
+                                            <img :src="comment.reply_to.user.image.src" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                             <div class="pt-1" >
                                                 <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
                                                 <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
@@ -42,7 +42,7 @@
                             <!-- Replies add now -->
                             <div v-for="reply in replies" :key="reply.id" class="my-1" style="padding: 5px; border:1px solid #f7f7f7; border-radius: 5px">
                                 <div class="d-flex">
-                                    <img :src="reply.user.image" :alt="reply.user.username" class="avatar avatar-xs">
+                                    <img :src="reply.user.image.src" :alt="reply.user.username" class="avatar avatar-xs">
                                     <div class="ml-2 pt-1" >
                                         <strong class="d-block">{{reply.user.fullname}}</strong>
                                         <a :href="`/@${reply.user.username}`">@{{reply.user.username}}</a>
@@ -135,6 +135,13 @@ export default {
         border: 1px solid #eee;
     }
     .quoted-discussion{
+    }
+    .comment-wrapper{
+        border-bottom: 1px solid rgba(0,0,0,.125);
+        padding:5px 0
+    }
+    .comment-wrapper.threaded{
+        padding-left: 15px
     }
 
 </style>

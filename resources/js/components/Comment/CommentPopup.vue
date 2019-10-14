@@ -6,7 +6,7 @@
                     <div class="d-flex">
                         <div>
                             <div class="d-flex">
-                                <img :src="comment.user.image" class="avatar avatar-sm">
+                                <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                                 <div class="ml-2 pt-1" >
                                     <strong class="d-block">{{`${comment.user.fullname}`}}</strong>
                                     <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>
@@ -35,7 +35,7 @@
                             <div class="reply_to">
                                 <div  style="">
                                     <div class="d-flex">
-                                        <img :src="comment.reply_to.user.image" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
+                                        <img :src="comment.reply_to.user.image.src" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                         <div class="ml-2 pt-1" >
                                             <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
                                             <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
@@ -54,7 +54,7 @@
                     </div>
                             
                     <div class="d-flex">
-                        <img :src="comment.user.image" class="avatar avatar-sm">
+                        <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                         <div class="ml-2 pt-1" >
                             <strong class="d-block">{{`${comment.user.fullname}`}}</strong>
                             <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>

@@ -69,7 +69,7 @@
                                         <small class="m-1">in ${data.discussions_count} discussions</small>
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <img src="${data.user.image}"  style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
+                                                <img src="${data.user.image.src}" alt="${data.user.username}" style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
                                             </div>
                                             <div>
                                                 <strong class="d-block">${data.user.fullname}</strong>

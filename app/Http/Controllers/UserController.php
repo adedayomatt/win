@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use Auth;
-
+use Image;
 use Validator;
 use App\User;
 use App\Training;
@@ -17,6 +17,7 @@ use App\Traits\Resource;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\Feed as FeedResource;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -102,28 +103,41 @@ class UserController extends Controller
 		$this->validate($request,[
 			'avatar' => ['required','image','mimes:jpeg,png,jpg,JPG,gif,svg','max:5048']
 		]);
-		
-		if($request->hasFile('avatar')){
-			$storage = public_path('storage/images/users/');
-			$old_avatar = $user->avatar;
-			
-			$upload = new FileUpload($request,
-									$name='avatar',
-									$title=$user->id.'-'.$user->username.'-'.time(),
-									$path = 'public/images/users/'
-								  );
-			if(!empty($upload->files)){
-				$user->avatar = $upload->files[0]['slug'];
-				$user->save();
-				// if(file_exists($storage.$upload->files[0])){//confirm if new avatar is uploaded successfully
-				// 	// if(file_exists($storage.$old_avatar)){
-				// 	// 	unlink($storage.$old_avatar);
-				// 	// }
-				// }
+		if ($request->hasFile('avatar')){
+			$file = $request->file('avatar');
+			$user = Auth::user();
+			$prev_avatar = $user->avatar;
+			$new_avatar = $user->id.'-'.$user->username.'-'.time().'.'.$file->getClientOriginalExtension();
+			Image::make($file)->resize(250, 205)->save( public_path('storage/images/users/' . $new_avatar));
+			$user->avatar = $new_avatar;
+			$user->save();
+			if(Storage::exists('public/images/users/'.$prev_avatar)){
+				Storage::delete('public/images/users/'.$prev_avatar);
 			}
-
 			return redirect()->back()->with('success','profile picture updated!');
-		}
+
+		  }
+		// if($request->hasFile('avatar')){
+		// 	$storage = public_path('storage/images/users/');
+		// 	$old_avatar = $user->avatar;
+			
+		// 	$upload = new FileUpload($request,
+		// 							$name='avatar',
+		// 							$title=$user->id.'-'.$user->username.'-'.time(),
+		// 							$path = 'public/images/users/'
+		// 						  );
+		// 	if(!empty($upload->files)){
+		// 		$user->avatar = $upload->files[0]['slug'];
+		// 		$user->save();
+		// 		// if(file_exists($storage.$upload->files[0])){//confirm if new avatar is uploaded successfully
+		// 		// 	// if(file_exists($storage.$old_avatar)){
+		// 		// 	// 	unlink($storage.$old_avatar);
+		// 		// 	// }
+		// 		// }
+		// 	}
+
+		// 	return redirect()->back()->with('success','profile picture updated!');
+		// }
 		return redirect()->back();
 	}
 	

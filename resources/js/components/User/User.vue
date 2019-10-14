@@ -1,6 +1,6 @@
 <template>
    <div class="d-flex py-1">
-       <img :src="user.image" class="avatar avatar-sm">
+       <img :src="user.image.src" :alt="user.image.alt" class="avatar avatar-sm">
         <div class="ml-2 pt-1" >
             <strong class="d-block">{{`${user.fullname}`}}</strong>
             <a :href="`/@${user.username}`">@{{user.username}}</a>

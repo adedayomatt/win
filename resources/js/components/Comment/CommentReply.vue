@@ -2,7 +2,7 @@
     <div>
         <div>
             <div class="d-flex shift-left">
-                <img :src="comment.user.image" :alt="comment.user.username" class="avatar avatar-sm">
+                <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                 <div class="ml-2 pt-1" >
                     <strong class="d-block">{{comment.user.fullname}}</strong>
                     <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>

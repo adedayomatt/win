@@ -8,8 +8,8 @@
         background-color: #fff;
     }
     #avatar{
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
         border-radius: 50%;
         margin-top: -100px;
     }
@@ -399,6 +399,8 @@
                                 <div class="text-right text-muted">
                                     <p>contributed <a href="{{route('discussion.show', [$contribution->discussion()->slug])}}?contributor={{$user->username}}">{{$contribution->total_comments}} comments</a></p>
                                 </div>
+                            @else
+                                <p class="text-muted">contributed {{$contribution->total_comments}} comments</p>
                             @endif
                         </div>
                     @endforeach 

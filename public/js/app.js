@@ -2989,8 +2989,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          var avatarURL = baseURL() + '/storage/images/users/';
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/discussion/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/discussion/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\" alt=\"").concat(data.user.username, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -3241,7 +3240,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/forum/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.name, "\n                                            </strong>\n                                        </a>\n                                        <small class=\"m-1\">in ").concat(data.discussions_count, " discussions</small>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.fullname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/forum/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.name, "\n                                            </strong>\n                                        </a>\n                                        <small class=\"m-1\">in ").concat(data.discussions_count, " discussions</small>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image.src, "\" alt=\"").concat(data.user.username, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.fullname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -4433,8 +4432,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          var avatarURL = baseURL() + '/storage/images/users/';
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions_count, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.avatar == null ? avatarURL + 'default.png' : avatarURL + data.user.avatar, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions_count, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\" alt=\"").concat(data.user.username, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -4644,7 +4642,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.showing = this.showing.concat(this.loadBatch());
     },
     userPopover: function userPopover(user) {
-      return "\n                       <div class=\"d-flex py-1\">\n                            <img src=\"".concat(user.image, "\" class=\"avatar avatar-sm\">\n                            <div class=\"ml-2 pt-1\" >\n                                <strong class=\"d-block\">").concat(user.fullname, "</strong>\n                                <a href=\"/@").concat(user.username, "\">@").concat(user.username, "</a>\n                                ").concat(user.bio == null ? '' : '<div class="text-muted">' + user.bio + '</div>', "\n                            </div>\n                        </div>\n                  ");
+      return "\n                       <div class=\"d-flex py-1\">\n                            <img src=\"".concat(user.image.src, "\" alt=\"").concat(user.image.alt, "\" class=\"avatar avatar-sm\">\n                            <div class=\"ml-2 pt-1\" >\n                                <strong class=\"d-block\">").concat(user.fullname, "</strong>\n                                <a href=\"/@").concat(user.username, "\">@").concat(user.username, "</a>\n                                ").concat(user.bio == null ? '' : '<div class="text-muted">' + user.bio + '</div>', "\n                            </div>\n                        </div>\n                  ");
     }
   },
   mounted: function mounted() {
@@ -11819,7 +11817,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.reply_to[data-v-94a5e118]{\n    border: 1px solid #eee;\n}\n.quoted-discussion[data-v-94a5e118]{\n}\n\n", ""]);
+exports.push([module.i, "\n.reply_to[data-v-94a5e118]{\n    border: 1px solid #eee;\n}\n.quoted-discussion[data-v-94a5e118]{\n}\n.comment-wrapper[data-v-94a5e118]{\n    border-bottom: 1px solid rgba(0,0,0,.125);\n    padding:5px 0\n}\n.comment-wrapper.threaded[data-v-94a5e118]{\n    padding-left: 15px\n}\n\n", ""]);
 
 // exports
 
@@ -43961,290 +43959,309 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", [
-      _c(
-        "div",
-        {
-          class: _vm.threads.length > 0 ? "list-group image-bullet" : "",
-          staticStyle: { "padding-top": "0" }
-        },
-        [
-          _c(
-            "div",
-            {
-              class: _vm.threads.length > 0 ? "list-group-item" : "",
-              staticStyle: {
-                "background-color": "inherit",
-                "border-radius": "5px",
-                padding: "5px"
-              }
-            },
-            [
-              _c("div", { staticClass: "d-flex shift-left" }, [
-                _c("img", {
-                  staticClass: "avatar avatar-sm",
-                  attrs: {
-                    src: _vm.comment.user.image,
-                    alt: _vm.comment.user.username
-                  }
-                }),
+    _c(
+      "div",
+      {
+        class:
+          _vm.threads.length > 0
+            ? "comment-wrapper threaded"
+            : "comment-wrapper"
+      },
+      [
+        _c(
+          "div",
+          {
+            class: _vm.threads.length > 0 ? "list-group image-bullet" : "",
+            staticStyle: { "padding-top": "0" }
+          },
+          [
+            _c(
+              "div",
+              {
+                class: _vm.threads.length > 0 ? "list-group-item" : "",
+                staticStyle: {
+                  "background-color": "inherit",
+                  "border-radius": "5px",
+                  padding: "5px"
+                }
+              },
+              [
+                _c("div", { staticClass: "d-flex shift-left" }, [
+                  _c("img", {
+                    staticClass: "avatar avatar-sm",
+                    attrs: {
+                      src: _vm.comment.user.image.src,
+                      alt: _vm.comment.user.username
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "ml-2 pt-1" }, [
+                    _c("strong", { staticClass: "d-block" }, [
+                      _vm._v(_vm._s(_vm.comment.user.fullname))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      { attrs: { href: "/@" + _vm.comment.user.username } },
+                      [_vm._v("@" + _vm._s(_vm.comment.user.username))]
+                    ),
+                    _vm._v(" "),
+                    _c("span", { staticClass: "text-muted ml-2" }, [
+                      _vm._v(
+                        _vm._s(_vm.time_diff(_vm.comment.created_timestamp))
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.comment.reply_to !== null && _vm.quote_comment == true
+                      ? _c("div", { staticClass: "text-muted" }, [
+                          _vm._v(
+                            "Replying to " +
+                              _vm._s(_vm.comment.reply_to.user.fullname) +
+                              " "
+                          ),
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: "/@" + _vm.comment.reply_to.user.username
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "@" + _vm._s(_vm.comment.reply_to.user.username)
+                              )
+                            ]
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "ml-2 pt-1" }, [
-                  _c("strong", { staticClass: "d-block" }, [
-                    _vm._v(_vm._s(_vm.comment.user.fullname))
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "a",
-                    { attrs: { href: "/@" + _vm.comment.user.username } },
-                    [_vm._v("@" + _vm._s(_vm.comment.user.username))]
-                  ),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "text-muted ml-2" }, [
-                    _vm._v(_vm._s(_vm.time_diff(_vm.comment.created_timestamp)))
-                  ]),
-                  _vm._v(" "),
-                  _vm.comment.reply_to !== null && _vm.quote_comment == true
-                    ? _c("div", { staticClass: "text-muted" }, [
+                _c(
+                  "div",
+                  { staticClass: "ml-4" },
+                  [
+                    _vm.comment.reply_to !== null && _vm.quote_comment == true
+                      ? [
+                          _c(
+                            "div",
+                            { staticClass: "reply_to single-comment" },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.loadSingleComment(
+                                        _vm.comment.reply_to
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("div", { staticClass: "d-flex" }, [
+                                    _c("img", {
+                                      staticClass: "avatar avatar-sm",
+                                      attrs: {
+                                        src:
+                                          _vm.comment.reply_to.user.image.src,
+                                        alt: _vm.comment.reply_to.user.username
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "pt-1" }, [
+                                      _c("strong", { staticClass: "d-block" }, [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.comment.reply_to.user.fullname
+                                          )
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "a",
+                                        {
+                                          attrs: {
+                                            href:
+                                              "/@" +
+                                              _vm.comment.reply_to.user.username
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "@" +
+                                              _vm._s(
+                                                _vm.comment.reply_to.user
+                                                  .username
+                                              )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "span",
+                                        { staticClass: "text-muted ml-2" },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm.time_diff(
+                                                _vm.comment.reply_to
+                                                  .created_timestamp
+                                              )
+                                            )
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  ]),
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.comment.reply_to.content) +
+                                      "\n                                "
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.quote_discussion
+                      ? [
+                          _c(
+                            "div",
+                            { staticClass: "quoted-discussion" },
+                            [
+                              _c("discussion", {
+                                attrs: { data: _vm.comment.comment_discussion }
+                              })
+                            ],
+                            1
+                          )
+                        ]
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "single-comment",
+                        on: { click: _vm.loadComment }
+                      },
+                      [
                         _vm._v(
-                          "Replying to " +
-                            _vm._s(_vm.comment.reply_to.user.fullname) +
-                            " "
-                        ),
-                        _c(
-                          "a",
-                          {
-                            attrs: {
-                              href: "/@" + _vm.comment.reply_to.user.username
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "@" + _vm._s(_vm.comment.reply_to.user.username)
-                            )
-                          ]
+                          "\n                            " +
+                            _vm._s(_vm.comment.content) +
+                            "\n                        "
                         )
-                      ])
-                    : _vm._e()
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "ml-4" },
-                [
-                  _vm.comment.reply_to !== null && _vm.quote_comment == true
-                    ? [
-                        _c("div", { staticClass: "reply_to single-comment" }, [
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("comment-actions", {
+                      attrs: {
+                        data: _vm.comment,
+                        write_comment: _vm.write_comment,
+                        comment_writable: true
+                      },
+                      on: { "new-reply": _vm.newReply }
+                    }),
+                    _vm._v(" "),
+                    _vm._l(_vm.replies, function(reply) {
+                      return _c(
+                        "div",
+                        {
+                          key: reply.id,
+                          staticClass: "my-1",
+                          staticStyle: {
+                            padding: "5px",
+                            border: "1px solid #f7f7f7",
+                            "border-radius": "5px"
+                          }
+                        },
+                        [
+                          _c("div", { staticClass: "d-flex" }, [
+                            _c("img", {
+                              staticClass: "avatar avatar-xs",
+                              attrs: {
+                                src: reply.user.image.src,
+                                alt: reply.user.username
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "ml-2 pt-1" }, [
+                              _c("strong", { staticClass: "d-block" }, [
+                                _vm._v(_vm._s(reply.user.fullname))
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                { attrs: { href: "/@" + reply.user.username } },
+                                [_vm._v("@" + _vm._s(reply.user.username))]
+                              ),
+                              _vm._v(" "),
+                              _c("span", { staticClass: "text-muted ml-2" }, [
+                                _vm._v(
+                                  _vm._s(_vm.time_diff(reply.created_timestamp))
+                                )
+                              ])
+                            ])
+                          ]),
+                          _vm._v(" "),
                           _c(
                             "div",
                             {
                               on: {
                                 click: function($event) {
-                                  return _vm.loadSingleComment(
-                                    _vm.comment.reply_to
-                                  )
+                                  return _vm.loadSingleComment(reply)
                                 }
                               }
                             },
                             [
-                              _c("div", { staticClass: "d-flex" }, [
-                                _c("img", {
-                                  staticClass: "avatar avatar-sm",
-                                  attrs: {
-                                    src: _vm.comment.reply_to.user.image,
-                                    alt: _vm.comment.reply_to.user.username
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "pt-1" }, [
-                                  _c("strong", { staticClass: "d-block" }, [
-                                    _vm._v(
-                                      _vm._s(_vm.comment.reply_to.user.fullname)
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      attrs: {
-                                        href:
-                                          "/@" +
-                                          _vm.comment.reply_to.user.username
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "@" +
-                                          _vm._s(
-                                            _vm.comment.reply_to.user.username
-                                          )
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "span",
-                                    { staticClass: "text-muted ml-2" },
-                                    [
-                                      _vm._v(
-                                        _vm._s(
-                                          _vm.time_diff(
-                                            _vm.comment.reply_to
-                                              .created_timestamp
-                                          )
-                                        )
-                                      )
-                                    ]
-                                  )
-                                ])
-                              ]),
                               _vm._v(
-                                "\n                                    " +
-                                  _vm._s(_vm.comment.reply_to.content) +
-                                  "\n                                "
+                                "\n                                " +
+                                  _vm._s(reply.content) +
+                                  "\n                            "
                               )
                             ]
                           )
-                        ])
-                      ]
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.quote_discussion
-                    ? [
-                        _c(
-                          "div",
-                          { staticClass: "quoted-discussion" },
-                          [
-                            _c("discussion", {
-                              attrs: { data: _vm.comment.comment_discussion }
-                            })
-                          ],
-                          1
-                        )
-                      ]
-                    : _vm._e(),
-                  _vm._v(" "),
+                        ]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _vm.threads.length > 0
+              ? [
                   _c(
                     "div",
                     {
-                      staticClass: "single-comment",
-                      on: { click: _vm.loadComment }
+                      staticClass: "list-group-item",
+                      staticStyle: { "background-color": "inherit" }
                     },
-                    [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(_vm.comment.content) +
-                          "\n                        "
+                    _vm._l(_vm.threads, function(thread) {
+                      return _c(
+                        "div",
+                        { key: thread.id },
+                        [
+                          _c("comment-thread", {
+                            attrs: { comment: thread },
+                            on: { "load-thread": _vm.loadThread }
+                          })
+                        ],
+                        1
                       )
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("comment-actions", {
-                    attrs: {
-                      data: _vm.comment,
-                      write_comment: _vm.write_comment,
-                      comment_writable: true
-                    },
-                    on: { "new-reply": _vm.newReply }
-                  }),
-                  _vm._v(" "),
-                  _vm._l(_vm.replies, function(reply) {
-                    return _c(
-                      "div",
-                      {
-                        key: reply.id,
-                        staticClass: "my-1",
-                        staticStyle: {
-                          padding: "5px",
-                          border: "1px solid #f7f7f7",
-                          "border-radius": "5px"
-                        }
-                      },
-                      [
-                        _c("div", { staticClass: "d-flex" }, [
-                          _c("img", {
-                            staticClass: "avatar avatar-xs",
-                            attrs: {
-                              src: reply.user.image,
-                              alt: reply.user.username
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "ml-2 pt-1" }, [
-                            _c("strong", { staticClass: "d-block" }, [
-                              _vm._v(_vm._s(reply.user.fullname))
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "a",
-                              { attrs: { href: "/@" + reply.user.username } },
-                              [_vm._v("@" + _vm._s(reply.user.username))]
-                            ),
-                            _vm._v(" "),
-                            _c("span", { staticClass: "text-muted ml-2" }, [
-                              _vm._v(
-                                _vm._s(_vm.time_diff(reply.created_timestamp))
-                              )
-                            ])
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            on: {
-                              click: function($event) {
-                                return _vm.loadSingleComment(reply)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                                " +
-                                _vm._s(reply.content) +
-                                "\n                            "
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  })
-                ],
-                2
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _vm.threads.length > 0
-            ? [
-                _c(
-                  "div",
-                  {
-                    staticClass: "list-group-item",
-                    staticStyle: { "background-color": "inherit" }
-                  },
-                  _vm._l(_vm.threads, function(thread) {
-                    return _c(
-                      "div",
-                      { key: thread.id },
-                      [
-                        _c("comment-thread", {
-                          attrs: { comment: thread },
-                          on: { "load-thread": _vm.loadThread }
-                        })
-                      ],
-                      1
-                    )
-                  }),
-                  0
-                )
-              ]
-            : _vm._e()
-        ],
-        2
-      )
-    ])
+                    }),
+                    0
+                  )
+                ]
+              : _vm._e()
+          ],
+          2
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = []
@@ -44369,7 +44386,10 @@ var render = function() {
                       _c("div", { staticClass: "d-flex" }, [
                         _c("img", {
                           staticClass: "avatar avatar-sm",
-                          attrs: { src: _vm.comment.user.image }
+                          attrs: {
+                            src: _vm.comment.user.image.src,
+                            alt: _vm.comment.user.username
+                          }
                         }),
                         _vm._v(" "),
                         _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -44457,7 +44477,7 @@ var render = function() {
                                 _c("img", {
                                   staticClass: "avatar avatar-sm",
                                   attrs: {
-                                    src: _vm.comment.reply_to.user.image,
+                                    src: _vm.comment.reply_to.user.image.src,
                                     alt: _vm.comment.reply_to.user.username
                                   }
                                 }),
@@ -44551,7 +44571,10 @@ var render = function() {
                 _c("div", { staticClass: "d-flex" }, [
                   _c("img", {
                     staticClass: "avatar avatar-sm",
-                    attrs: { src: _vm.comment.user.image }
+                    attrs: {
+                      src: _vm.comment.user.image.src,
+                      alt: _vm.comment.user.username
+                    }
                   }),
                   _vm._v(" "),
                   _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -44679,7 +44702,10 @@ var render = function() {
       _c("div", { staticClass: "d-flex shift-left" }, [
         _c("img", {
           staticClass: "avatar avatar-sm",
-          attrs: { src: _vm.comment.user.image, alt: _vm.comment.user.username }
+          attrs: {
+            src: _vm.comment.user.image.src,
+            alt: _vm.comment.user.username
+          }
         }),
         _vm._v(" "),
         _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -44821,7 +44847,8 @@ var render = function() {
                 _c("img", {
                   staticClass: "commenter-avatar",
                   attrs: {
-                    src: _vm.auth.image,
+                    src: _vm.auth.image.src,
+                    alt: _vm.auth.username,
                     "data-toggle": "tooltip",
                     title: "Add comment"
                   }
@@ -44913,7 +44940,7 @@ var render = function() {
     _c("div", { staticClass: "d-flex shift-left" }, [
       _c("img", {
         staticClass: "avatar avatar-sm",
-        attrs: { src: _vm.thread.user.image, alt: _vm.thread.user.username }
+        attrs: { src: _vm.thread.user.image.src, alt: _vm.thread.user.username }
       }),
       _vm._v(" "),
       _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -44978,7 +45005,7 @@ var render = function() {
               _c("div", { staticClass: "d-flex" }, [
                 _c("img", {
                   staticClass: "avatar avatar-xs",
-                  attrs: { src: reply.user.image, alt: reply.user.username }
+                  attrs: { src: reply.user.image.src, alt: reply.user.username }
                 }),
                 _vm._v(" "),
                 _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -47113,7 +47140,7 @@ var render = function() {
   return _c("div", { staticClass: "d-flex py-1" }, [
     _c("img", {
       staticClass: "avatar avatar-sm",
-      attrs: { src: _vm.user.image }
+      attrs: { src: _vm.user.image.src, alt: _vm.user.image.alt }
     }),
     _vm._v(" "),
     _c("div", { staticClass: "ml-2 pt-1" }, [
@@ -47248,7 +47275,7 @@ var render = function() {
                         "margin-left": "-10px",
                         border: "2px solid #fff"
                       },
-                      attrs: { src: user.image, alt: "" }
+                      attrs: { src: user.image.src, alt: user.image.alt }
                     })
                   ]
                 )

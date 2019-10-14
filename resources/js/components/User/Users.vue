@@ -4,7 +4,7 @@
             <span v-if="am_among" class="mr-3" @click="userClicked(auth)">You, </span>
             <span v-for="user in showing" :key="user.id+Math.random()" >
                 <a v-if="!is_authenticated || (auth.id != user.id)" class="users-component" :href="`/@${user.username}`" @click.prevent="userClicked(user)" data-toggle="tooltip" :data-content="userPopover(user)" :title="user.fullname">
-                    <img :src="user.image" alt="" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" >
+                    <img :src="user.image.src" :alt="user.image.alt" style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" >
                 </a>
             </span>
         </span>
@@ -59,7 +59,7 @@ import {mapGetters} from 'vuex';
             userPopover(user){
                     return `
                        <div class="d-flex py-1">
-                            <img src="${user.image}" class="avatar avatar-sm">
+                            <img src="${user.image.src}" alt="${user.image.alt}" class="avatar avatar-sm">
                             <div class="ml-2 pt-1" >
                                 <strong class="d-block">${user.fullname}</strong>
                                 <a href="/@${user.username}">@${user.username}</a>

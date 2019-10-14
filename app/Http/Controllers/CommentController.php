@@ -146,7 +146,6 @@ class CommentController extends Controller
             return response(['comment' => $comment, 'replies' => $comment->replies]);
         }
         $comment = Comment::findorfail($id);
-        dd($comment->thread);
         return view('comment.show')->with('comment',$comment);
     }
 

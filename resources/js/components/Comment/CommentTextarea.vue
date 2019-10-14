@@ -6,7 +6,7 @@
                 <input v-if="discussion !== null && discussion !== undefined" type="hidden" name="discussion_id" v-model="discussion_id">
                 <!-- if it's reply to a comment -->
                 <input v-if="comment !== null && comment !== undefined" type="hidden" name="comment_id" v-model="comment_id">
-                <img :src="auth.image" class="commenter-avatar" data-toggle="tooltip" title="Add comment">
+                <img :src="auth.image.src" :alt="auth.username" class="commenter-avatar" data-toggle="tooltip" title="Add comment">
                 <button v-if="contentFilled" type="submit" class="no-outline btn primary-color submit">Post</button>
                 <button v-else type="submit" class="no-outline btn primary-color submit" disabled>Post</button>
                 <div>
