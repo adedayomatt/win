@@ -1,14 +1,14 @@
 
 <script>
-    window.tkn = "{{Auth::check() ? Auth::user()->api_token : ''}}";
+    window.key = "{{Auth::check() ? Auth::user()->api_token : ''}}";
 
   function baseURL(){
-      return "{{url('/')}}";
+      return "{{env('APP_URL')}}";
   }
   function apiURL(endpoint = ''){
-    let url = `/api${endpoint}`;
-    if(window.tkn !== null){
-      return `${url}${endpoint.split('?').length > 1 ? '&' : '?'}api_token=${window.tkn}`
+    let url = `${baseURL()}/api${endpoint}`;
+    if(window.key !== null){
+      return `${url}${endpoint.split('?').length > 1 ? '&' : '?'}api_token=${window.key}`
     }
     return url;
   }

@@ -142,9 +142,9 @@ import CommentTextarea from './CommentTextarea';
 <style scoped>
     .single-comment-container{
         position: fixed;
-        right: 10px;
-        left: 10px;
-        top: 10%;
+        right: 0;
+        left: 0;
+        bottom: 0;
         z-index: 1200;
     }
     .list-group-item.comment{

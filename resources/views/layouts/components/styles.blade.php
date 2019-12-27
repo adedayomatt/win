@@ -103,6 +103,9 @@ textarea.textarea{
 .no-whitespace{
   white-space: unset;
 }
+.break-word{
+        word-wrap: break-word;
+}
 .card,
 .card-body{
   border: none;
@@ -152,9 +155,9 @@ textarea.textarea{
     padding: 5px
 
 }
-.single-comment:hover{
+  .single-comment-content:hover{
     background-color: #fdfdfd;
-}
+  }
 
     @yield('styles')
 

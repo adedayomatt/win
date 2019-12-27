@@ -1697,6 +1697,13 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -1707,7 +1714,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root'])),
   props: ['message'],
   watch: {
     message: function message(newMessage, oldMessage) {
@@ -1814,6 +1823,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -1830,7 +1842,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       replies: []
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated', 'time_diff'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff'])),
   props: ['data', 'quote_discussion', 'quote_comment', 'write_comment'],
   methods: {
     loadSingleComment: function loadSingleComment(comment) {
@@ -1979,6 +1991,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {},
   watch: {
+    data: function data(newData, oldData) {
+      this.comment = newData;
+      this.replies_count = newData.replies_count;
+      this.likes_count = newData.likes_count;
+      this.likes = newData.likes;
+    },
     write_comment: function write_comment(newValue, oldValue) {
       this.write_comment = newValue;
     }
@@ -2132,7 +2150,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       current: null
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated', 'time_diff']), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff']), {
     sortedReplies: function sortedReplies() {
       return this.replies.length > 0 ? this.replies.sort(function (a, b) {
         return a.id - b.id;
@@ -2172,6 +2190,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   }),
   props: ['id'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment', 'likeComment']), {
+    setComment: function setComment(comment) {
+      this.getComment(comment.id);
+    },
     getComment: function getComment(id) {
       var _this4 = this;
 
@@ -2288,7 +2309,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       replies_count: this.reply.replies_count
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated', 'time_diff'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff'])),
   props: ['reply'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['likeComment']), {
     loadReply: function loadReply() {
@@ -2350,7 +2371,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       content: ''
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated']), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated']), {
     contentFilled: function contentFilled() {
       return this.content == '' ? false : true;
     }
@@ -2443,7 +2464,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       replies: []
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated', 'time_diff'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff'])),
   props: ['comment'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['likeComment']), {
     loadThread: function loadThread(thread) {
@@ -2798,7 +2819,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       discussion: this.data
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'time_diff', 'snippet', 'is_trashed'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'time_diff', 'snippet', 'is_trashed'])),
   props: ['data'],
   methods: {},
   components: {
@@ -3351,7 +3372,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   props: ['container'],
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['is_following_tag']), {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'is_following_tag']), {
     input: function input() {
       return "".concat(this.container, " input.global-search");
     }
@@ -3367,7 +3388,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.loading = true;
         this.status = "Looking up \"".concat(this.q, "\"...");
         setTimeout(function () {
-          axios.get("/search?q=".concat(_this.q)).then(function (response) {
+          axios.get("".concat(_this.root, "/search?q=").concat(_this.q)).then(function (response) {
             _this.tags = response.data.tags;
             _this.discussions = response.data.discussions;
             _this.trainings = response.data.trainings;
@@ -3719,7 +3740,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       followers: []
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
   props: ['data', 'url'],
   methods: {
     tagFollowed: function tagFollowed(tag) {
@@ -3962,7 +3983,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var followers = "";
 
         if (data.users.length > 0) {
-          var avatarURL = baseURL() + '/storage/images/users/';
           followers = "<div class=\"text-muted\">";
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
@@ -4352,7 +4372,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       training: this.data
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'time_diff', 'snippet', 'is_trashed'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'time_diff', 'snippet', 'is_trashed'])),
   props: ['data'],
   methods: {},
   components: {
@@ -4476,7 +4496,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       user: this.data
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'time_diff', 'snippet'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'time_diff', 'snippet'])),
   props: ['data'],
   methods: {},
   components: {},
@@ -11798,7 +11818,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.loading-container[data-v-5cf2f7db]{\n    background-image: url('/assets/loading-1.gif');\n    background-repeat: no-repeat;\n    background-position: center center;\n    background-size: 80px 80px;\n    height: 90px\n}\n", ""]);
+exports.push([module.i, "\n.loading-container[data-v-5cf2f7db]{\n    background-repeat: no-repeat;\n    background-position: center center;\n    background-size: 80px 80px;\n    height: 90px\n}\n", ""]);
 
 // exports
 
@@ -11817,7 +11837,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.reply_to[data-v-94a5e118]{\n    border: 1px solid #eee;\n}\n.quoted-discussion[data-v-94a5e118]{\n}\n.comment-wrapper[data-v-94a5e118]{\n    border-bottom: 1px solid rgba(0,0,0,.125);\n    padding:5px 0\n}\n.comment-wrapper.threaded[data-v-94a5e118]{\n    padding-left: 15px\n}\n\n", ""]);
+exports.push([module.i, "\n.reply_to[data-v-94a5e118]{\n    border: 1px solid #eee;\n    padding: 5px;\n    border-radius: 5px;\n}\n.quoted-discussion[data-v-94a5e118]{\n}\n.comment-wrapper[data-v-94a5e118]{\n    border-bottom: 1px solid rgba(0,0,0,.125);\n    padding:5px 0\n}\n.comment-wrapper.threaded[data-v-94a5e118]{\n    padding-left: 15px\n}\n\n", ""]);
 
 // exports
 
@@ -11855,7 +11875,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.popup[data-v-201459c8]{\n    background-color: #fff;\n}\n.comment-header[data-v-201459c8]{\n    background-color: #f7f7f7;\n}\n.navigator[data-v-201459c8]{\n    cursor: pointer;\n}\n.comment-body[data-v-201459c8]{\n    max-height: 70vh;\n    overflow: auto;\n}\n.comment-footer[data-v-201459c8]{\n}\n.replied-comment[data-v-201459c8]{\n    /* font-size: 12px; */\n}\n.reply_to[data-v-201459c8]{\n    background-color: #f7f7f7;\n    padding: 5px;\n    border-radius: 5px;\n    border-left: 5px solid #eee;\n    margin: 5px 0;\n}\n.main-comment[data-v-201459c8]{\n    font-size: 18px;\n}\n.main-comment-actions[data-v-201459c8]{\n    font-size: 22px;\n    padding: 5px 0;\n    border-top: 1px solid rgba(0,0,0,.125);\n    border-bottom: 1px solid rgba(0,0,0,.125)\n}\n.replies-container[data-v-201459c8]{\n    margin-left: 10px;\n}\n.quoted-discussion[data-v-201459c8]{\n    margin-left: 20px\n}\n", ""]);
+exports.push([module.i, "\n.popup[data-v-201459c8]{\n    background-color: #fff;\n}\n.comment-header[data-v-201459c8]{\n    background-color: #f7f7f7;\n}\n.navigator[data-v-201459c8]{\n    cursor: pointer;\n}\n.comment-body[data-v-201459c8]{\n    max-height: 60vh;\n    overflow: auto;\n}\n.comment-footer[data-v-201459c8]{\n}\n.replied-comment[data-v-201459c8]{\n    /* font-size: 12px; */\n}\n.reply_to[data-v-201459c8]{\n    background-color: #f7f7f7;\n    padding: 5px;\n    border-radius: 5px;\n    border-left: 5px solid #eee;\n    margin: 5px 0;\n}\n.main-comment[data-v-201459c8]{\n    font-size: 18px;\n}\n.main-comment-actions[data-v-201459c8]{\n    font-size: 22px;\n    padding: 5px 0;\n    border-top: 1px solid rgba(0,0,0,.125);\n    border-bottom: 1px solid rgba(0,0,0,.125)\n}\n.replies-container[data-v-201459c8]{\n    margin-left: 10px;\n}\n.quoted-discussion[data-v-201459c8]{\n    margin-left: 20px\n}\n", ""]);
 
 // exports
 
@@ -11912,7 +11932,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    z-index: 1200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    z-index: 1200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
 
 // exports
 
@@ -11931,7 +11951,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 10px;\n    left: 10px;\n    top: 10%;\n    z-index: 1200000;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n.single-feed-container[data-v-73c5f522]{\n        left: 30%;\n        right: 30%;\n}\n}\n}\n", ""]);
+exports.push([module.i, "\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 0px;\n    left: 0px;\n    bottom:0;\n    z-index: 1200000;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n.single-feed-container[data-v-73c5f522]{\n        left: 30%;\n        right: 30%;\n}\n}\n}\n", ""]);
 
 // exports
 
@@ -43929,7 +43949,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "loading-container" }),
+    _c("div", {
+      staticClass: "loading-container",
+      style: "background-image: url(" + _vm.root + "/assets/loading-1.gif)"
+    }),
     _vm._v(" "),
     _c("div", { staticClass: "text-center" }, [
       _c("p", [_vm._v(_vm._s(_vm.message))])
@@ -44002,7 +44025,11 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "a",
-                      { attrs: { href: "/@" + _vm.comment.user.username } },
+                      {
+                        attrs: {
+                          href: _vm.root + "/@" + _vm.comment.user.username
+                        }
+                      },
                       [_vm._v("@" + _vm._s(_vm.comment.user.username))]
                     ),
                     _vm._v(" "),
@@ -44043,86 +44070,91 @@ var render = function() {
                   [
                     _vm.comment.reply_to !== null && _vm.quote_comment == true
                       ? [
-                          _c(
-                            "div",
-                            { staticClass: "reply_to single-comment" },
-                            [
-                              _c(
-                                "div",
-                                {
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.loadSingleComment(
-                                        _vm.comment.reply_to
-                                      )
-                                    }
+                          _c("div", { staticClass: "reply_to" }, [
+                            _c(
+                              "div",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.loadSingleComment(
+                                      _vm.comment.reply_to
+                                    )
                                   }
-                                },
-                                [
-                                  _c("div", { staticClass: "d-flex" }, [
-                                    _c("img", {
-                                      staticClass: "avatar avatar-sm",
-                                      attrs: {
-                                        src:
-                                          _vm.comment.reply_to.user.image.src,
-                                        alt: _vm.comment.reply_to.user.username
-                                      }
-                                    }),
+                                }
+                              },
+                              [
+                                _c("div", { staticClass: "d-flex" }, [
+                                  _c("img", {
+                                    staticClass: "avatar avatar-sm",
+                                    attrs: {
+                                      src: _vm.comment.reply_to.user.image.src,
+                                      alt: _vm.comment.reply_to.user.username
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "pt-1" }, [
+                                    _c("strong", { staticClass: "d-block" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.comment.reply_to.user.fullname
+                                        )
+                                      )
+                                    ]),
                                     _vm._v(" "),
-                                    _c("div", { staticClass: "pt-1" }, [
-                                      _c("strong", { staticClass: "d-block" }, [
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: {
+                                          href:
+                                            _vm.root +
+                                            "/@" +
+                                            _vm.comment.reply_to.user.username
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "@" +
+                                            _vm._s(
+                                              _vm.comment.reply_to.user.username
+                                            )
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "text-muted ml-2" },
+                                      [
                                         _vm._v(
                                           _vm._s(
-                                            _vm.comment.reply_to.user.fullname
-                                          )
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "a",
-                                        {
-                                          attrs: {
-                                            href:
-                                              "/@" +
-                                              _vm.comment.reply_to.user.username
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "@" +
-                                              _vm._s(
-                                                _vm.comment.reply_to.user
-                                                  .username
-                                              )
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "span",
-                                        { staticClass: "text-muted ml-2" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(
-                                              _vm.time_diff(
-                                                _vm.comment.reply_to
-                                                  .created_timestamp
-                                              )
+                                            _vm.time_diff(
+                                              _vm.comment.reply_to
+                                                .created_timestamp
                                             )
                                           )
-                                        ]
-                                      )
-                                    ])
-                                  ]),
-                                  _vm._v(
-                                    "\n                                    " +
-                                      _vm._s(_vm.comment.reply_to.content) +
-                                      "\n                                "
-                                  )
-                                ]
-                              )
-                            ]
-                          )
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "single-comment-content break-word"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                        " +
+                                        _vm._s(_vm.comment.reply_to.content) +
+                                        "\n                                    "
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ])
                         ]
                       : _vm._e(),
                     _vm._v(" "),
@@ -44144,7 +44176,7 @@ var render = function() {
                     _c(
                       "div",
                       {
-                        staticClass: "single-comment",
+                        staticClass: "single-comment-content break-word",
                         on: { click: _vm.loadComment }
                       },
                       [
@@ -44194,7 +44226,11 @@ var render = function() {
                               _vm._v(" "),
                               _c(
                                 "a",
-                                { attrs: { href: "/@" + reply.user.username } },
+                                {
+                                  attrs: {
+                                    href: _vm.root + "/@" + reply.user.username
+                                  }
+                                },
                                 [_vm._v("@" + _vm._s(reply.user.username))]
                               ),
                               _vm._v(" "),
@@ -44209,6 +44245,7 @@ var render = function() {
                           _c(
                             "div",
                             {
+                              staticClass: "single-comment-content break-word",
                               on: {
                                 click: function($event) {
                                   return _vm.loadSingleComment(reply)
@@ -44400,7 +44437,10 @@ var render = function() {
                           _c(
                             "a",
                             {
-                              attrs: { href: "/@" + _vm.comment.user.username }
+                              attrs: {
+                                href:
+                                  _vm.root + "/@" + _vm.comment.user.username
+                              }
                             },
                             [_vm._v("@" + _vm._s(_vm.comment.user.username))]
                           )
@@ -44494,6 +44534,7 @@ var render = function() {
                                     {
                                       attrs: {
                                         href:
+                                          _vm.root +
                                           "/@" +
                                           _vm.comment.reply_to.user.username
                                       }
@@ -44532,7 +44573,7 @@ var render = function() {
                                   _c(
                                     "div",
                                     {
-                                      staticClass: "replied-comment",
+                                      staticClass: "replied-comment break-word",
                                       on: {
                                         click: function($event) {
                                           return _vm.getComment(
@@ -44552,7 +44593,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c("comment-actions", {
                                     attrs: {
-                                      data: _vm.comment,
+                                      data: _vm.comment.reply_to,
                                       write_comment: false,
                                       comment_writable: false
                                     }
@@ -44584,7 +44625,11 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "a",
-                      { attrs: { href: "/@" + _vm.comment.user.username } },
+                      {
+                        attrs: {
+                          href: _vm.root + "/@" + _vm.comment.user.username
+                        }
+                      },
                       [_vm._v("@" + _vm._s(_vm.comment.user.username))]
                     ),
                     _vm._v(" "),
@@ -44597,7 +44642,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", [
-                  _c("div", { staticClass: "main-comment" }, [
+                  _c("div", { staticClass: "main-comment break-word" }, [
                     _vm._v(
                       "\n                        " +
                         _vm._s(_vm.comment.content) +
@@ -44631,12 +44676,12 @@ var render = function() {
                         { key: reply.id + Math.random() },
                         [
                           _c("comment", {
-                            attrs: { data: reply, quote_comment: false },
-                            on: {
-                              "load-single-comment": function($event) {
-                                return _vm.getComment(reply.id)
-                              }
-                            }
+                            attrs: {
+                              data: reply,
+                              quote_comment: false,
+                              write_comment: false
+                            },
+                            on: { "load-single-comment": _vm.setComment }
                           })
                         ],
                         1
@@ -44713,9 +44758,11 @@ var render = function() {
             _vm._v(_vm._s(_vm.comment.user.fullname))
           ]),
           _vm._v(" "),
-          _c("a", { attrs: { href: "/@" + _vm.comment.user.username } }, [
-            _vm._v("@" + _vm._s(_vm.comment.user.username))
-          ]),
+          _c(
+            "a",
+            { attrs: { href: _vm.root + "/@" + _vm.comment.user.username } },
+            [_vm._v("@" + _vm._s(_vm.comment.user.username))]
+          ),
           _vm._v(" "),
           _c("span", { staticClass: "text-muted ml-2" }, [
             _vm._v(_vm._s(_vm.time_diff(_vm.comment.created_timestamp)))
@@ -44738,13 +44785,20 @@ var render = function() {
         "div",
         { staticClass: "ml-5" },
         [
-          _c("div", { on: { click: _vm.loadReply } }, [
-            _vm._v(
-              "\n                " +
-                _vm._s(_vm.comment.content) +
-                "\n            "
-            )
-          ]),
+          _c(
+            "div",
+            {
+              staticClass: "single-comment-content break-word",
+              on: { click: _vm.loadReply }
+            },
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.comment.content) +
+                  "\n            "
+              )
+            ]
+          ),
           _vm._v(" "),
           _c("comment-actions", {
             attrs: {
@@ -44898,23 +44952,22 @@ var render = function() {
               ]
             )
           ]
-        : [_vm._m(0)]
+        : [
+            _c("div", { staticClass: "alert alert-info mb-0" }, [
+              _c("a", { attrs: { href: _vm.root + "/login" } }, [
+                _vm._v("sign in")
+              ]),
+              _vm._v("  to add comment or "),
+              _c("a", { attrs: { href: _vm.root + "/register" } }, [
+                _vm._v("Sign up")
+              ])
+            ])
+          ]
     ],
     2
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "alert alert-info mb-0" }, [
-      _c("a", { attrs: { href: "/login" } }, [_vm._v("sign in")]),
-      _vm._v("  to add comment or "),
-      _c("a", { attrs: { href: "/register" } }, [_vm._v("Sign up")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -44948,9 +45001,11 @@ var render = function() {
           _vm._v(_vm._s(_vm.thread.user.fullname))
         ]),
         _vm._v(" "),
-        _c("a", { attrs: { href: "/@" + _vm.thread.user.username } }, [
-          _vm._v("@" + _vm._s(_vm.thread.user.username))
-        ]),
+        _c(
+          "a",
+          { attrs: { href: _vm.root + "/@" + _vm.thread.user.username } },
+          [_vm._v("@" + _vm._s(_vm.thread.user.username))]
+        ),
         _vm._v(" "),
         _c("span", { staticClass: "text-muted ml-2" }, [
           _vm._v(_vm._s(_vm.time_diff(_vm.thread.created_timestamp)))
@@ -44965,7 +45020,7 @@ var render = function() {
         _c(
           "div",
           {
-            staticClass: "single-comment",
+            staticClass: "single-comment-content break-word",
             on: {
               click: function($event) {
                 return _vm.loadThread(_vm.thread)
@@ -45026,6 +45081,7 @@ var render = function() {
               _c(
                 "div",
                 {
+                  staticClass: "single-comment-content break-word",
                   staticStyle: { "font-style": "italic" },
                   on: {
                     click: function($event) {
@@ -45320,7 +45376,11 @@ var render = function() {
                 _c("strong", [
                   _c(
                     "a",
-                    { attrs: { href: "/discussion/" + _vm.discussion.slug } },
+                    {
+                      attrs: {
+                        href: _vm.root + "/discussion/" + _vm.discussion.slug
+                      }
+                    },
                     [_vm._v(_vm._s(_vm.discussion.title))]
                   )
                 ]),
@@ -45337,7 +45397,8 @@ var render = function() {
                           "a",
                           {
                             attrs: {
-                              href: "/forum/" + _vm.discussion.forum.slug
+                              href:
+                                _vm.root + "/forum/" + _vm.discussion.forum.slug
                             }
                           },
                           [_vm._v(_vm._s(_vm.discussion.forum.name))]
@@ -45350,6 +45411,7 @@ var render = function() {
                           {
                             attrs: {
                               href:
+                                _vm.root +
                                 "/discussion/" +
                                 _vm.discussion.slug +
                                 "#comments"
@@ -45386,7 +45448,9 @@ var render = function() {
                             {
                               attrs: {
                                 href:
-                                  "/training/" + _vm.discussion.on_training.slug
+                                  _vm.root +
+                                  "/training/" +
+                                  _vm.discussion.on_training.slug
                               }
                             },
                             [_vm._v(_vm._s(_vm.discussion.on_training.title))]
@@ -45412,7 +45476,7 @@ var render = function() {
                       {
                         key: tag,
                         staticClass: "tag",
-                        attrs: { href: "/tag/" + tag }
+                        attrs: { href: _vm.root + "/tag/" + tag }
                       },
                       [_vm._v(_vm._s(tag))]
                     )
@@ -46455,7 +46519,7 @@ var render = function() {
                   "a",
                   {
                     staticClass: "tag",
-                    attrs: { href: "/tag/" + _vm.tag.name }
+                    attrs: { href: _vm.root + "/tag/" + _vm.tag.name }
                   },
                   [_vm._v("#" + _vm._s(_vm.tag.name))]
                 )
@@ -47020,7 +47084,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("small", [
                             _vm._v(
-                              "pubished " +
+                              "published " +
                                 _vm._s(
                                   _vm.time_diff(
                                     _vm.training.createdat_timestamp
@@ -47051,7 +47115,7 @@ var render = function() {
                       {
                         key: tag,
                         staticClass: "tag",
-                        attrs: { href: "/tag/" + tag }
+                        attrs: { href: _vm.root + "/tag/" + tag }
                       },
                       [_vm._v(_vm._s(tag))]
                     )
@@ -47148,7 +47212,7 @@ var render = function() {
         _vm._v(_vm._s("" + _vm.user.fullname))
       ]),
       _vm._v(" "),
-      _c("a", { attrs: { href: "/@" + _vm.user.username } }, [
+      _c("a", { attrs: { href: _vm.root + "/@" + _vm.user.username } }, [
         _vm._v("@" + _vm._s(_vm.user.username))
       ])
     ])
@@ -63200,7 +63264,7 @@ var actions = {
     var commit = _ref.commit,
         dispatch = _ref.dispatch;
     return new Promise(function (resolve, reject) {
-      if (window.tkn !== '') {
+      if (window.key !== '') {
         axios.get(apiURL('/user')).then(function (res) {
           console.log(res);
 
@@ -63362,6 +63426,9 @@ var actions = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var getters = {
+  root: function root(state) {
+    return baseURL();
+  },
   app_ready: function app_ready(state) {
     return state.app_ready;
   },
@@ -63457,7 +63524,8 @@ var mutations = {
 __webpack_require__.r(__webpack_exports__);
 var state = {
   app_ready: false,
-  auth: null
+  auth: null,
+  root: ''
 };
 /* harmony default export */ __webpack_exports__["default"] = (state);
 

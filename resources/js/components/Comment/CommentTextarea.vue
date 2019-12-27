@@ -16,7 +16,7 @@
         </template>
         <template v-else>
                 <div class="alert alert-info mb-0">
-                    <a href="/login">sign in</a>  to add comment or <a href="/register">Sign up</a>
+                    <a :href="`${root}/login`">sign in</a>  to add comment or <a :href="`${root}/register`">Sign up</a>
                 </div>
         </template>
     </div>
@@ -36,6 +36,7 @@ import {mapActions} from 'vuex';
         },
         computed: {
              ...mapGetters([
+                'root',
                 'auth',
                 'is_authenticated'
             ]),

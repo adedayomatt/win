@@ -4,17 +4,17 @@
                     <img :src="thread.user.image.src" :alt="thread.user.username" class="avatar avatar-sm">
                     <div class="ml-2 pt-1" >
                         <strong class="d-block">{{thread.user.fullname}}</strong>
-                        <a :href="`/@${thread.user.username}`">@{{thread.user.username}}</a>
+                        <a :href="`${root}/@${thread.user.username}`">@{{thread.user.username}}</a>
                         <span class="text-muted ml-2">{{time_diff(thread.created_timestamp)}}</span>
                     </div> 
                 </div>
                 <div class="ml-5">
-                    <div @click="loadThread(thread)" class="single-comment">
+                    <div @click="loadThread(thread)" class="single-comment-content break-word">
                         {{thread.content}}
                     </div>
                     <comment-actions :data="thread" :write_comment="false" :comment_writable="true" @new-reply="newReply"></comment-actions>
                     
-                    <!-- Replies add now -->
+                    <!-- Replies added now -->
                     <div v-for="reply in replies" :key="reply.id" style="padding: 5px; border:1px solid #f7f7f7; border-radius: 5px">
                         <div class="d-flex">
                             <img :src="reply.user.image.src" :alt="reply.user.username" class="avatar avatar-xs">
@@ -24,7 +24,7 @@
                                 <span class="text-muted ml-2">{{time_diff(reply.created_timestamp)}}</span>
                             </div> 
                         </div>
-                        <div @click="loadReply(reply)" style="font-style: italic">
+                        <div @click="loadReply(reply)" class="single-comment-content break-word" style="font-style: italic">
                             {{reply.content}}
                         </div>
                     </div>
@@ -47,6 +47,7 @@ export default {
         },
         computed: {
              ...mapGetters([
+                'root',
                 'auth',
                 'is_authenticated',
                 'time_diff'

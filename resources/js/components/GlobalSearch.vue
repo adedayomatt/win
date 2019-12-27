@@ -81,6 +81,7 @@
         props: ['container'],
         computed: {
             ...mapGetters([
+                'root',
                 'is_following_tag'
             ]),
             input(){
@@ -97,7 +98,7 @@
                     this.loading = true;
                      this.status = `Looking up "${this.q}"...`;
                     setTimeout(() => {
-                        axios.get(`/search?q=${this.q}`)
+                        axios.get(`${this.root}/search?q=${this.q}`)
                         .then(response => {
                             this.tags = response.data.tags;
                             this.discussions = response.data.discussions;

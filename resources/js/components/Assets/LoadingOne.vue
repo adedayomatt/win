@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="loading-container"></div>
+        <div class="loading-container" :style="`background-image: url(${root}/assets/loading-1.gif)`"></div>
         <div class="text-center">
             <p>{{message}}</p>
         </div>
@@ -9,8 +9,14 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
 
     export default {
+        computed:{
+            ...mapGetters([
+                'root'
+            ])
+        },
         props: ['message'],
         watch: {
             message: function(newMessage, oldMessage){
@@ -22,7 +28,6 @@
 
 <style scoped>
     .loading-container{
-        background-image: url('/assets/loading-1.gif');
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 80px 80px;

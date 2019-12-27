@@ -3,7 +3,7 @@
        <img :src="user.image.src" :alt="user.image.alt" class="avatar avatar-sm">
         <div class="ml-2 pt-1" >
             <strong class="d-block">{{`${user.fullname}`}}</strong>
-            <a :href="`/@${user.username}`">@{{user.username}}</a>
+            <a :href="`${root}/@${user.username}`">@{{user.username}}</a>
         </div>
     </div>
 </template>
@@ -18,6 +18,7 @@ export default {
         },
         computed: {
              ...mapGetters([
+                 'root',
                 'auth',
                 'time_diff',
                 'snippet',

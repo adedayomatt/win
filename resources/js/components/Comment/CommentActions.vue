@@ -100,6 +100,12 @@ export default {
            
         },
         watch: {
+            data: function(newData, oldData){
+                this.comment = newData;
+                this.replies_count = newData.replies_count;
+                this.likes_count = newData.likes_count;
+                this.likes = newData.likes;
+            },
              write_comment: function(newValue, oldValue){
                 this.write_comment = newValue;
             }

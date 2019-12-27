@@ -101,7 +101,7 @@ class UserController extends Controller
 			return $this->bounce($user);
 		}
 		$this->validate($request,[
-			'avatar' => ['required','image','mimes:jpeg,png,jpg,JPG,gif,svg','max:5048']
+			'avatar' => ['required','image','mimes:jpeg,png,jpg,JPG,gif,svg','max:15048']
 		]);
 		if ($request->hasFile('avatar')){
 			$file = $request->file('avatar');

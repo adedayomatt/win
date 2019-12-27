@@ -22,7 +22,7 @@
                                     <small><a :href="`training/${training.slug}#discussions`">{{training.discussions_count}} discussions</a></small>
                                     <small>{{training.photos.length}} photos</small>
                                     <small>{{training.videos.length}} videos</small>
-                                    <small>pubished {{time_diff(training.createdat_timestamp)}}</small>
+                                    <small>published {{time_diff(training.createdat_timestamp)}}</small>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +31,7 @@
                         {{training.snippet}}
                     </div>
                     <div>
-                        <a v-for="tag in training.training_tags" class="tag" :key="tag" :href="`/tag/${tag}`">{{tag}}</a>
+                        <a v-for="tag in training.training_tags" class="tag" :key="tag" :href="`${root}/tag/${tag}`">{{tag}}</a>
                     </div>
 
                 </div>
@@ -53,6 +53,7 @@ export default {
         },
         computed: {
              ...mapGetters([
+                'root',
                 'auth',
                 'time_diff',
                 'snippet',

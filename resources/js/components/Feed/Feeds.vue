@@ -132,9 +132,9 @@ export default {
 <style scoped>
     .single-feed-container{
         position: fixed;
-        right: 10px;
-        left: 10px;
-        top: 10%;
+        right: 0px;
+        left: 0px;
+        bottom:0;
         z-index: 1200000;
     }
 

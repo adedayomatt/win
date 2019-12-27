@@ -66,6 +66,8 @@ class Comment extends Model
 			$carbon = new \Carbon\Carbon($reply_to->created_at);
 			$reply_to->created_timestamp = $carbon->getTimestamp();
 			$reply_to->user = User::find($reply_to->user_id);
+			$reply_to->likes_count = CommentLike::where('comment_id', $reply_to->id)->count();
+			$reply_to->replies_count = Comment::where('comment_id', $reply_to->id)->count();
 		}
 		return $reply_to;
 	}

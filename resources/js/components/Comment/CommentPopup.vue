@@ -9,7 +9,7 @@
                                 <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                                 <div class="ml-2 pt-1" >
                                     <strong class="d-block">{{`${comment.user.fullname}`}}</strong>
-                                    <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>
+                                    <a :href="`${root}/@${comment.user.username}`">@{{comment.user.username}}</a>
                                 </div>
                             </div>
                         </div>
@@ -38,15 +38,15 @@
                                         <img :src="comment.reply_to.user.image.src" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                         <div class="ml-2 pt-1" >
                                             <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
-                                            <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
+                                            <a :href="`${root}/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
                                             <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
                                         </div> 
                                     </div>
                                     <div class="ml-5">
-                                        <div class="replied-comment" @click="getComment(comment.reply_to.id)">
+                                        <div class="replied-comment break-word" @click="getComment(comment.reply_to.id)">
                                             {{comment.reply_to.content}}
                                         </div>
-                                        <comment-actions :data="comment" :write_comment="false" :comment_writable="false"></comment-actions>
+                                        <comment-actions :data="comment.reply_to" :write_comment="false" :comment_writable="false"></comment-actions>
                                     </div>
                                 </div>
                             </div>
@@ -57,13 +57,13 @@
                         <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                         <div class="ml-2 pt-1" >
                             <strong class="d-block">{{`${comment.user.fullname}`}}</strong>
-                            <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a>
+                            <a :href="`${root}/@${comment.user.username}`">@{{comment.user.username}}</a>
                             <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
                         </div>
                     </div>
 
                     <div>
-                        <div class="main-comment">
+                        <div class="main-comment break-word">
                             {{comment.content}}
                         </div>
                         <div class="main-comment-actions">
@@ -75,7 +75,7 @@
                     <div>
                         <div class="replies-container">
                             <div v-for="reply in sortedReplies" v-bind:key="reply.id+Math.random()">
-                                <comment :data="reply" @load-single-comment="getComment(reply.id)" :quote_comment="false"></comment>
+                                <comment :data="reply" @load-single-comment="setComment" :quote_comment="false" :write_comment="false"></comment>
 
                                 <!-- <div v-if="reply.thread_id != comment.id">
                                     <comment-reply :reply="reply" @load-reply="getComment(reply.id)"></comment-reply>
@@ -127,6 +127,7 @@ export default {
         },
         computed: {
              ...mapGetters([
+                 'root',
                 'auth',
                 'is_authenticated',
                 'time_diff',
@@ -160,6 +161,9 @@ export default {
                 'loadComment',
                 'likeComment'
             ]),
+            setComment(comment){
+                this.getComment(comment.id);
+            },
             getComment(id){
                 this.loadComment(id)
                .then(response => {
@@ -218,6 +222,7 @@ export default {
 <style scoped>
     .popup{
         background-color: #fff;
+        
     }
     .comment-header{
         background-color: #f7f7f7;
@@ -226,11 +231,11 @@ export default {
         cursor: pointer;
     }
     .comment-body{
-        max-height: 70vh;
+        max-height: 60vh;
         overflow: auto;
     }
     .comment-footer{
-        
+
     }
     .replied-comment{
         /* font-size: 12px; */

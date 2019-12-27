@@ -2,7 +2,7 @@ let actions = {
     
     getAuth({commit, dispatch}){ 
         return new Promise((resolve, reject) => {
-            if(window.tkn !== ''){
+            if(window.key !== ''){
                 axios.get(apiURL('/user'))
                 .then(res => {
                     console.log(res);

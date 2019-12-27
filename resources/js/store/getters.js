@@ -1,4 +1,7 @@
 let getters = {
+    root: state => {
+        return baseURL()
+    },
     app_ready: state => {
         return state.app_ready
     },

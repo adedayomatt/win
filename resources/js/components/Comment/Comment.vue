@@ -7,7 +7,7 @@
                             <img :src="comment.user.image.src" :alt="comment.user.username" class="avatar avatar-sm">
                             <div class="ml-2 pt-1" >
                                 <strong class="d-block">{{comment.user.fullname}}</strong>
-                                <a :href="`/@${comment.user.username}`">@{{comment.user.username}}</a> 
+                                <a :href="`${root}/@${comment.user.username}`">@{{comment.user.username}}</a> 
                                 <span class="text-muted ml-2">{{time_diff(comment.created_timestamp)}}</span>
                                 <div v-if="comment.reply_to !== null && quote_comment == true" class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
                             </div> 
@@ -15,17 +15,20 @@
                         <div class="ml-4">
                         <!-- If the comment was a reply -->
                             <template v-if="comment.reply_to !== null && quote_comment == true">
-                                <div class="reply_to single-comment">
-                                    <div @click="loadSingleComment(comment.reply_to)" class="">
+                                <div class="reply_to">
+                                    <div @click="loadSingleComment(comment.reply_to)">
                                         <div class="d-flex">
                                             <img :src="comment.reply_to.user.image.src" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                             <div class="pt-1" >
                                                 <strong class="d-block">{{comment.reply_to.user.fullname}}</strong>
-                                                <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
+                                                <a :href="`${root}/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a>
                                                 <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
                                             </div> 
                                         </div>
-                                        {{comment.reply_to.content}}
+                                        <div class="single-comment-content break-word">
+                                            {{comment.reply_to.content}}
+                                        </div>
+                                        
                                     </div>
                                 </div>
                             </template>
@@ -34,22 +37,22 @@
                                     <discussion :data="comment.comment_discussion"></discussion>
                                 </div>
                             </template>
-                            <div @click="loadComment" class="single-comment">
+                            <div @click="loadComment" class="single-comment-content break-word">
                                 {{comment.content}}
                             </div>
                             <comment-actions :data="comment" :write_comment="write_comment" :comment_writable="true" @new-reply="newReply"></comment-actions>
                            
-                            <!-- Replies add now -->
+                            <!-- Replies added now -->
                             <div v-for="reply in replies" :key="reply.id" class="my-1" style="padding: 5px; border:1px solid #f7f7f7; border-radius: 5px">
                                 <div class="d-flex">
                                     <img :src="reply.user.image.src" :alt="reply.user.username" class="avatar avatar-xs">
                                     <div class="ml-2 pt-1" >
                                         <strong class="d-block">{{reply.user.fullname}}</strong>
-                                        <a :href="`/@${reply.user.username}`">@{{reply.user.username}}</a>
+                                        <a :href="`${root}/@${reply.user.username}`">@{{reply.user.username}}</a>
                                         <span class="text-muted ml-2">{{time_diff(reply.created_timestamp)}}</span>
                                     </div> 
                                 </div>
-                                <div @click="loadSingleComment(reply)">
+                                <div @click="loadSingleComment(reply)" class="single-comment-content break-word">
                                     {{reply.content}}
                                 </div>
                             </div>
@@ -60,7 +63,7 @@
                     <template v-if="threads.length > 0">
                         <div class="list-group-item" style="background-color: inherit;">
                             <div v-for="thread in threads" :key="thread.id">
-                                <comment-thread :comment="thread" @load-thread="loadThread"></comment-thread>
+                                <comment-thread :comment="thread" @load-thread="loadThread" ></comment-thread>
                             </div>
                         </div>
                     </template>
@@ -92,6 +95,7 @@ export default {
         },
         computed: {
              ...mapGetters([
+                'root',
                 'auth',
                 'is_authenticated',
                 'time_diff',
@@ -131,8 +135,11 @@ export default {
 </script>
 
 <style scoped>
+
     .reply_to{
         border: 1px solid #eee;
+        padding: 5px;
+        border-radius: 5px;
     }
     .quoted-discussion{
     }

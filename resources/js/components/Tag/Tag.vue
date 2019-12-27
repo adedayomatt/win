@@ -2,7 +2,7 @@
         <div>
             <template v-if="tag != null">
                 <div class="d-flex">
-                    <h6><a :href="`/tag/${tag.name}`" class="tag">#{{tag.name}}</a></h6>
+                    <h6><a :href="`${root}/tag/${tag.name}`" class="tag">#{{tag.name}}</a></h6>
                     <div class="ml-auto">
                         <tag-follow-btn  v-bind:prop_tag="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed" ></tag-follow-btn>
                     </div>
@@ -35,6 +35,7 @@ import TagFollowButton from './TagFollowButton';
         },
         computed: {
             ...mapGetters([
+                'root',
                 'auth',
                 'app_ready',
                 'tags_following',

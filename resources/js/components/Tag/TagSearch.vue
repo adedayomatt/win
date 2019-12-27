@@ -122,7 +122,6 @@
                     suggestion: function (data) {
                         var followers = "";
                         if(data.users.length > 0){
-                            var avatarURL = baseURL()+'/storage/images/users/';
                             followers = `<div class="text-muted">`;
                             for(var user of data.users.slice(0,5)){
                                  followers += `<img src="${user.image}"  style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="@${user.username}">`;
