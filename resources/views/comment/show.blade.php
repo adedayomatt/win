@@ -1,4 +1,9 @@
 @extends('layouts.app')
+@section('title')
+    Comment by {{$comment->user->fullname}}
+@endsection
+
+
 @section('styles')
     
 @endsection

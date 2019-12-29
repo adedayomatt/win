@@ -1,4 +1,9 @@
 @extends('layouts.appRHSfixed')
+
+@section('title')
+  {{$user->fullname}} ({{$user->username()}})
+@endsection
+
 @section('styles')
     .generic-profile-bg{
         background-color: {{primaryColor()}};

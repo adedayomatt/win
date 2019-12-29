@@ -1,4 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+    #{{$tag->name}} : Discussions
+@endsection
 @section('styles')
     .after-fixed-head{
         padding-top: 72px;

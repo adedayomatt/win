@@ -124,7 +124,7 @@
                         if(data.users.length > 0){
                             followers = `<div class="text-muted">`;
                             for(var user of data.users.slice(0,5)){
-                                 followers += `<img src="${user.image}"  style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="@${user.username}">`;
+                                 followers += `<img src="${user.image.src}"  style="width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff" data-toggle="tooltip" title="@${user.username}">`;
                             }
                             followers += `</div>`;
                         }

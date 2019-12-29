@@ -1,5 +1,15 @@
 @extends('layouts.plain')
 
+@section('title')
+    Sign in
+@endsection
+
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
+
 @section('main')
 <div class="mt-50">
     <div class="row justify-content-center">

@@ -23,6 +23,9 @@
         },
         props: ['container'],
         computed: {
+            ...mapGetters([
+                'root',
+            ]),
             input(){
                 return `${this.container} .forum-search`
             }, 
@@ -38,7 +41,7 @@
             let component = this;
             this.suggestions = new Bloodhound({
 				remote: {
-                            url: baseURL()+'/search/forum?q=%QUERY%',
+                            url: component.root+'/search/forum?q=%QUERY%',
                             wildcard: '%QUERY%'
                         },
                 datumTokenizer: Bloodhound.tokenizers.whitespace('q'),
@@ -61,7 +64,7 @@
                     // footer: '<div class="list-group-item text-center">Footer Content</div>',
                     suggestion: function (data) {
                         return `<div class="list-group-item">
-                                        <a href="/forum/${data.slug}">
+                                        <a href="${component.root}/forum/${data.slug}">
                                             <strong class="d-block">
                                                 ${data.name}
                                             </strong>
@@ -73,7 +76,7 @@
                                             </div>
                                             <div>
                                                 <strong class="d-block">${data.user.fullname}</strong>
-                                                <a href="${baseURL()}/@${data.user.username}">@${data.user.username}</a>
+                                                <a href="${component.root}/@${data.user.username}">@${data.user.username}</a>
                                             </div>
                                         </div>
                                     

@@ -1,5 +1,9 @@
 @extends('layouts.appLHSfixedRHSfixed')
 
+@section('title')
+  {{$user->fullname}} ({{$user->username()}}) | Contributions
+@endsection
+
 @section('xs-styles')
 .main-content{
     padding-top: 70px;

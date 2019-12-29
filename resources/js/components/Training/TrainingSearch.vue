@@ -38,7 +38,7 @@
             let component = this;
             this.suggestions = new Bloodhound({
 				remote: {
-                            url: baseURL()+'/search/training?q=%QUERY%',
+                            url: component.root+'/search/training?q=%QUERY%',
                             wildcard: '%QUERY%'
                         },
                 datumTokenizer: Bloodhound.tokenizers.whitespace('q'),
@@ -62,7 +62,7 @@
                     // footer: '<div class="list-group-item text-center">Footer Content</div>',
                     suggestion: function (data) {
                         return `<div class="list-group-item">
-                                        <a href="/training/${data.slug}">
+                                        <a href="${component.root}/training/${data.slug}">
                                             <strong class="d-block">
                                                 ${data.title}
                                             </strong>
@@ -75,7 +75,7 @@
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <img src="${data.user.image}" alt="${data.user.username}"  style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
+                                                <img src="${data.user.image.src}" alt="${data.user.username}"  style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
                                             </div>
                                             <div>
                                                 <strong class="d-block">${data.user.firstname} ${data.user.lastname}</strong>

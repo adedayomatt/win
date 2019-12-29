@@ -10,10 +10,8 @@
             <main>
                 <div id="app-accordion">
                     <div class="container-fluid">
-                        <div class="app">
-                            <div class="content">
-                                @yield('main')
-                            </div>
+                        <div class="content">
+                            @yield('main')
                         </div>
                     </div>
                 </div>

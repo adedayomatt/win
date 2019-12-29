@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+    #{{$tag->name}} | Edit
+@endsection
 @section('main')
     <div class="row justify-content-center ">
         <div class="col-sm-5 col-md-4">

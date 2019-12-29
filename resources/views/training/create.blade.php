@@ -1,4 +1,7 @@
 @extends('layouts.appRHSfixed')
+@section('title')
+   New Training
+@endsection
 
 @section('main')
 <div class="">

@@ -1,4 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+  Trainings
+@endsection
 
 @section('xs-styles')
 .main-content{

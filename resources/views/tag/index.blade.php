@@ -1,4 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+    Tags
+@endsection
 
 @section('LHS')
     <div class="content-box">

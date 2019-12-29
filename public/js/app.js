@@ -2957,6 +2957,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2978,18 +2984,18 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   props: ['container'],
-  computed: {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root']), {
     input: function input() {
       return "".concat(this.container, " .discussion-search");
     }
-  },
+  }),
   methods: {},
   components: {},
   mounted: function mounted() {
     var component = this;
     this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
       remote: {
-        url: baseURL() + '/search/discussion?q=%QUERY%',
+        url: component.root + '/search/discussion?q=%QUERY%',
         wildcard: '%QUERY%'
       },
       datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
@@ -3010,7 +3016,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/discussion/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\" alt=\"").concat(data.user.username, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"".concat(component.root, "/discussion/").concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <small>in ").concat(data.forum.name, "</small>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image.src, "\" alt=\"").concat(data.user.image.alt, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(component.root, "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -3208,6 +3214,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3229,18 +3241,18 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   props: ['container'],
-  computed: {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root']), {
     input: function input() {
       return "".concat(this.container, " .forum-search");
     }
-  },
+  }),
   methods: {},
   components: {},
   mounted: function mounted() {
     var component = this;
     this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
       remote: {
-        url: baseURL() + '/search/forum?q=%QUERY%',
+        url: component.root + '/search/forum?q=%QUERY%',
         wildcard: '%QUERY%'
       },
       datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
@@ -3261,7 +3273,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/forum/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.name, "\n                                            </strong>\n                                        </a>\n                                        <small class=\"m-1\">in ").concat(data.discussions_count, " discussions</small>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image.src, "\" alt=\"").concat(data.user.username, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.fullname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"".concat(component.root, "/forum/").concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.name, "\n                                            </strong>\n                                        </a>\n                                        <small class=\"m-1\">in ").concat(data.discussions_count, " discussions</small>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image.src, "\" alt=\"").concat(data.user.username, "\" style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.fullname, "</strong>\n                                                <a href=\"").concat(component.root, "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {
@@ -3991,7 +4003,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           try {
             for (var _iterator = data.users.slice(0, 5)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var user = _step.value;
-              followers += "<img src=\"".concat(user.image, "\"  style=\"width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff\" data-toggle=\"tooltip\" title=\"@").concat(user.username, "\">");
+              followers += "<img src=\"".concat(user.image.src, "\"  style=\"width: 30px; height: 30px; border-radius: 50%; margin-left: -10px; border: 2px solid #fff\" data-toggle=\"tooltip\" title=\"@").concat(user.username, "\">");
             }
           } catch (err) {
             _didIteratorError = true;
@@ -4431,7 +4443,7 @@ __webpack_require__.r(__webpack_exports__);
     var component = this;
     this.suggestions = new corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a({
       remote: {
-        url: baseURL() + '/search/training?q=%QUERY%',
+        url: component.root + '/search/training?q=%QUERY%',
         wildcard: '%QUERY%'
       },
       datumTokenizer: corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default.a.tokenizers.whitespace('q'),
@@ -4452,7 +4464,7 @@ __webpack_require__.r(__webpack_exports__);
         // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
         // footer: '<div class="list-group-item text-center">Footer Content</div>',
         suggestion: function suggestion(data) {
-          return "<div class=\"list-group-item\">\n                                        <a href=\"/training/".concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions_count, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image, "\" alt=\"").concat(data.user.username, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
+          return "<div class=\"list-group-item\">\n                                        <a href=\"".concat(component.root, "/training/").concat(data.slug, "\">\n                                            <strong class=\"d-block\">\n                                                ").concat(data.title, "\n                                            </strong>\n                                        </a>\n                                        <div class=\"text-muted\">\n                                            <small>").concat(data.discussions_count, " discussions</small>\n                                        </div>\n                                        <div class=\"text-muted\">\n                                            ").concat(data.snippet, "\n                                        </div>\n                                        <div class=\"d-flex align-items-center\">\n                                            <div>\n                                                <img src=\"").concat(data.user.image.src, "\" alt=\"").concat(data.user.username, "\"  style=\"width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff\">\n                                            </div>\n                                            <div>\n                                                <strong class=\"d-block\">").concat(data.user.firstname, " ").concat(data.user.lastname, "</strong>\n                                                <a href=\"").concat(baseURL(), "/@").concat(data.user.username, "\">@").concat(data.user.username, "</a>\n                                            </div>\n                                        </div>\n                                    \n                                </div>");
         }
       }
     }).bind('typeahead:select', function (ev, suggestion) {

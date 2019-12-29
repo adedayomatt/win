@@ -57,7 +57,7 @@
   function toastError(err,message=''){
       switch(err.status){
           case 401:
-              toastr.error(`${message} <a href="/login">Login first</a>`);
+              toastr.error(`${message} <a href="${baseURL()}/login">Login first</a>`);
           break;
           case 500:
               toastr.error(`${message} Something went wrong`);

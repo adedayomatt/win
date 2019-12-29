@@ -1,4 +1,15 @@
 @extends('layouts.app')
+
+@section('title')
+  {{$user->fullname}} ({{$user->username()}}) | Settings
+@endsection
+
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
+
 @section('h-scripts')
     {{-- @include('layouts.components.typeahead.company')
     @include('layouts.components.typeahead.school') --}}

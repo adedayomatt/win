@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title')
+    New Forum
+@endsection
 
 @section('LHS')
         @include('components.banners.create-training')

@@ -1,4 +1,7 @@
 @extends('layouts.appRHSfixed')
+@section('title')
+    New Discussions
+@endsection
 
 
 @section('main')

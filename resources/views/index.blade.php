@@ -1,4 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+  Home
+@endsection
 
 @section('LHS')
     @auth()

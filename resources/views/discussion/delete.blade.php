@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title')
+    Delete {{$discussion->title}}
+@endsection
 
 @section('main')
     <div class="row justify-content-center">

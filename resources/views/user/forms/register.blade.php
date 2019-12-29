@@ -1,22 +1,28 @@
 {!!Form::open(['route' => 'register'])!!}
-        <div class="form-group">
-            {{form::label('firstname','First Name')}}
-            {{form::text('firstname',old('firstname'),['class' =>'form-control','placeholder'=>'first name','required', 'autofocus'])}}
-            @if ($errors->has('firstname'))
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $errors->first('firstname') }}</strong>
-            </span>
-            @endif
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{form::label('firstname','First Name')}}
+                {{form::text('firstname',old('firstname'),['class' =>'form-control','placeholder'=>'first name','required', 'autofocus'])}}
+                @if ($errors->has('firstname'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('firstname') }}</strong>
+                </span>
+                @endif
+            </div>
         </div>
-        <div class="form-group">
-            {{form::label('lastname','Last Name')}}
-            {{form::text('lastname',old('lastname'),['class' =>'form-control','placeholder'=>'last name','required', 'autofocus'])}}
-            @if ($errors->has('lastname'))
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $errors->first('lastname') }}</strong>
-            </span>
-            @endif
-        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{form::label('lastname','Last Name')}}
+                {{form::text('lastname',old('lastname'),['class' =>'form-control','placeholder'=>'last name','required', 'autofocus'])}}
+                @if ($errors->has('lastname'))
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $errors->first('lastname') }}</strong>
+                </span>
+                @endif
+            </div>
+        </div>    
+    </div>
 
     <div class="form-group">
         {{form::label('username','Choose a username')}}

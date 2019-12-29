@@ -1,4 +1,8 @@
 @extends('layouts.appRHSfixed')
+@section('title')
+  {{$training->title}}
+@endsection
+
 @section('styles')
     .create-discussion{
         position: fixed;

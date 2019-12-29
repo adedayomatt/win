@@ -1,7 +1,7 @@
 @extends('layouts.appLHSfixed')
-{{-- @section('h-scripts')
-    @include('layouts.components.typeahead.user')
-@endsection --}}
+@section('title')
+  Users
+@endsection
 
 @section('xs-styles')
 .after-fixed-head{

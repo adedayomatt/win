@@ -1,4 +1,8 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+    Forum :  {{$forum->name}}
+@endsection
+
 @section('styles')
     .snippet{
         background-color: #fff;

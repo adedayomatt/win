@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title')
+    Create Tag
+@endsection
 
 @section('main')
     <div class="row justify-content-center ">

@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title')
+   {{$comment->user->fullname}} | Edit
+@endsection
 
 @section('main')
     <div class="row justify-content-center">

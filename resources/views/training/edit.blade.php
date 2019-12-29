@@ -1,4 +1,7 @@
 @extends('layouts.appRHSfixed')
+@section('title')
+   Trainining : {{$training->title}} | Edit
+@endsection
 
 @section('main')
 <div class="justify-content-center">

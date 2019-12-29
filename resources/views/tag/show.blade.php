@@ -1,4 +1,7 @@
 @extends('layouts.appLHSfixedRHSfixed')
+@section('title')
+    #{{$tag->name}}
+@endsection
 @section('styles')
     .after-fixed-head{
         padding-top: 82px;

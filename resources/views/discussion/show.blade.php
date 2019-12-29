@@ -1,4 +1,8 @@
 @extends('layouts.app50-50LHSfixed')
+@section('title')
+   {{$discussion->title}}
+@endsection
+
 @section('styles')
     [data-role = 'unlike']{
         color: red;

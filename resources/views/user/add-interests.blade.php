@@ -1,4 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.plain')
+
+@section('title')
+  {{$user->fullname}} ({{$user->username()}}) | Interests
+@endsection
+
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
 
 @section('main')
 <div class="">

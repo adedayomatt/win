@@ -191,7 +191,7 @@ class UserController extends Controller
 		
 		$this->validate($request, [
 			'company' => 'required',
-			'started_at' => 'date'
+			// 'started_at' => 'date'
         ]);
 		
 		if(!$user->hasWork()){

@@ -1,4 +1,13 @@
 @extends('layouts.plain')
+@section('title')
+    Sign up
+@endsection
+
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
 
 @section('main')
     <div class="row justify-content-center">
