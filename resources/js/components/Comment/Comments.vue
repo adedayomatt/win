@@ -2,6 +2,7 @@
     <div>
         <template v-if="app_ready">
             <template v-if="mode === 'popup'">
+                <div class="blur"></div>
                 <div class="single-comment-container shadow-lg">
                     <comment-popup :id="popup_comment"  @new-reply="newCommentPosted" @close-popup="closeSingleComment"></comment-popup>
                 </div>
@@ -99,10 +100,12 @@ import CommentTextarea from './CommentTextarea';
             },
             loadSingleComment(comment){
                 this.mode = 'popup';
-                this.popup_comment = comment.id;          
-                },
+                this.popup_comment = comment.id;  
+                // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
+            },
             closeSingleComment(){
                 this.mode = 'list';
+                // $('*:not(#single-comment-container)').css({'filter':'blur(0px)'})
             },
             newCommentPosted(comment){
                 this.comments.push(comment);
@@ -140,13 +143,24 @@ import CommentTextarea from './CommentTextarea';
     }
 </script>
 <style scoped>
+
+    .blur,
     .single-comment-container{
         position: fixed;
         right: 0;
         left: 0;
         bottom: 0;
+    }
+    .blur{
+        top: 0;
+        z-index:1100;
+        background-color:rgba(255, 255, 255, 0.9);
+    }
+
+    .single-comment-container{
         z-index: 1200;
     }
+    
     .list-group-item.comment{
         border: 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.125);

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <input class="global-search form-control no-outline" placeholder="search WIN..."
+        <input class="global-search form-control no-outline" placeholder="search Insyde Life..."
         v-model.trim="q" @keyup="search" @focus="activateSearch"
         >
         <template v-if="active">
@@ -18,29 +18,29 @@
                         </template>
                         <template v-else>
                             <div class="row">
-                                <div class="col-lg-2">
+                                <div class="col-lg-2 my-1">
                                     <div class="result-header px-3 py-2">Tags ({{tags.length}})</div>
                                     <div class="result-wrapper">
                                         <tag v-for="tag in tags" :key="tag.id+Math.random()" :data="tag"></tag>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4">
+                                <div class="col-lg-4 my-1">
                                     <div class="result-header px-3 py-2">Discussions ({{discussions.length}})</div>
                                     <div class="result-wrapper">
                                         <discussion v-for="discussion in discussions" :key="discussion.id+Math.random()" :data="discussion"></discussion>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4">
+                                <div class="col-lg-4 my-1">
                                     <div class="result-header px-3 py-2">Trainings ({{trainings.length}})</div>
                                     <div class="result-wrapper">
                                         <training v-for="training in trainings" :key="training.id+Math.random()" :data="training"></training>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-2">
-                                    <div class="result-header px-3 py-2">Users ({{users.length}})</div>
+                                <div class="col-lg-2 my-1">
+                                    <div class="result-header px-3 py-2">People ({{users.length}})</div>
                                     <div class="result-wrapper">
                                         <user v-for="user in users" :key="user.id+Math.random()" :data="user"></user>
                                     </div>
@@ -123,7 +123,7 @@
             closeSearch(){
                 this.active = false;
                 $('body').css({'overflow':'auto'});
-                $(this.input).css({'background-color': 'inherit'});
+                $(this.input).css({'background-color': '#f9f9f9'});
             }
         },
         components: {
@@ -138,8 +138,7 @@
 <style scoped>
     input.global-search{
         border: 0;
-        border-bottom: 1px solid #4D551C;
-        border-radius: 0;
+        border-radius: 3px;
     }
     .search-results-container{
             overflow: auto;

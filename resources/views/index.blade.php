@@ -36,6 +36,7 @@
     @endauth
 
     @guest()
+    <div class="mt-3">
         <h2 class="text-center">Built Just For You</h2>
         <div class="content-box ">
             <nav>
@@ -53,6 +54,7 @@
                 </div>
             </div> 
         </div>
+    </div>
     @endguest
     
 @endsection

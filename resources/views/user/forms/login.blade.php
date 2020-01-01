@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-group">
-            {{form::submit(__('Login'),['class'=>'btn btn-primary btn-block'])}}
+            {{form::submit(__('Login'),['class'=>'btn btn-primary btn-block no-outline'])}}
     </div>
     @if (Route::has('password.request'))
         <div class="text-right">

@@ -14,10 +14,10 @@
                             </div>
                         </div>
                         <div class="ml-auto">
-                            <div class="d-flex align-items-center">
-                                <button class="mx-1 btn btn-default no-outline" v-if="prev != null" @click="goBack">BACK</button>
-                                <button class="mx-1 btn btn-default no-outline" v-if="next != null" @click="goForward">FRONT</button>
-                                <span class="mx-1 closer" @click="closePopup">&times;</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <button class="mx-1 btn btn-default no-outline" v-if="prev != null" @click="goBack" title="Go back"><i class="fa fa-arrow-left"></i></button>
+                                <button class="mx-1 btn btn-default no-outline" v-if="next != null" @click="goForward" title="Go front"><i class="fa fa-arrow-right"></i></button>
+                                <button class="mx-1  btn btn-default no-outline" @click="closePopup" title="close"><i class="fa fa-chevron-down"></i></button>
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,10 @@
 
             </template>
             <template v-else>
-                <loading-one message="just a bit..."></loading-one>
+                <loading-one message="loading comment..."></loading-one>
+                <div class="text-center">
+                    <button class="btn btn-default btn-sm" @click="closePopup"><i class="fa fa-times"></i> cancel</button>
+                </div>
             </template>
         </div>
     </div>
@@ -222,7 +225,6 @@ export default {
 <style scoped>
     .popup{
         background-color: #fff;
-        
     }
     .comment-header{
         background-color: #f7f7f7;

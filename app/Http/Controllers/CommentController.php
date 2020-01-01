@@ -58,7 +58,7 @@ class CommentController extends Controller
         $discussion = $this->find(Discussion::class,$discussion);
         $user = $request->user();
         $comment = new Comment();
-        $comment->user_id = Auth::id();
+        $comment->user_id = $user->id;
         $comment->discussion_id = $discussion->id;
         $comment->content = $request->comment;
         $comment->save();

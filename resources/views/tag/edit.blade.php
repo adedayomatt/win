@@ -2,6 +2,11 @@
 @section('title')
     #{{$tag->name}} | Edit
 @endsection
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
 @section('main')
     <div class="row justify-content-center ">
         <div class="col-sm-5 col-md-4">

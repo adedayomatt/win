@@ -5,7 +5,7 @@
 <div>
     @if($tag->users->count() > 0)
     <small class="d-block text-muted">followed by </small>
-       @include('mail.widgets.users-tile',['users' => $tag->followers(), 'max' => 5])
+       @include('mail.widgets.users-tile',['users' => $tag->users, 'max' => 5])
     @else
         <small class="text-muted">No followers yet</small>
     @endif

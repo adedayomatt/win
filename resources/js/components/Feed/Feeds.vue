@@ -1,6 +1,7 @@
 <template>
     <div>
          <template v-if="mode === 'single'">
+             <div class="blur"></div>
             <div class="single-feed-container shadow-lg">
                 <comment-popup :id="single_comment" @close-popup="closeSingleFeed"></comment-popup>
             </div>
@@ -130,14 +131,22 @@ export default {
     }
 </script>
 <style scoped>
+    .blur,
     .single-feed-container{
         position: fixed;
-        right: 0px;
-        left: 0px;
-        bottom:0;
-        z-index: 1200000;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
+    .blur{
+        top: 0;
+        z-index:1100;
+        background-color:rgba(255, 255, 255, 0.9);
     }
 
+    .single-feed-container{
+        z-index: 1200;
+    }
     @media (min-width: 768px){
         .single-feed-container{
             left: 25%;

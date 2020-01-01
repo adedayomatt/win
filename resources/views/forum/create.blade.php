@@ -2,7 +2,11 @@
 @section('title')
     New Forum
 @endsection
-
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
 @section('LHS')
         @include('components.banners.create-training')
 @endsection

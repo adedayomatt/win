@@ -2,6 +2,11 @@
 @section('title')
     Forum :  {{$forum->name}} | Edit 
 @endsection
+@section('styles')
+    body{
+        background-color: #F5F8FA;
+    }
+@endsection
 @section('main')
 <div class="row justify-content-center">
     <div class="col-md-4">

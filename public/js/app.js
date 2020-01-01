@@ -2133,6 +2133,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2547,6 +2550,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2589,10 +2593,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     loadSingleComment: function loadSingleComment(comment) {
       this.mode = 'popup';
-      this.popup_comment = comment.id;
+      this.popup_comment = comment.id; // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
     },
     closeSingleComment: function closeSingleComment() {
-      this.mode = 'list';
+      this.mode = 'list'; // $('*:not(#single-comment-container)').css({'filter':'blur(0px)'})
     },
     newCommentPosted: function newCommentPosted(comment) {
       this.comments.push(comment);
@@ -3128,6 +3132,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -3426,7 +3431,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'overflow': 'auto'
       });
       $(this.input).css({
-        'background-color': 'inherit'
+        'background-color': '#f9f9f9'
       });
     }
   },
@@ -11944,7 +11949,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n    z-index: 1200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.blur[data-v-03a0802f],\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-03a0802f]{\n    top: 0;\n    z-index:1100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-comment-container[data-v-03a0802f]{\n    z-index: 1200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
 
 // exports
 
@@ -11963,7 +11968,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 0px;\n    left: 0px;\n    bottom:0;\n    z-index: 1200000;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n.single-feed-container[data-v-73c5f522]{\n        left: 30%;\n        right: 30%;\n}\n}\n}\n", ""]);
+exports.push([module.i, "\n.blur[data-v-73c5f522],\n.single-feed-container[data-v-73c5f522]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-73c5f522]{\n    top: 0;\n    z-index:1100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-feed-container[data-v-73c5f522]{\n    z-index: 1200;\n}\n@media (min-width: 768px){\n.single-feed-container[data-v-73c5f522]{\n        left: 25%;\n        right: 25%;\n}\n@media (min-width: 992px){\n.single-feed-container[data-v-73c5f522]{\n        left: 30%;\n        right: 30%;\n}\n}\n}\n", ""]);
 
 // exports
 
@@ -11982,7 +11987,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ninput.global-search[data-v-59a3b596]{\n    border: 0;\n    border-bottom: 1px solid #4D551C;\n    border-radius: 0;\n}\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        z-index:1000000;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n}\n.search-results-container-header[data-v-59a3b596]{\n    position: fixed;\n    z-index:1000001;\n    left: 0;\n    right:0;\n    background-color: #fff;\n    border-bottom: 1px solid #f7f7f7\n}\n.search-results-container-body[data-v-59a3b596]{\n    padding-top: 60px;\n    height: 92vh;\n    overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\ninput.global-search[data-v-59a3b596]{\n    border: 0;\n    border-radius: 3px;\n}\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        z-index:1000000;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n}\n.search-results-container-header[data-v-59a3b596]{\n    position: fixed;\n    z-index:1000001;\n    left: 0;\n    right:0;\n    background-color: #fff;\n    border-bottom: 1px solid #f7f7f7\n}\n.search-results-container-body[data-v-59a3b596]{\n    padding-top: 60px;\n    height: 92vh;\n    overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -44461,38 +44466,47 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "ml-auto" }, [
-                      _c("div", { staticClass: "d-flex align-items-center" }, [
-                        _vm.prev != null
-                          ? _c(
-                              "button",
-                              {
-                                staticClass: "mx-1 btn btn-default no-outline",
-                                on: { click: _vm.goBack }
-                              },
-                              [_vm._v("BACK")]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _vm.next != null
-                          ? _c(
-                              "button",
-                              {
-                                staticClass: "mx-1 btn btn-default no-outline",
-                                on: { click: _vm.goForward }
-                              },
-                              [_vm._v("FRONT")]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c(
-                          "span",
-                          {
-                            staticClass: "mx-1 closer",
-                            on: { click: _vm.closePopup }
-                          },
-                          [_vm._v("×")]
-                        )
-                      ])
+                      _c(
+                        "div",
+                        { staticClass: "d-flex align-items-center mt-1" },
+                        [
+                          _vm.prev != null
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "mx-1 btn btn-default no-outline",
+                                  attrs: { title: "Go back" },
+                                  on: { click: _vm.goBack }
+                                },
+                                [_c("i", { staticClass: "fa fa-arrow-left" })]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.next != null
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "mx-1 btn btn-default no-outline",
+                                  attrs: { title: "Go front" },
+                                  on: { click: _vm.goForward }
+                                },
+                                [_c("i", { staticClass: "fa fa-arrow-right" })]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "mx-1  btn btn-default no-outline",
+                              attrs: { title: "close" },
+                              on: { click: _vm.closePopup }
+                            },
+                            [_c("i", { staticClass: "fa fa-chevron-down" })]
+                          )
+                        ]
+                      )
                     ])
                   ])
                 ]
@@ -44726,7 +44740,20 @@ var render = function() {
                 )
               ])
             ]
-          : [_c("loading-one", { attrs: { message: "just a bit..." } })]
+          : [
+              _c("loading-one", { attrs: { message: "loading comment..." } }),
+              _vm._v(" "),
+              _c("div", { staticClass: "text-center" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default btn-sm",
+                    on: { click: _vm.closePopup }
+                  },
+                  [_c("i", { staticClass: "fa fa-times" }), _vm._v(" cancel")]
+                )
+              ])
+            ]
       ],
       2
     )
@@ -45146,6 +45173,8 @@ var render = function() {
         ? [
             _vm.mode === "popup"
               ? [
+                  _c("div", { staticClass: "blur" }),
+                  _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "single-comment-container shadow-lg" },
@@ -45764,6 +45793,8 @@ var render = function() {
     [
       _vm.mode === "single"
         ? [
+            _c("div", { staticClass: "blur" }),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "single-feed-container shadow-lg" },
@@ -45950,7 +45981,7 @@ var render = function() {
           }
         ],
         staticClass: "global-search form-control no-outline",
-        attrs: { placeholder: "search WIN..." },
+        attrs: { placeholder: "search Insyde Life..." },
         domProps: { value: _vm.q },
         on: {
           keyup: _vm.search,
@@ -46008,7 +46039,7 @@ var render = function() {
                             ]
                           : [
                               _c("div", { staticClass: "row" }, [
-                                _c("div", { staticClass: "col-lg-2" }, [
+                                _c("div", { staticClass: "col-lg-2 my-1" }, [
                                   _c(
                                     "div",
                                     { staticClass: "result-header px-3 py-2" },
@@ -46032,7 +46063,7 @@ var render = function() {
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "col-lg-4" }, [
+                                _c("div", { staticClass: "col-lg-4 my-1" }, [
                                   _c(
                                     "div",
                                     { staticClass: "result-header px-3 py-2" },
@@ -46060,7 +46091,7 @@ var render = function() {
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "col-lg-4" }, [
+                                _c("div", { staticClass: "col-lg-4 my-1" }, [
                                   _c(
                                     "div",
                                     { staticClass: "result-header px-3 py-2" },
@@ -46086,13 +46117,13 @@ var render = function() {
                                   )
                                 ]),
                                 _vm._v(" "),
-                                _c("div", { staticClass: "col-lg-2" }, [
+                                _c("div", { staticClass: "col-lg-2 my-1" }, [
                                   _c(
                                     "div",
                                     { staticClass: "result-header px-3 py-2" },
                                     [
                                       _vm._v(
-                                        "Users (" +
+                                        "People (" +
                                           _vm._s(_vm.users.length) +
                                           ")"
                                       )

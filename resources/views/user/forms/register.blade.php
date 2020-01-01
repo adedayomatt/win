@@ -61,7 +61,7 @@
     </div>
 
     <div class="form-group">
-            {{form::submit(__('Register'),['class'=>'btn btn-primary btn-block'])}}
+            {{form::submit(__('Register'),['class'=>'btn btn-primary btn-block  no-outline'])}}
     </div>
 
 {!!Form::close()!!}

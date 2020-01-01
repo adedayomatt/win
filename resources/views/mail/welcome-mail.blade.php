@@ -23,10 +23,11 @@
                             @include('mail.snippets.tag')
                         </td>
                         <td class="text-right">
-                            <form action="{{route('tag.follow',[$tag->id])}}" method="POST">
+                            <a href="{{route('tag.show',$tag->slug)}}" class="btn">follow</a>
+                            {{-- <form action="{{route('tag.follow',[$tag->id])}}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn">follow</button>
-                            </form>
+                            </form> --}}
                         </td>
                     </tr>
                 @endforeach
