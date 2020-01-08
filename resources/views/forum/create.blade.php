@@ -8,7 +8,7 @@
     }
 @endsection
 @section('LHS')
-        @include('components.banners.create-training')
+        @include('components.banners.create-experience')
 @endsection
 
 @section('main')

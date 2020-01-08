@@ -2,21 +2,21 @@
 
 namespace App\Matto;
 class feeds
-// This class is to arrange feeds, discussion, trainings and comment collections are passed to the constructor
+// This class is to arrange feeds, discussion, experiences and comment collections are passed to the constructor
 {
-    public $trainings = null;
+    public $experiences = null;
     public $comments = null;
     public $discussions = null; 
 
 
-    public function __construct($discussions = null,$trainings= null,$comments=null){
+    public function __construct($discussions = null,$experiences= null,$comments=null){
         $this->discussions = $discussions == null ? collect([]) : $discussions;
-        $this->trainings = $trainings == null ? collect([]) : $trainings;
+        $this->experiences = $experiences == null ? collect([]) : $experiences;
         $this->comments = $comments == null ? collect([]) : $comments;
     }
 
     public function feeds(){
-		$feeds = collect([])->merge($this->trainings)
+		$feeds = collect([])->merge($this->experiences)
 							->merge($this->comments)
 							->merge($this->discussions);
         return $feeds->sortByDesc('created_at')->paginate(config('custom.pagination'));  								

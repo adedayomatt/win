@@ -3,7 +3,7 @@
 namespace App;
 
 use Auth;
-use App\Training;
+use App\Experience;
 use App\Comment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -14,9 +14,9 @@ class Discussion extends Model
 {
 	use softDeletes, SearchableTrait;
 	
-	protected $fillable = ['user_id', 'forum_id','training_id','title', 'content', 'slug'];
+	protected $fillable = ['user_id', 'forum_id','experience_id','title', 'content', 'slug'];
 	protected $hidden = ['content'];
-	protected $appends = ['type','comments_count','on_training','discussion_tags','snippet','contributors','createdat_timestamp'];
+	protected $appends = ['type','comments_count','on_experience','discussion_tags','snippet','contributors','createdat_timestamp'];
 	protected $snippet_length = 200;
 	protected $searchable = [
         /**
@@ -45,9 +45,9 @@ class Discussion extends Model
 	public function tags(){
         return $this->belongsToMany('App\Tag');
 	}
-	public function training(){
-		if($this->training_id != null){
-			return	Training::withTrashed()->where('id', $this->training_id)->first();
+	public function experience(){
+		if($this->experience_id != null){
+			return	Experience::withTrashed()->where('id', $this->experience_id)->first();
 		}
 		return null;
 	}
@@ -64,9 +64,9 @@ class Discussion extends Model
 		return 'discussion';
 	}
 
-	public function getOnTrainingAttribute(){
-		$training = $this->training();
-		return $training == null ? null : ['title' => $training->title, 'slug' => $training->slug];
+	public function getOnExperienceAttribute(){
+		$experience = $this->experience();
+		return $experience == null ? null : ['title' => $experience->title, 'slug' => $experience->slug];
 	}
 
 	public function getCommentsCountAttribute(){
@@ -105,8 +105,8 @@ class Discussion extends Model
 		return in_array($user->id, $this->invitedUsersId()) ? true : false;
 	}
 
-	public function fromTraining(){
-		return  $this->training() === null ? false : true;
+	public function fromExperience(){
+		return  $this->experience() === null ? false : true;
 	}
 
 	public function tagIDs(){

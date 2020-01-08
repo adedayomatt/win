@@ -6,12 +6,12 @@ namespace App\Listeners;
 use Notification;
 use Carbon\Carbon;
 use App\Jobs\SendNotificationEmails;
-use App\Notifications\NewTrainingNotification;
-use App\Events\NewTraining;
+use App\Notifications\NewExperienceNotification;
+use App\Events\NewExperience;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SendNewTrainingNotification
+class SendNewExperienceNotification
 {
     /**
      * Create the event listener.
@@ -26,16 +26,16 @@ class SendNewTrainingNotification
     /**
      * Handle the event.
      *
-     * @param  NewTraining  $event
+     * @param  NewExperience  $event
      * @return void
      */
-    public function handle(NewTraining $event)
+    public function handle(NewExperience $event)
     {
-        // Notification::send($event->training->reachableUsers(),new NewTrainingNofication($event->training));
+        // Notification::send($event->experience->reachableUsers(),new NewExperienceNofication($event->experience));
         
         // queue the mailing job instead...
-        foreach($event->training->reachableUsers() as $recipient){
-            SendNotificationEmails::dispatch($recipient, new NewTrainingNotification($event->training))
+        foreach($event->experience->reachableUsers() as $recipient){
+            SendNotificationEmails::dispatch($recipient, new NewExperienceNotification($event->experience))
                             ->onQueue(config('custom.notification_mail_queue'))
                             ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
         }

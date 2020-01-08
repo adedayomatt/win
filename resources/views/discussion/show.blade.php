@@ -43,9 +43,9 @@
              @endif
             <h5>{{$discussion->title}}</h5>
             @include('discussion.widgets.meta')
-            @if($discussion->fromTraining())
+            @if($discussion->fromExperience())
                 <div class="ml-2">
-                    @include('training.widgets.snippet', ['training' => $discussion->training()])
+                    @include('experience.widgets.snippet', ['experience' => $discussion->experience()])
                 </div>
             @endif
             </div>

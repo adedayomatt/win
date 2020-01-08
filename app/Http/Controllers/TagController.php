@@ -22,7 +22,7 @@ class TagController extends Controller
         }else{
             $middleware = ['auth'];
         }
-        $this->middleware($middleware)->except(['search','index', 'show','trainings','discussions','followers','feeds']);
+        $this->middleware($middleware)->except(['search','index', 'show','experiences','discussions','followers','feeds']);
     }
 
     private function getTag($id){
@@ -75,8 +75,11 @@ class TagController extends Controller
          ]);
         $tag_format = str_replace('-','_',str_slug($request->name));
         $tag = Tag::where('name', $tag_format)->first();
-        if($tag !== null && !$this->isAPIRequest()){
-            return redirect()->back()->with('error', 'Tag <strong>'.$tag_format.'</strong> already exist');
+
+        if($tag !== null){
+            if(!$this->isAPIRequest()){
+                return redirect()->back()->with('error', 'Tag <strong>'.$tag_format.'</strong> already exist');
+            }
         }
         $tag = Tag::create([
             'user_id' => $request->user()->id,
@@ -84,6 +87,7 @@ class TagController extends Controller
             'description' => $request->description,
             'slug' => $tag_format
         ]);
+
         $request->user()->tagsFollowing()->attach($tag->id);
         // return the newly created tag...
         if($this->isAPIRequest()){
@@ -120,10 +124,10 @@ class TagController extends Controller
         return view('tag.discussions')->with('tag', $tag)
                                     ->with('discussions', $tag->discussions()->orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
-    public function trainings($id){
+    public function experiences($id){
         $tag = $this->getTag($id);
-        return view('tag.trainings')->with('tag', $tag)
-                                ->with('trainings', $tag->trainings()->orderby('created_at','desc')->paginate(config('custom.pagination')));
+        return view('tag.experiences')->with('tag', $tag)
+                                ->with('experiences', $tag->experiences()->orderby('created_at','desc')->paginate(config('custom.pagination')));
     }
 
     public function followers($id){

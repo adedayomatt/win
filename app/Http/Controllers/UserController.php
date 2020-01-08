@@ -5,7 +5,7 @@ use Auth;
 use Image;
 use Validator;
 use App\User;
-use App\Training;
+use App\Experience;
 use App\School;
 use App\Education;
 use App\Work;
@@ -57,7 +57,7 @@ class UserController extends Controller
 	public function feeds($username){
 		$user = $this->find($username);
 		if($this->isAPIRequest()){
-			$feeds = new Feeds($user->discussions,$user->trainings,$user->comments);
+			$feeds = new Feeds($user->discussions,$user->experiences,$user->comments);
 			return FeedResource::collection($feeds->feeds());
 		}
 	}

@@ -57,8 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
 	}  
 
 
-	public function trainings(){
-		return $this->hasMany('App\Training');
+	public function experiences(){
+		return $this->hasMany('App\Experience');
     }
     public function discussions(){
 		return $this->hasMany('App\Discussion');
@@ -140,9 +140,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return Discussion::whereIn('id',$IDs)->orderby('created_at','desc')->get();
     }
 
-    public function interestedTrainings(){
-        $IDs = DB::table('tag_training')->whereIn('tag_id',$this->interests())->groupBy('training_id')->pluck('training_id');
-        return Training::whereIn('id',$IDs)->orderby('created_at','desc')->get();
+    public function interestedExperiences(){
+        $IDs = DB::table('experience_tag')->whereIn('tag_id',$this->interests())->groupBy('experience_id')->pluck('experience_id');
+        return Experience::whereIn('id',$IDs)->orderby('created_at','desc')->get();
     }
 
     public function commentsOnContributions(){

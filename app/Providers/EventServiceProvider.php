@@ -22,8 +22,8 @@ class EventServiceProvider extends ServiceProvider
         Verified::class => [
             'App\Listeners\SendWelcomeMail'
         ],
-        'App\Events\NewTraining' => [ 
-            'App\Listeners\SendNewTrainingNotification'
+        'App\Events\NewExperience' => [ 
+            'App\Listeners\SendNewExperienceNotification'
         ],
         'App\Events\NewDiscussion' => [
             'App\Listeners\SendNewDiscussionNotification'

@@ -85,8 +85,8 @@ class DiscussionController extends Controller
         
         $discussion = new Discussion();
         $discussion->user_id = Auth::id();
-        if($request->exists('training')){
-            $discussion->training_id = $request->training;
+        if($request->exists('experience')){
+            $discussion->experience_id = $request->experience;
         }
 		$discussion->title = $request->discussion_title;
 		$discussion->content = $request->content;

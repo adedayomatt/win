@@ -139,7 +139,7 @@
                                                     </strong>
                                                     <div class="text-muted">
                                                         <small class="m-1">
-                                                            ${data.trainings_count} trainings</a>
+                                                            ${data.experiences_count} experiences</a>
                                                         </small>
                                                         <small class="m-1">
                                                             ${data.discussions_count} discussions
@@ -171,7 +171,7 @@
                                                 </div>
                                                 <div class="text-muted">
                                                     <small class="m-1">
-                                                        ${data.trainings_count} trainings</a>
+                                                        ${data.experiences_count} experiences</a>
                                                     </small>
                                                     <small class="m-1">
                                                         ${data.discussions_count} discussions
@@ -201,7 +201,7 @@
                                                 </div>
                                                 <div class="text-muted">
                                                     <small class="m-1">
-                                                        ${data.trainings_count} trainings</a>
+                                                        ${data.experiences_count} experiences</a>
                                                     </small>
                                                     <small class="m-1">
                                                         ${data.discussions_count} discussions

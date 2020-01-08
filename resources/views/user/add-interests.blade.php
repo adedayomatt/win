@@ -26,9 +26,7 @@
                             @endif
                             <p>Select tags to follow. We'll use this to customize what you see on your feeds</p>
                         </div>
-                        @if($user)
-                            <tag-suggest></tag-suggest>
-                        @endif
+                        <tag-suggest></tag-suggest>
                         <hr>
                         <p class="text-center">But it's okay if you want to skip this</p>
                         <div class="text-right">

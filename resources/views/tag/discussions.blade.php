@@ -63,7 +63,7 @@
             </div>
         </div>
     </div>
-    <h6>Trending</h6>
+    <h6>Most used tags</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 2, 'md' => 2, 'lg' => 2] ])
 @endsection
 

@@ -1,6 +1,6 @@
 <strong><a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></strong>
-@if($discussion->fromTraining())
- on the training <a href="{{route('training.show',[$discussion->training()->slug])}}">{{$discussion->training()->title}}</a>
+@if($discussion->fromExperience())
+ on the experience <a href="{{route('experience.show',[$discussion->experience()->slug])}}">{{$discussion->experience()->title}}</a>
 @endif
 <div class="">
     @include('mail.snippets.user',['user' => $discussion->user])

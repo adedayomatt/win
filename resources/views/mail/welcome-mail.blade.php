@@ -8,10 +8,10 @@
     <h4 class="text-center color-primary">Thank you for verifying your email</h4>
     <div>
         <p>Dear <strong>{{$user->firstname}}</strong>, We are so glad to have you join this community.</p>
-        <p>This is a community where trainings on different topics are provided by top trainers. You can keep up with your favorite niche by choosing <a href="{{route('tags')}}">tags</a> to follow. The tags you follow will be used to customize what you see on your feed. </p>
+        <p>This is a community where experiences on different topics are provided by top trainers. You can keep up with your favorite niche by choosing <a href="{{route('tags')}}">tags</a> to follow. The tags you follow will be used to customize what you see on your feed. </p>
         <?php 
             $tag_suggestions = $_tags::whereNotIn('id',$user->interests())->get();
-            $training_suggestions = $_trainings::take(3)->get();
+            $experience_suggestions = $_experiences::take(3)->get();
             $discussion_suggestions = $_discussions::take(3)->get();
         ?>
         @if($tag_suggestions->count() > 0)
@@ -37,18 +37,18 @@
             </div>
         @endif
 
-        @if($training_suggestions->count() > 0)
-            <p>You may also want to check this trainings, they have been resourceful</p>
-            @foreach($training_suggestions as $training)
-                @include('mail.snippets.training')
+        @if($experience_suggestions->count() > 0)
+            <p>You may also want to check this experiences, they have been resourceful</p>
+            @foreach($experience_suggestions as $experience)
+                @include('mail.snippets.experience')
                 <hr>
             @endforeach
             <div class="text-right">
-                <a href="{{route('trainings')}}">see more trainings</a>
+                <a href="{{route('experiences')}}">see more experiences</a>
             </div>
         @endif
 
-        @if($training_suggestions->count() > 0)
+        @if($experience_suggestions->count() > 0)
             <p>Remember, {{config('app.name')}} is a community where you can discuss several topics, for example, here are some things your fellow winners are talking about</p>
             @foreach($discussion_suggestions as $discussion)
                 @include('mail.snippets.discussion')

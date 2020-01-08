@@ -1,0 +1,1 @@
+<img src="{{asset('storage/experiences/media/'.$media->slug)}}" alt="{{$experience->title}}" width="100%">

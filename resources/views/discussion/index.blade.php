@@ -38,10 +38,10 @@
                 @if(isset($src))
                     <div class="col-4 col-md-12">
                         <div class="dropdown text-right">
-                            <a id="trainingsrc" class="dropdown-toggle btn btn-default no-outline" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a id="experiencesrc" class="dropdown-toggle btn btn-default no-outline" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {{$src == 'interests' ? 'In my interest ('.Auth::user()->interestedDiscussions()->count().')' : 'All discussions' }}
                             </a>
-                            <div class="dropdown-menu text-left" aria-labelledby="trainingsrc">                            
+                            <div class="dropdown-menu text-left" aria-labelledby="experiencesrc">                            
                                 <a class="dropdown-item no-whitespace" href="{{route('discussion.index',['src' => 'interests'])}}">
                                     <div class="d-flex">
                                         <div class="mr-1">

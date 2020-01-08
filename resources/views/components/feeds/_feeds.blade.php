@@ -2,8 +2,8 @@
     <div class="infinite-scroll">
         @foreach($feeds as $feed)
             @switch($feed->type)
-                @case('training')
-                    @include('components.feeds.training')
+                @case('experience')
+                    @include('components.feeds.experience')
                 @break
                 @case('comment')
                     @include('components.feeds.comment')
@@ -23,17 +23,17 @@
             @endif --}}
 
             @if($loop->index == 5)
-                <h6>Recently published trainings</h6>
-                @if($_trainings::count() > 0)
-                    @include('components.owl-carousel', ['carousel_collection' => $_trainings::orderby('created_at', 'desc')->take(10)->get(), 'carousel_template' => 'training.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3]])
-                    @if($_trainings::count() > 10)
+                <h6>Recently published experiences</h6>
+                @if($_experiences::count() > 0)
+                    @include('components.owl-carousel', ['carousel_collection' => $_experiences::orderby('created_at', 'desc')->take(10)->get(), 'carousel_template' => 'experience.templates.carousel-default', 'carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3]])
+                    @if($_experiences::count() > 10)
                         <div class="text-right">
-                            <a href="{{route('training.index')}}">see more</a>
+                            <a href="{{route('experience.index')}}">see more</a>
                         </div>
                     @endif
                 @else
                     <div class="content-box text-muted text-center">
-                        <small>No training found</small>
+                        <small>No experience found</small>
                     </div>
                 @endif
             @endif

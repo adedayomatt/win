@@ -3,6 +3,28 @@
   Home
 @endsection
 
+@section('styles')
+    @guest
+        .lhs-fixed{
+            background-color: {{primaryColor()}};
+            min-height: 100vh;
+            margin-top: -20px;
+        }
+        .lhs-content{
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .lhs-content .tag-line{
+            color: #fff !important
+        }
+    @endguest
+@endsection
+
+@section('md-styles')
+    @guest
+
+    @endguest
+@endsection
 @section('LHS')
     @auth()
         <div class="content-box">
@@ -36,8 +58,8 @@
     @endauth
 
     @guest()
-    <div class="mt-3">
-        <h2 class="text-center">Built Just For You</h2>
+    <div class="pt-3">
+        <h2 class="text-center tag-line">Built Just For You</h2>
         <div class="content-box ">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -59,9 +81,8 @@
     
 @endsection
 @section('main')
-    <h6>Trending</h6>
+    <h6>Most used tags</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
-
     <feeds url="/feeds" ></feeds>
   
 @endsection

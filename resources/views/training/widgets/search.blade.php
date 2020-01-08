@@ -1,1 +1,0 @@
-<input type="search" class="training-search form-control" placeholder="search for training..." style="">

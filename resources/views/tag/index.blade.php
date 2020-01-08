@@ -10,7 +10,7 @@
             <a href="{{route('tag.create')}}" class="btn btn-sm btn-theme ml-auto"><i class="fa fa-plus"></i> create new</a>
         </div>
     </div>
-    <h6>Trending</h6>
+    <h6>Most used tags</h6>
     @include('tag.widgets.trending', ['carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>2]])
     @include('components.ads.sample')
 @endsection
@@ -37,7 +37,7 @@
                     </div>
                     <div class="d-flex">
                         <small class="m-1">{{$tag->discussions->count()}} discussions</small>
-                        <small class="m-1">{{$tag->trainings->count()}} trainings</small>
+                        <small class="m-1">{{$tag->experiences->count()}} experiences</small>
                     </div>
                 </div>
             @endforeach

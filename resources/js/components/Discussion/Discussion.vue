@@ -19,9 +19,9 @@
                     <small class="mr-2">{{time_diff(discussion.createdat_timestamp)}}</small>
                 </div> 
             </div>
-            <template v-if="discussion.on_training != null">
+            <template v-if="discussion.on_experience != null">
                 <div class="text-muted">
-                    On training <strong><a :href="`${root}/training/${discussion.on_training.slug}`">{{discussion.on_training.title}}</a></strong>
+                    On experience <strong><a :href="`${root}/experience/${discussion.on_experience.slug}`">{{discussion.on_experience.title}}</a></strong>
                 </div>
             </template>
             <div>
@@ -44,7 +44,7 @@ import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
 import User from './../User/User';
 import Users from './../User/Users';
-import Training from './../Training/Training';
+import Experience from './../Experience/Experience';
 export default {
         data(){
             return {
@@ -66,7 +66,7 @@ export default {
 
         },
         components:{
-           User,Users,Training
+           User,Users,Experience
         },
         mounted() {
             console.warn(this.discussion)

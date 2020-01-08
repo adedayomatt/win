@@ -43,10 +43,10 @@ Vue.component('discussion-meta', require('./components/Discussion/DiscussionMeta
 Vue.component('discussion-search', require('./components/Discussion/DiscussionSearch.vue').default);
 Vue.component('discussion-comments', require('./components/Discussion/DiscussionComments.vue').default);
 
-Vue.component('training', require('./components/Training/Training.vue').default);
-Vue.component('trainings', require('./components/Training/Trainings.vue').default);
-Vue.component('training-meta', require('./components/Training/TrainingMeta.vue').default);
-Vue.component('training-search', require('./components/Training/TrainingSearch.vue').default);
+Vue.component('experience', require('./components/Experience/Experience.vue').default);
+Vue.component('experiences', require('./components/Experience/Experiences.vue').default);
+Vue.component('experience-meta', require('./components/Experience/ExperienceMeta.vue').default);
+Vue.component('experience-search', require('./components/Experience/ExperienceSearch.vue').default);
 
 Vue.component('comment', require('./components/Comment/Comment.vue').default);
 Vue.component('comments', require('./components/Comment/Comments.vue').default);

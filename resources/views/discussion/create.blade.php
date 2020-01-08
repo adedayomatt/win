@@ -5,8 +5,8 @@
 
 
 @section('main')
-        <div class="text-center">
-            <h6>New Discussion{{isset($training) ? ' on' : ''}}</h6>
+        <div class="">
+            <h6>Start new discussion{{isset($experience) ? ' on' : ''}}</h6>
         </div>
         <div class="content-box">
             @include('discussion.forms.create')
@@ -15,7 +15,7 @@
 @section('RHS')
         @include('components.ads.sample')
         <div class="content-box">
-            <h6>Trending</h6>
+            <h6>Most used tags</h6>
             <hr>
             <div style="max-height: 300px; overflow: auto">
                 @include('tag.widgets.list')

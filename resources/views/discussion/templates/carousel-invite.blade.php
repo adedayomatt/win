@@ -5,7 +5,7 @@
       <small class="text-muted">started {{$item->created_at->diffForHumans()}}</small>
       <div>
          @if(!$item->alreadyInvited($user))
-         <form action="{{route('discussion.invite.users', [$item->id])}}" method="training">
+         <form action="{{route('discussion.invite.users', [$item->id])}}" method="experience">
             @csrf
             <input type="hidden" value="{{$user->id}}" name="users[]">
             <button class="btn btn-sm btn-secondary btn-block">invite</button>

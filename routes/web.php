@@ -24,14 +24,14 @@ Route::group(['prefix' => 'search'], function(){
     Route::get('user','UserController@search')->name('search.user');
     Route::get('tag', 'TagController@search')->name('search.tag');
     Route::get('discussion', 'DiscussionController@search')->name('search.discussion');
-    Route::get('training', 'TrainingController@search')->name('search.training');
+    Route::get('experience', 'ExperienceController@search')->name('search.experience');
     Route::get('company', 'CompanyController@search')->name('search.company');
     Route::get('school', 'SchoolController@search')->name('search.school');
 });
 
 Route::get('users','UserController@index')->name('users');
 Route::get('@{username}','UserController@show')->name('user.profile');
-Route::get('@{username}/trainings','TrainingController@userTrainings')->name('user.trainings');
+Route::get('@{username}/experiences','ExperienceController@userExperiences')->name('user.experiences');
 Route::get('@{username}/forums','ForumController@userForums')->name('user.forums');
 Route::get('@{username}/discussions','DiscussionController@userDiscussions')->name('user.discussions');
 Route::get('@{username}/contributions','UserController@contributions')->name('user.contributions');
@@ -47,7 +47,7 @@ Route::put('@{username}/settings/education','UserController@updateEducation')->n
 Route::resource('tag','TagController');
 Route::get('tags', 'TagController@index')->name('tags');
 Route::get('tag/{tag}/discussions','TagController@discussions')->name('tag.discussions');
-Route::get('tag/{tag}/trainings','TagController@trainings')->name('tag.trainings');
+Route::get('tag/{tag}/experiences','TagController@experiences')->name('tag.experiences');
 Route::get('tag/{tag}/followers','TagController@followers')->name('tag.followers');
 Route::post('tag/{tag}/follow','TagController@follow')->name('tag.follow');
 
@@ -64,12 +64,12 @@ Route::post('comment/{comment}/reply','CommentController@reply')->name('comment.
 Route::post('comment/{comment}/like','CommentController@like')->name('comment.like');
 Route::get('discussion/{discussion}/delete', 'DiscussionController@delete')->name('discussion.delete');
 
-Route::resource('training','TrainingController');
-Route::get('trainings','TrainingController@index')->name('trainings');
-Route::get('training/{training}/discuss','TrainingController@discuss')->name('training.discuss');
-Route::post('training/{training}/media/add','TrainingController@addMedia')->name('training.media.add');
-Route::delete('training/{training}/media/remove','TrainingController@removeMedia')->name('training.media.remove');
-Route::get('training/{training}/delete', 'TrainingController@delete')->name('training.delete');
+Route::resource('experience','ExperienceController');
+Route::get('experiences','ExperienceController@index')->name('experiences');
+Route::get('experience/{experience}/discuss','ExperienceController@discuss')->name('experience.discuss');
+Route::post('experience/{experience}/media/add','ExperienceController@addMedia')->name('experience.media.add');
+Route::delete('experience/{experience}/media/remove','ExperienceController@removeMedia')->name('experience.media.remove');
+Route::get('experience/{experience}/delete', 'ExperienceController@delete')->name('experience.delete');
 
 Route::resource('company', 'CompanyController');
 Route::get('companies', 'CompanyController@index')->name('companies');

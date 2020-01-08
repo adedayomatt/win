@@ -7,20 +7,6 @@
 <script src="{{ asset('js/vendors/select2.min.js') }}"></script>
 <script src="{{ asset('js/b/scripts.js') }}"></script>
 
-<!-- 
-<script src="http://169.254.56.90/wyzi/public/js/app.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/vendors/toastr.min.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/vendors/owl.carousel.min.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/vendors/jquery.jscroll.min.js"></script>
-
-<script src="http://169.254.56.90/wyzi/public/js/vendors/jquery.jscroll.min.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/vendors/typeahead.min.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/vendors/select2.min.js"></script>
-<script src="http://169.254.56.90/wyzi/public/js/b/scripts.js"></script>
-
- -->
- <script>
- </script>
 <script>
 			toastr.options = {
 				"closeButton": true,

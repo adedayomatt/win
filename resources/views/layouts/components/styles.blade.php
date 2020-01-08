@@ -2,17 +2,8 @@
 <link rel="stylesheet" href="{{asset('css/vendors/toastr.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/select2.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/owl.carousel.min.css')}}">
-<link rel="stylesheet" href="{{asset('css/b/layouts.css')}}">
+<link rel="stylesheet" href="{{asset('css/b/layouts.css?v=1')}}">
 <link rel="stylesheet" href="{{asset('css/b/styles.css')}}"> 
-
-<!--
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/app.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/toastr.min.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/select2.min.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/vendors/owl.carousel.min.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/layouts.css">
-<link rel="stylesheet" href="http://169.254.56.90/wyzi/public/css/b/styles.css">
- -->
 
 <style>
     body{
@@ -31,7 +22,7 @@
   .global-search,
   .tag-search,
   .discussion-search,
-  .training-search,
+  .experience-search,
   .forum-search,
   .user-search,
   .school-search,

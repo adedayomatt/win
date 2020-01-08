@@ -23,8 +23,8 @@
                         <template v-else-if="feed.type == 'discussion'">
                             <discussion  :data="feed"></discussion>
                         </template>
-                        <template v-else-if="feed.type == 'training'" >
-                            <training :data="feed"></training>
+                        <template v-else-if="feed.type == 'experience'" >
+                            <experience :data="feed"></experience>
                         </template>
                     </div>
                     <template v-if="links !== null && links.next !== null">
@@ -52,7 +52,7 @@ import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
 import CommentFeed from './CommentFeed'
 import DiscussionFeed from './DiscussionFeed'
-import TrainingFeed from './TrainingFeed'
+import ExperienceFeed from './ExperienceFeed'
 import LoadingOne from './../Assets/LoadingOne'
 
 export default {
@@ -65,7 +65,7 @@ export default {
                loaded: false,
                single_comment: null,
                single_discussion: null,
-               single_training: null,
+               single_experience: null,
             }
         },
         computed: {
@@ -111,7 +111,7 @@ export default {
 
         },
         components:{
-           CommentFeed, DiscussionFeed, TrainingFeed, LoadingOne
+           CommentFeed, DiscussionFeed, ExperienceFeed, LoadingOne
         },
         mounted() {
             let component = this;

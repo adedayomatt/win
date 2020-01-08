@@ -8,12 +8,12 @@
                     <strong class="text-muted" data-toggle="tooltip" title="discussion deleted">{{$discussion->title}}</strong>
                 @endif
                 
-                @if($discussion->fromTraining())
-                    on the training 
-                    @if($discussion->training()->isTrashed())
-                        <strong class="text-muted" data-toggle="tooltip" title="training deleted">{{$discussion->training()->title}}</strong>
+                @if($discussion->fromExperience())
+                    on the experience 
+                    @if($discussion->experience()->isTrashed())
+                        <strong class="text-muted" data-toggle="tooltip" title="experience deleted">{{$discussion->experience()->title}}</strong>
                     @else
-                        <a href="{{route('training.show',$discussion->training()->slug)}}"><strong>  {{$discussion->training()->title}}</strong></a>
+                        <a href="{{route('experience.show',$discussion->experience()->slug)}}"><strong>  {{$discussion->experience()->title}}</strong></a>
                     @endif
                 @endif            
             </p> 

@@ -19,7 +19,7 @@
                         </div>
                         <div class="p-2">
                             <div class="d-fle">
-                                <small class="mr-1">{{$suggestion->trainings->count()}} trainings </small>
+                                <small class="mr-1">{{$suggestion->experiences->count()}} experiences </small>
                                 <small class="mr-1">{{$suggestion->discussions->count()}} discussions </small>
                             </div>
                             <div class="pl-2">

@@ -4,26 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Trainingtag;
+use App\Experiencetag;
 use App\Traits\GetResource;
 
-class TrainingTagController extends Controller
+class ExperienceTagController extends Controller
 {
     
     use GetResource;
 
     public function __construct()
     {
-        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only training list and single training view is publicly accessible
+        // $this->middleware('auth', ['except'=>['index', 'show']]);//This is to authenticate the user, only experience list and single experience view is publicly accessible
     }
 
     private function getTag($id){
-        return $this->find(Trainingtag::class,$id);
+        return $this->find(Experiencetag::class,$id);
     }
 
     public function search(Request $request){
-    return Trainingtag::search($request->get('q'))
-                    ->with('trainings')
+    return Experiencetag::search($request->get('q'))
+                    ->with('experiences')
                     ->get();
     }
 
@@ -34,7 +34,7 @@ class TrainingTagController extends Controller
      */
     public function index()
     {
-        return view('training.tag.index')->with('trainingtags',Trainingtag::all());
+        return view('experience.tag.index')->with('experiencetags',Experiencetag::all());
     }
 
     /**
@@ -44,7 +44,7 @@ class TrainingTagController extends Controller
      */
     public function create()
     {
-        return view('training.tag.create');
+        return view('experience.tag.create');
     }
 
     /**
@@ -59,12 +59,12 @@ class TrainingTagController extends Controller
 		'tag_name' => 'required'
 		]);
 		
-		Trainingtag::create([
+		Experiencetag::create([
         'name' => $request->tag_name,
         'description' => $request->description,
         'slug' => str_slug($request->tag_name)
 		]);
-		return redirect()->route('training.tags')->with('success','Tag '.$request->tag_name.' created');
+		return redirect()->route('experience.tags')->with('success','Tag '.$request->tag_name.' created');
    
     }
 
@@ -76,7 +76,7 @@ class TrainingTagController extends Controller
      */
     public function show($id)
     {
-		return view('training.tag.show')->with('trainingtag', $this->getTag($id));
+		return view('experience.tag.show')->with('experiencetag', $this->getTag($id));
     }
 
     /**
@@ -87,7 +87,7 @@ class TrainingTagController extends Controller
      */
     public function edit($id)
     {
-		return view('training.tag.edit')->with('trainingtag', $this->getTag($id));
+		return view('experience.tag.edit')->with('experiencetag', $this->getTag($id));
     }
 
     /**
@@ -108,7 +108,7 @@ class TrainingTagController extends Controller
         $tag->description = $request->description;
         $tag->slug = str_slug($request->tag_name);
 		$tag->save();
-		return redirect()->route('training.tag.show',[$tag->slug])->with('success','Tag '.$request->tag_name.' updated');
+		return redirect()->route('experience.tag.show',[$tag->slug])->with('success','Tag '.$request->tag_name.' updated');
 		}
 
     /**

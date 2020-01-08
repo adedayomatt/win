@@ -22,9 +22,9 @@ Route::get('/user/{username}', 'UserController@show');
 Route::get('tags', 'TagController@index');
 Route::get('tag/{tag}', 'TagController@show');
 
-Route::get('trainings','TrainingController@index');
-Route::get('training/{id}','TrainingController@show');
-Route::get('training/{training}/discussions','TrainingController@discussions');
+Route::get('experiences','ExperienceController@index');
+Route::get('experience/{id}','ExperienceController@show');
+Route::get('experience/{experience}/discussions','ExperienceController@discussions');
 
 Route::get('discussions','DiscussionController@index');
 Route::get('discussion/{id}','DiscussionController@show');

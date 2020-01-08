@@ -44,7 +44,7 @@
                                                     </strong>
                                                     <div class="text-muted">
                                                         <small class="m-1">
-                                                            ${data.trainings.length} trainings</a>
+                                                            ${data.experiences.length} experiences</a>
                                                         </small>
                                                         <small class="m-1">
                                                             ${data.discussions.length} discussions
@@ -71,7 +71,7 @@
                                                     </strong>
                                                     <div class="text-muted">
                                                         <small class="m-1">
-                                                            ${data.trainings.length} trainings</a>
+                                                            ${data.experiences.length} experiences</a>
                                                         </small>
                                                         <small class="m-1">
                                                             ${data.discussions.length} discussions
@@ -90,7 +90,7 @@
                 }
                 }
             }).bind('typeahead:select', function(ev, suggestion) {
-                if($(this).attr('for') && $(this).attr('preview') && !tagSelected(suggestion)){ //suggesting for a new training
+                if($(this).attr('for') && $(this).attr('preview') && !tagSelected(suggestion)){ //suggesting for a new experience
                     $(this).typeahead('val',''); //clear the values
                     var tagsPreview = $($(this).attr('preview'));
                     addTag(tagsPreview,suggestion)

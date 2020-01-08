@@ -10,7 +10,7 @@
          @include('discussion.widgets.contributors-mini',['discussion' => $item])
       </div>
       <div class="py-1">
-         <form action="#" method="training">
+         <form action="#" method="experience">
             @csrf
             <a href="{{route('discussion.show', $item->slug)}}" class="btn btn-sm btn-secondary btn-block">contribute</a>
             <!-- <button class="btn btn-sm btn-secondary btn-block">Contribute</button> -->

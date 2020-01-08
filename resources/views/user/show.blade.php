@@ -5,9 +5,12 @@
 @endsection
 
 @section('styles')
+    main{
+        margin-top: 60px;
+    }
     .generic-profile-bg{
         background-color: {{primaryColor()}};
-        height: 200px;
+        height: 150px;
     }
     .user-about-container{
         background-color: #fff;
@@ -175,44 +178,44 @@
                             </div>
 
                             <div class="profile-section">
-                                <div class="content-box" data-toggle="collapse" data-target="#trainings" aria-expanded="true">
+                                <div class="content-box" data-toggle="collapse" data-target="#experiences" aria-expanded="true">
                                     <div class="d-flex">
-                                        <h6>Published Trainings ({{$user->trainings->count()}})</h6>
+                                        <h6>Shared Experiences ({{$user->experiences->count()}})</h6>
                                         @if($user->auth())
                                             <div class="ml-auto">
-                                                <a href="{{route('training.create')}}" class="operation"><i class="fas fa-plus" title="create new training"></i></a>
+                                                <a href="{{route('experience.create')}}" class="operation"><i class="fas fa-plus" title="create new experience"></i></a>
                                             </div>
                                         @endif
                                     </div>
                                 </div>
 
-                                <div class="collapse show" id="trainings" data-parent="">
-                                    @if($user->trainings->count() > 0)
-                                        @foreach($user->trainings()->orderby('created_at', 'desc')->take(3)->get() as $training)
-                                            <h6><a href="{{route('training.show',[$training->slug])}}">{{$training->title}}</a></h6>
+                                <div class="collapse show" id="experiences" data-parent="">
+                                    @if($user->experiences->count() > 0)
+                                        @foreach($user->experiences()->orderby('created_at', 'desc')->take(3)->get() as $experience)
+                                            <h6><a href="{{route('experience.show',[$experience->slug])}}">{{$experience->title}}</a></h6>
                                             <div class="text-muted">
-                                                <small class="m-1"><a href="{{route('training.show',[$training->slug])}}#discussions">{{$training->discussions->count()}} discussions</a></small>
-                                                <small class="m-1">published {{$training->created_at->diffForHumans()}}</small>
+                                                <small class="m-1"><a href="{{route('experience.show',[$experience->slug])}}#discussions">{{$experience->discussions->count()}} discussions</a></small>
+                                                <small class="m-1">published {{$experience->created_at->diffForHumans()}}</small>
                                             </div>
-                                            @if($training->tags->count() > 0)
-                                                @foreach($training->tags()->take(4)->get() as $tag)
+                                            @if($experience->tags->count() > 0)
+                                                @foreach($experience->tags()->take(4)->get() as $tag)
                                                     <a href="{{route('tag.show',[$tag->slug])}}" class="tag">#{{$tag->name}}</a>
                                                 @endforeach
-                                                @if($training->tags->count() > 4)
-                                                    <small class="text-muted ml-2"> + {{$training->tags->count() - 4}} other tags</small>
+                                                @if($experience->tags->count() > 4)
+                                                    <small class="text-muted ml-2"> + {{$experience->tags->count() - 4}} other tags</small>
                                                 @endif
                                             @endif
                                             <hr>
                                         @endforeach
                                         <div class="text-muted text-right small">
-                                        @if($user->trainings->count() > 3)
-                                            + {{$user->trainings->count() - 2}} more. 
+                                        @if($user->experiences->count() > 3)
+                                            + {{$user->experiences->count() - 2}} more. 
                                         @endif
-                                        <a href="{{route('user.trainings',[$user->username])}}">all trainings</a>
+                                        <a href="{{route('user.experiences',[$user->username])}}">all experiences</a>
                                         </div>
                                     @else
                                         <div class="text-muted text-center">
-                                            No training yet
+                                            No experience yet
                                         </div>
                                     @endif
                                 </div>
@@ -352,12 +355,12 @@
             </div>
             <div class="col-md-8 no-padding-xs">
                 @if($user->auth())               
-                    <h6>Training in your interests</h6>
-                        @if($user->interestedTrainings()->count() > 0)
-                            @include('components.owl-carousel', ['carousel_collection' => $user->interestedTrainings(), 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3], 'carousel_template' => 'training.templates.carousel-default'])
+                    <h6>Experiences in your interests</h6>
+                        @if($user->interestedExperiences()->count() > 0)
+                            @include('components.owl-carousel', ['carousel_collection' => $user->interestedExperiences(), 'carousel_layout' => ['xs'=>2,'sm'=>2,'md'=>2,'lg'=>3], 'carousel_template' => 'experience.templates.carousel-default'])
                         @else
                             <div class="content-box">
-                                <p class="text-muted text-center">No training found</p>
+                                <p class="text-muted text-center">No experience found</p>
                             </div>
                         @endif
                 @else

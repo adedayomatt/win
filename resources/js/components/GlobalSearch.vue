@@ -33,9 +33,9 @@
                                 </div>
 
                                 <div class="col-lg-4 my-1">
-                                    <div class="result-header px-3 py-2">Trainings ({{trainings.length}})</div>
+                                    <div class="result-header px-3 py-2">Experiences ({{experiences.length}})</div>
                                     <div class="result-wrapper">
-                                        <training v-for="training in trainings" :key="training.id+Math.random()" :data="training"></training>
+                                        <experience v-for="experience in experiences" :key="experience.id+Math.random()" :data="experience"></experience>
                                     </div>
                                 </div>
 
@@ -60,7 +60,7 @@
     import {mapActions} from 'vuex';
     import Tag from './Tag/Tag'
     import Discussion from './Discussion/Discussion'
-    import Training from './Training/Training'
+    import Experience from './Experience/Experience'
     import User from './User/User'
     import LoadingOne from './Assets/LoadingOne'
 
@@ -71,7 +71,7 @@
                 q: '',
                 tags: [],
                 discussions: [],
-                trainings: [],
+                experiences: [],
                 users: [],
                 active: false,
                 loading: false,
@@ -102,7 +102,7 @@
                         .then(response => {
                             this.tags = response.data.tags;
                             this.discussions = response.data.discussions;
-                            this.trainings = response.data.trainings;
+                            this.experiences = response.data.experiences;
                             this.users = response.data.users;
                             this.loading = false;
                             this.status = `Search result for "${this.q}"`
@@ -127,7 +127,7 @@
             }
         },
         components: {
-        Tag, Discussion, Training, User, LoadingOne
+        Tag, Discussion, Experience, User, LoadingOne
         },
         mounted() {
            this.closeSearch();

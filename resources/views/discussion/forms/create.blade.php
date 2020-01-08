@@ -1,7 +1,7 @@
 {!!Form::open(['route' => 'discussion.store', 'method' => 'POST'])!!}
-    @if(isset($training))
-        @include('training.widgets.snippet')
-        {{form::hidden('training',$training->id)}}
+    @if(isset($experience))
+        @include('experience.widgets.snippet')
+        {{form::hidden('experience',$experience->id)}}
     @endif
     <fieldset>
         <div class="form-group">

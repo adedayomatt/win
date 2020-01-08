@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewTrainingNotification extends Notification
+class NewExperienceNotification extends Notification
 {
     use Queueable;
 
@@ -16,10 +16,10 @@ class NewTrainingNotification extends Notification
      *
      * @return void
      */
-    public $training;
-    public function __construct($training)
+    public $experience;
+    public function __construct($experience)
     {
-        $this->training = $training;
+        $this->experience = $experience;
     }
 
     /**
@@ -41,10 +41,10 @@ class NewTrainingNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = $this->training->title.' by '.$this->training->user->fullname().' ('.$this->training->user->username().')';
+        $subject = $this->experience->title.' by '.$this->experience->user->fullname().' ('.$this->experience->user->username().')';
         return (new MailMessage)
                     ->subject($subject)
-                    ->view('mail.notification.new-training', ['subject' => $subject, 'training' => $this->training]);
+                    ->view('mail.notification.new-experience', ['subject' => $subject, 'experience' => $this->experience]);
     }
 
     /**

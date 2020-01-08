@@ -4,5 +4,5 @@
     {{$subject}}
 @endsection
 @section('body')
-    @include('mail.snippets.training')
+    @include('mail.snippets.experience')
 @endsection

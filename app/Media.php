@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Media extends Model
 {
-    protected $fillable = ['training_id', 'slug', 'type'];
+    protected $fillable = ['experience_id', 'slug', 'type'];
 
-    public function training(){
-        return $this->belongsTo('App\Training');
+    public function experience(){
+        return $this->belongsTo('App\Experience');
     }
     public function isPhoto(){
         return $this->type == 'photo' ? true : false;

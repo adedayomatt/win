@@ -24,8 +24,8 @@
             </a>
       </li>
       <li class="nav-item ">
-            <a href="{{route('trainings')}}" class="nav-link" >
-                Trainings
+            <a href="{{route('experiences')}}" class="nav-link" >
+                Experiences
             </a>
       </li>
       {{-- <li class="nav-item ">
@@ -57,11 +57,13 @@
     @auth()
     <ul class="navbar-nav ml-auto">
         <li class="nav-item ">
-              <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm" >
-                  <i class="fa fa-plus"></i> New discussion
-              </a>
+            <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm mx-1" >
+                 <i class="fa fa-plus"></i> New Discussion
+            </a>
+            <a href="{{route('experience.create')}}" class="btn btn-theme btn-sm mx-1" >
+             <i class="fa fa-share-alt"></i> Share Experience
+            </a>
         </li>
-
     </ul>
     @endauth()
     <ul class="navbar-nav ml-auto">
@@ -71,23 +73,23 @@
 
                   <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                     <img src="{{auth()->user()->avatar()['src']}}" alt="{{auth()->user()->avatar()['alt']}}" class="avatar avatar-xs">
-                      {{ auth()->user()->username }} <span class="caret"></span>
+                       <span class="caret"></span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">                            
                     <a class="dropdown-item" href="{{route('user.profile',[Auth::user()->username])}}">
-                      <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> My profile
+                      <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> {{ auth()->user()->username }}
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{route('tag.create')}}">create tag</a>
                     <div class="dropdown-divider"></div>
 
-                    <a class="dropdown-item" href="{{route('training.create')}}">create training</a>
+                    <a class="dropdown-item" href="{{route('experience.create')}}">share experience</a>
                       <div class="dropdown-divider"></div>
 
                       <a class="dropdown-item" href="{{route('forum.create')}}">create forum</a>
                       <div class="dropdown-divider"></div>
 
-                      <a class="dropdown-item" href="{{route('discussion.create')}}">create discussion</a>
+                      <a class="dropdown-item" href="{{route('discussion.create')}}">start discussion</a>
                       <div class="dropdown-divider"></div>
 
 

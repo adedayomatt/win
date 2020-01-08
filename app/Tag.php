@@ -12,7 +12,7 @@ class Tag extends Model
 	use SearchableTrait;
 	
   protected $fillable = ['user_id','name','description','slug'];
-  protected $appends = ['type','trainings_count','discussions_count'];
+  protected $appends = ['type','experiences_count','discussions_count'];
 	  /**
      * Searchable rules.
      *
@@ -38,14 +38,14 @@ class Tag extends Model
     $trendArray = array();
     foreach(Tag::all() as $tag){
       $trend = 0;
-      $trend += $tag->trainings->count();
+      $trend += $tag->experiences->count();
       $trend += $tag->discussions->count();
       $trend += Comment::whereIn('discussion_id', $tag->discussions->pluck('id'))->count();
       $trendArray[] = (object) [
         'tag' => $tag,
         'trend' => $trend,
         'discussions' => $tag->discussions,
-        'trainings' => $tag->trainings
+        'experiences' => $tag->experiences
       ];
     }
     // dd(collect($trendArray));
@@ -53,9 +53,13 @@ class Tag extends Model
   }
   public static function recent(){
     $from_discussions = DB::table('discussion_tag')->orderby('created_at','desc')->take(10)->pluck('tag_id');
-    $from_trainings = DB::table('tag_training')->orderby('created_at','desc')->take(10)->pluck('tag_id');
-   $id = $from_discussions->merge($from_trainings);
-   return Tag::whereIn('id',$id)->get();
+    $from_experiences = DB::table('experience_tag')->orderby('created_at','desc')->take(10)->pluck('tag_id');
+   $id = $from_discussions->merge($from_experiences);
+   $recents = Tag::whereIn('id',$id)->get();
+   if($recents->count() == 0){
+     $recents = Tag::orderby('created_at', 'desc')->take(20)->get();
+   }
+   return $recents;
   }
 
   // return collection of users following an collection of tags
@@ -76,8 +80,8 @@ class Tag extends Model
     return $this->belongsTo('App\User');
   }
   
-	public function trainings(){
-		return $this->belongsToMany('App\Training');
+	public function experiences(){
+		return $this->belongsToMany('App\Experience');
     }
 
     public function discussions(){
@@ -93,15 +97,15 @@ public function getTypeAttribute(){
     $this->user;
     $this->users;
 }
-public function getTrainingsCountAttribute(){
-  return $this->trainings()->count();
+public function getExperiencesCountAttribute(){
+  return $this->experiences()->count();
 }
 
 public function getDiscussionsCountAttribute(){
   return $this->discussions()->count();
 }
 function getFeedsAttribute(){
-  $feeds = new Feeds($this->discussions, $this->trainings, $this->comments);
+  $feeds = new Feeds($this->discussions, $this->experiences, $this->comments);
   return $feeds->feeds();
 }
 function getCommentsAttribute(){

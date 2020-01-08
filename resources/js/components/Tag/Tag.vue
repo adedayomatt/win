@@ -11,8 +11,8 @@
                     Followed by: 
                     <users :data="followers"></users>
                     <div class="d-flex">
-                        <a class="m-1" :href="`/tag/${tag.slug}/discussions`">{{tag.discussions_count}} discussions</a>
-                        <a class="m-1"  :href="`/tag/${tag.slug}/trainings`">{{tag.trainings_count}} trainings</a>
+                        <a class="m-1" :href="`${root}/tag/${tag.slug}/discussions`">{{tag.discussions_count}} discussions</a>
+                        <a class="m-1"  :href="`${root}/tag/${tag.slug}/experiences`">{{tag.experiences_count}} experiences</a>
                     </div>
                 </div>
             </template>

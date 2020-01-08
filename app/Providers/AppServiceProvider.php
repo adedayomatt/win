@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Forum;
-use App\Training;
+use App\Experience;
 use App\User;
 use App\Tag;
 use App\Discussion;
@@ -53,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
             '_tags' => Tag::class,
             '_users' => User::class,
 			'_forums' => Forum::class, 
-            '_trainings' => Training::class,
+            '_experiences' => Experience::class,
             '_discussions' => Discussion::class,
             '_comments' => Comment::class,
 		);

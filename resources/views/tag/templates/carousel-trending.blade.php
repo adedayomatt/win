@@ -2,7 +2,7 @@
    <strong class="d-block text-center"><a href="{{route('tag.show',[$item->tag->slug])}}" class="tag" data-toggle="tooltip" title="{{$item->tag->name}}">#{{str_limit($item->tag->name,12)}}</a></strong> 
    <div class="d-flex justify-content-center text-muted">
       <small class="mr-2">{{$item->discussions->count()}} discussions</small>
-      <small class="mr-2">{{$item->trainings->count()}} trainings</small>
+      <small class="mr-2">{{$item->experiences->count()}} experiences</small>
    </div>
    <div style="border-top: 1px solid #f2f2f2; height: 50px" class="pt-1">
       @if($item->tag->users->count() > 0)

@@ -9,6 +9,6 @@
             <small class="text-muted"> + {{$discussion->contributors()->count() - 3 }} others</small>
         @endif
     @else
-        <small class="text-muted mx-1">No contributor yet, <a href="{{route('discussion.show',[$discussion->slug])}}#comment">contribute</a></small>
+        <small class="text-muted mx-1">No contributor yet @if(!$discussion->isTrashed()), <a href="{{route('discussion.show',[$discussion->slug])}}#comment">contribute</a> @endif</small>
     @endif
 </div>

@@ -11,9 +11,9 @@
                 @include('discussion.widgets.meta')
             </div>
             {!!$discussion->content()!!} 
-            @if($discussion->fromTraining())
+            @if($discussion->fromExperience())
                 <div class="ml-2">
-                    @include('training.widgets.snippet',['training' => $discussion->training()])
+                    @include('experience.widgets.snippet',['experience' => $discussion->experience()])
                 </div>
             @endif
         @include('tag.widgets.inline', ['tags' => $discussion->tags])

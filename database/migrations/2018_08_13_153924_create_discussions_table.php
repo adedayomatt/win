@@ -17,7 +17,7 @@ class CreateDiscussionsTable extends Migration
             $table->increments('id');
 			$table->integer('user_id')->unsigned();
 			$table->integer('forum_id')->unsigned();
-			$table->integer('training_id')->nullable();
+			$table->integer('experience_id')->nullable();
 			$table->string('title');
             $table->text('content');
             $table->string('slug');
