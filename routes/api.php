@@ -32,6 +32,7 @@ Route::get('discussion/{discussion}/comments','DiscussionController@comments');
 Route::get('discussion/{discussion}/contributors','DiscussionController@contributors');
 Route::get('comments','CommentController@index');
 Route::get('comment/{comment}','CommentController@show');
+Route::get('comment/{comment}/engagements','CommentController@engagements');
 Route::get('/feeds', 'AppController@index');
 Route::get('/{user}/feeds', 'UserController@feeds');
 Route::get('/tag/{tag}/feeds', 'TagController@feeds');

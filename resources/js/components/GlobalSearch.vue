@@ -91,6 +91,7 @@
         },
         methods: {
             search(){
+                this.q = $(this.input).val();
                 if(this.q === ''){
                     this.loading = false;
                     this.status = `Type above to search`;
@@ -147,6 +148,8 @@
             left: 0;
             right: 0;
             background-color: #fff;
+            box-shadow: 0px 30px 30PX rgba(0,0,0,.2);
+            border-radius: 0px 0px 15px 15px;
         }
     .search-results-container-header{
         position: fixed;
@@ -158,7 +161,7 @@
         }
     .search-results-container-body{
         padding-top: 60px;
-        height: 92vh;
+        height: 75vh;
         overflow: auto;
     }
     .result-header{

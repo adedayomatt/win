@@ -20,7 +20,33 @@ let getters = {
     },
     snippet: state => (content,length = 100) => {
         return content.substring(0,length);
+    },
+    makeId: state => (prefix = '', suffix = '', random_length = 5) => {
+        return `${prefix}${randomChar(random_length)}${suffix}`;
+    },  
+    renderHTML: state => (container, string) => {
+        // console.log('rendering in '+container);
+        $('#'+container).html($.parseHTML(string));
+    },
+    getMentions: state => (content) => {
+        let ats = getIndicesOf(' @', content);
+        let mentions = [];
+        if(ats.length > 0){
+           ats.forEach(index => {
+               var snippet = content.substring(index).slice(1);
+               var username = snippet.split(' ')[0];
+               mentions.push(username);
+           });
+       }
+       return mentions;
+    },
+    resolveMentions: state => (content, mentions = []) => {
+        mentions.forEach(mention => {
+           content = content.replace(' '+mention, ' <a href="'+baseURL()+'/'+mention+'">'+mention+'</a>')
+        })
+        return content;
     }
+   
 }
 
 export default  getters

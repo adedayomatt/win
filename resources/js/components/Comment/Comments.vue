@@ -1,50 +1,51 @@
 <template>
     <div>
-        <template v-if="app_ready">
-            <template v-if="mode === 'popup'">
-                <div class="blur"></div>
-                <div class="single-comment-container shadow-lg">
-                    <comment-popup :id="popup_comment"  @new-reply="newCommentPosted" @close-popup="closeSingleComment"></comment-popup>
-                </div>
-            </template>
-
-            <template v-if="target == `discussion` && meta !== null" >
-                Comments: {{total}}
-            </template>
-
-            <div id="comments-container" :style="`max-height: ${container}`">
-                <div id="comments-wrapper">
-                    <template v-if="loaded">
-                        <div>
-                            <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="comment" style="background-color: inherit">
-                                <div>
-                                    <comment :data="comment" :quote_comment="true" @load-single-comment="loadSingleComment"></comment>
-                                </div>
-                               
-                            </div> 
-                        </div>
-                    </template>
-                    <template v-else>
-                            <loading-one message="Fetching comments..."></loading-one>
-                    </template>
-                    <template v-if="links != null && links.next != null">
-                        <loading-one message="Fetching more comments..."></loading-one>
-                    </template>
-                    <template v-else>
-                        <div class="text-center">
-                            <h1>.</h1>
-                        </div>
-                    </template>
-
-                </div>
+        <template v-if="mode === 'popup'">
+            <div class="blur"></div>
+            <div class="single-comment-container shadow-lg">
+                <comment-popup :data="single_comment" :id="comment_id"  @new-reply="newCommentPosted" @close-popup="closeSingleComment"></comment-popup>
             </div>
-            <template v-if="target == `discussion`" >
-                <div class="comment-textarea">
-                    <comment-textarea :discussion="discussion_id" @comment-posted="newCommentPosted"></comment-textarea>
-                </div>
-            </template>
-           
         </template>
+        <template v-if="target == `discussion` && meta !== null" >
+            Comments: {{total}}
+        </template>
+
+        <div id="comments-container" :style="`${container !== null ? 'max-height: '+container+'; overflow-y: auto' : ''}`">
+            <template v-if="app_ready">
+                    <div id="comments-wrapper">
+                        <template v-if="loaded">
+                            <div>
+                                <div v-for="comment in sortedComments" v-bind:key="comment.id+Math.random()" class="comment" style="background-color: inherit">
+                                  <div>
+                                        <comment :data="comment" :quote_comment="true" @load-single-comment-by-data="loadSingleCommentByData" @load-single-comment-by-id="loadSingleCommentById"></comment>
+                                    </div>
+                                </div> 
+                            </div>
+                            <template v-if="links != null && links.next != null">
+                                <div id="more-comments-loader">
+                                    <loading-one message="getting more comments..."></loading-one>
+                                </div>
+                            </template>
+                            <template v-else>
+                                <div class="text-center">
+                                    <h1>.</h1>
+                                </div>
+                            </template>
+                        </template>
+                        <template v-else>
+                                <loading-one message="getting comments..."></loading-one>
+                        </template>
+                        
+                    </div>
+                    <template v-if="target == `discussion`" >
+                        <div class="comment-textarea" id="discussion-comment">
+                            <comment-textarea :discussion="discussion_id" @comment-posted="newCommentPosted" container="#discussion-comment"></comment-textarea>
+                        </div>
+                    </template>
+
+            </template>
+        </div>
+
     </div>
 </template>
 
@@ -62,7 +63,9 @@ import CommentTextarea from './CommentTextarea';
                 links: null,
                 meta: null,
                 loaded: false,
-                popup_comment: null,
+                can_load_more: true,
+                single_comment: null,
+                comment_id: null,
                 mode: 'list',
                 total: 0
 
@@ -83,6 +86,7 @@ import CommentTextarea from './CommentTextarea';
                 'loadComments'
             ]),
             loadComments(url){
+                this.can_load_more = false;
                 if(url !== '' && url !== null){
                     axios.get(url)
                     .then(response => {
@@ -91,16 +95,24 @@ import CommentTextarea from './CommentTextarea';
                         this.meta = response.data.meta;
                         this.loaded = true;
                         this.total = response.data.meta.total;
-                        console.warn(response.data)
+                        this.can_load_more = true;
+                        // console.warn(response.data)
                     })
                     .catch(error => {
 
                     })
                 }
             },
-            loadSingleComment(comment){
+            loadSingleCommentByData(comment){
                 this.mode = 'popup';
-                this.popup_comment = comment.id;  
+                this.comment_id = null;
+                this.single_comment = comment;  
+                // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
+            },
+            loadSingleCommentById(id){
+                this.mode = 'popup';
+                this.comment_id = id;
+                this.single_comment = null;    
                 // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
             },
             closeSingleComment(){
@@ -118,21 +130,20 @@ import CommentTextarea from './CommentTextarea';
             LoadingOne,Comment,CommentTextarea
         },
         mounted() {
-            const component = this;
-
             this.loadComments(apiURL(this.url));
+            const component = this;
             let container = component.container == null ? $(window) : $('#comments-container');
-            container.on('scroll',function(e){
-            let content = $('#comments-wrapper');
-            console.log('content:'+content.height()+' scrolled:'+container.scrollTop());
-            if(container.scrollTop() + container.height() >= content.height()){
-                if(component.links !== null && component.links.next !== null){
-                    setTimeout(() => { 
-                        component.loadComments(component.links.next)
-                        },3000)
+            console.log(container);
+            container.scroll(function(e){
+                let parent = component.container == null ? window : '#comments-container'
+                if(onScreen('#more-comments-loader')) { //if the loader is visible on the screen, It means the bottom has been reached
+                    if(component.can_load_more && component.links !== null && component.links.next !== null){
+                        component.loadComments(component.links.next);
+                    }
                 }
-            }
             })
+
+    
         },
         watch: {
             url: function(newUrl, oldUrl){
@@ -143,7 +154,6 @@ import CommentTextarea from './CommentTextarea';
     }
 </script>
 <style scoped>
-
     .blur,
     .single-comment-container{
         position: fixed;
@@ -153,12 +163,12 @@ import CommentTextarea from './CommentTextarea';
     }
     .blur{
         top: 0;
-        z-index:1100;
+        z-index:100;
         background-color:rgba(255, 255, 255, 0.9);
     }
 
     .single-comment-container{
-        z-index: 1200;
+        z-index: 200;
     }
     
     .list-group-item.comment{

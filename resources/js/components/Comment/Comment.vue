@@ -16,7 +16,7 @@
                         <!-- If the comment was a reply -->
                             <template v-if="comment.reply_to !== null && quote_comment == true">
                                 <div class="reply_to">
-                                    <div @click="loadSingleComment(comment.reply_to)">
+                                    <div>
                                         <div class="d-flex">
                                             <img :src="comment.reply_to.user.image.src" :alt="comment.reply_to.user.username" class="avatar avatar-sm">
                                             <div class="pt-1" >
@@ -25,7 +25,7 @@
                                                 <span class="text-muted ml-2">{{time_diff(comment.reply_to.created_timestamp)}}</span>
                                             </div> 
                                         </div>
-                                        <div class="single-comment-content break-word">
+                                        <div class="single-comment-content break-word" @click="loadSingleCommentById(comment.reply_to.id)">
                                             {{comment.reply_to.content}}
                                         </div>
                                         
@@ -37,33 +37,19 @@
                                     <discussion :data="comment.comment_discussion"></discussion>
                                 </div>
                             </template>
-                            <div @click="loadComment" class="single-comment-content break-word">
-                                {{comment.content}}
-                            </div>
-                            <comment-actions :data="comment" :write_comment="write_comment" :comment_writable="true" @new-reply="newReply"></comment-actions>
-                           
-                            <!-- Replies added now -->
-                            <div v-for="reply in replies" :key="reply.id" class="my-1" style="padding: 5px; border:1px solid #f7f7f7; border-radius: 5px">
-                                <div class="d-flex">
-                                    <img :src="reply.user.image.src" :alt="reply.user.username" class="avatar avatar-xs">
-                                    <div class="ml-2 pt-1" >
-                                        <strong class="d-block">{{reply.user.fullname}}</strong>
-                                        <a :href="`${root}/@${reply.user.username}`">@{{reply.user.username}}</a>
-                                        <span class="text-muted ml-2">{{time_diff(reply.created_timestamp)}}</span>
-                                    </div> 
-                                </div>
-                                <div @click="loadSingleComment(reply)" class="single-comment-content break-word">
-                                    {{reply.content}}
-                                </div>
+
+                            <div class="single-comment-content break-word" :id="main_comment_id = makeId('comment')">
                             </div>
 
+                            <comment-actions :data="comment" :expandable="true" @load-single-comment="loadSingleCommentByData" @comment-updated="updateComment"></comment-actions>
+                           
                         </div>
                     </div>
 
                     <template v-if="threads.length > 0">
                         <div class="list-group-item" style="background-color: inherit;">
                             <div v-for="thread in threads" :key="thread.id">
-                                <comment-thread :comment="thread" @load-thread="loadThread" ></comment-thread>
+                                <comment-thread :data="thread" @load-thread="loadSingleCommentById" ></comment-thread>
                             </div>
                         </div>
                     </template>
@@ -89,8 +75,8 @@ export default {
         data(){
             return {
                 comment: this.data,
+                mentions: [],
                 threads: this.data.thread,
-                replies: [],
             }
         },
         computed: {
@@ -99,37 +85,38 @@ export default {
                 'auth',
                 'is_authenticated',
                 'time_diff',
+                'makeId',
+                'renderHTML',
+                'getMentions',
+                'resolveMentions'
             ]),
             
         },
-        props: ['data','quote_discussion','quote_comment','write_comment'],
-        methods:{               
-            loadSingleComment(comment){
-                this.$emit('load-single-comment', comment);
+        props: ['data','quote_discussion','quote_comment'],
+        methods:{  
+            ...mapActions([
+            ]),
+            loadSingleCommentByData(comment){
+                this.$emit('load-single-comment-by-data', comment);
             },
-            loadComment(){
-                this.loadSingleComment(this.comment)
+            loadSingleCommentById(id){
+                this.$emit('load-single-comment-by-id', id);
             },
-            loadThread(thread){
-                this.loadSingleComment(thread)
+            updateComment(comment){
+                this.comment = comment;
             },
-            loadReply(reply){
-                this.loadSingleComment(reply)
-            },
-            newReply(reply){
-                this.replies.push(reply);
-            }
+            // appendContent(){
+            //    $('#'+this.identifier).append(this.htmlParsed);
+            // }
         },
         components:{
             LoadingOne, Discussion, CommentReply, CommentThread, CommentActions, CommentTextarea
         },
         mounted() {
-           
+            this.mentions = this.getMentions(this.comment.content);
+            this.renderHTML(this.main_comment_id, this.resolveMentions(this.comment.content, this.mentions));
         },
         watch: {
-             write_comment: function(newValue, oldValue){
-                this.write_comment = newValue;
-            }
         }
     }
 </script>

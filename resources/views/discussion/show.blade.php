@@ -14,11 +14,11 @@
         bottom: 0;
         width: 100%;
     }
-@endsection
-@section('md-styles')
     .comment-seperator{
         height: 150px;
         }
+@endsection
+@section('md-styles')
     .comment-area{
         width: 50%;
         right:0;
@@ -91,5 +91,5 @@
 @endsection
 
 @section('b-scripts')
-    @include('layouts.components.ckeditor')
+    {{-- @include('layouts.components.ckeditor') --}}
 @endsection

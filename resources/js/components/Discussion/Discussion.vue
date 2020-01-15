@@ -69,7 +69,7 @@ export default {
            User,Users,Experience
         },
         mounted() {
-            console.warn(this.discussion)
+            // console.warn(this.discussion)
             }
     }
 </script>

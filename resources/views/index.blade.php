@@ -81,9 +81,11 @@
     
 @endsection
 @section('main')
-    <h6>Most used tags</h6>
+    <h6>Most used tags</h6>    
     @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
-    <feeds url="/feeds" ></feeds>
+    <div id="home-feeds-container">
+        <feeds url="/feeds"></feeds>
+    </div>
   
 @endsection
 @section('RHS')

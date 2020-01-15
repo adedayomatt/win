@@ -79,7 +79,7 @@ class CommentController extends Controller
             'parent_comment' => 'required'
         ]);
 
-        $comment = Comment::find($request->parent_comment);
+        $comment = $this->find(Comment::class,$request->parent_comment);
         $user = $request->user();
         $reply = new Comment();
         $reply->user_id = $user->id;
@@ -142,13 +142,19 @@ class CommentController extends Controller
     public function show($id)
     {
         if($this->isAPIRequest()){
-            $comment = Comment::find($id);
-            return response(['comment' => $comment, 'replies' => $comment->replies]);
+            $comment = $this->find(Comment::class,$id);
+            return response(['comment' => $comment]);
         }
         $comment = Comment::findorfail($id);
         return view('comment.show')->with('comment',$comment);
     }
 
+    public function engagements($id){
+        if($this->isAPIRequest()){
+            $comment = $this->find(Comment::class,$id);
+            return response(['likes' => $comment->likes, 'replies' => $comment->replies]);
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *

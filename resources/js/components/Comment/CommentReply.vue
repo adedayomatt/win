@@ -14,7 +14,7 @@
                 <div  @click="loadReply" class="single-comment-content break-word">
                     {{comment.content}}
                 </div>
-                <comment-actions :data="comment" :comment_writable="true" :write_comment="false"></comment-actions>
+                <comment-actions :data="comment" z></comment-actions>
             </div>
         </div>
 

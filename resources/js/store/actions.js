@@ -148,6 +148,20 @@ let actions = {
         })
 
     },
+    loadCommentEngagements({commit}, id){
+        return new Promise((resolve, reject) => {
+            axios.get(apiURL(`/comment/${id}/engagements`))
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(error => {
+                    toastError(error.response);
+                    reject(error)
+                })
+        })
+
+    },
+
 
     likeComment({commit},comment){
         return new Promise((resolve, reject) => {
@@ -162,6 +176,8 @@ let actions = {
         })
       
    },
+
+
 
 }
 

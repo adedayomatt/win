@@ -1812,20 +1812,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -1838,29 +1824,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       comment: this.data,
-      threads: this.data.thread,
-      replies: []
+      mentions: [],
+      threads: this.data.thread
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff'])),
-  props: ['data', 'quote_discussion', 'quote_comment', 'write_comment'],
-  methods: {
-    loadSingleComment: function loadSingleComment(comment) {
-      this.$emit('load-single-comment', comment);
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff', 'makeId', 'renderHTML', 'getMentions', 'resolveMentions'])),
+  props: ['data', 'quote_discussion', 'quote_comment'],
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])([]), {
+    loadSingleCommentByData: function loadSingleCommentByData(comment) {
+      this.$emit('load-single-comment-by-data', comment);
     },
-    loadComment: function loadComment() {
-      this.loadSingleComment(this.comment);
+    loadSingleCommentById: function loadSingleCommentById(id) {
+      this.$emit('load-single-comment-by-id', id);
     },
-    loadThread: function loadThread(thread) {
-      this.loadSingleComment(thread);
-    },
-    loadReply: function loadReply(reply) {
-      this.loadSingleComment(reply);
-    },
-    newReply: function newReply(reply) {
-      this.replies.push(reply);
+    updateComment: function updateComment(comment) {
+      this.comment = comment;
     }
-  },
+  }),
   components: {
     LoadingOne: _Assets_LoadingOne__WEBPACK_IMPORTED_MODULE_1__["default"],
     Discussion: _Discussion_Discussion__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -1869,12 +1849,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     CommentActions: _CommentActions__WEBPACK_IMPORTED_MODULE_5__["default"],
     CommentTextarea: _CommentTextarea_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
-  mounted: function mounted() {},
-  watch: {
-    write_comment: function write_comment(newValue, oldValue) {
-      this.write_comment = newValue;
-    }
-  }
+  mounted: function mounted() {
+    this.mentions = this.getMentions(this.comment.content);
+    this.renderHTML(this.main_comment_id, this.resolveMentions(this.comment.content, this.mentions));
+  },
+  watch: {}
 });
 
 /***/ }),
@@ -1889,8 +1868,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _CommentReply_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CommentReply.vue */ "./resources/js/components/Comment/CommentReply.vue");
-/* harmony import */ var _CommentTextarea_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./CommentTextarea.vue */ "./resources/js/components/Comment/CommentTextarea.vue");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -1922,83 +1899,73 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
-
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      comment: this.data,
-      recent_replies: [],
-      replies_count: this.data.replies_count,
-      likes_count: this.data.likes_count,
-      likes: this.data.likes,
-      allow_comment: this.write_comment
+      comment: this.data
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'is_authenticated', 'time_diff']), {
-    isLiked: function isLiked() {
-      var _this = this;
-
-      if (this.is_authenticated) {
-        return this.likes.findIndex(function (like) {
-          return like.user_id == _this.auth.id;
-        }) < 0 ? false : true;
-      }
-
-      return false;
-    },
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff', 'getMentions']), {
     timeDiff: function timeDiff() {
       return this.comment.created_at;
     }
   }),
-  props: ['data', 'comment_writable', 'write_comment'],
+  props: ['data', 'expandable'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['likeComment']), {
     commentLike: function commentLike() {
-      var _this2 = this;
+      var _this = this;
 
       this.likeComment(this.comment).then(function (response) {
         if (response.data.action == 'like') {
-          _this2.likes.push(response.data.like);
-
-          _this2.likes_count++;
+          _this.comment.likes_count++;
+          _this.comment.liked = true;
         } else if (response.data.action == 'unlike') {
-          _this2.likes.splice(getIndex(_this2.likes, response.data.like), 1);
-
-          _this2.likes_count--;
+          _this.comment.likes_count--;
+          _this.comment.liked = false;
         }
+
+        _this.$emit('comment-updated', _this.comment);
       })["catch"](function (error) {});
     },
-    loadSingleComment: function loadSingleComment(comment) {
-      this.$emit('load-single-comment', comment);
+    loadSingleComment: function loadSingleComment() {
+      this.$emit('load-single-comment', this.comment);
     },
-    replyComment: function replyComment() {
-      this.allow_comment = this.allow_comment == true ? false : true;
-    },
-    disallowComment: function disallowComment() {
-      this.allow_comment = false;
-    },
-    newReplyPosted: function newReplyPosted(reply) {
-      this.replies_count++;
-      this.allow_comment = false;
-      this.$emit('new-reply', reply);
+    showMentions: function showMentions() {
+      var _this2 = this;
+
+      var container = this.container;
+      var mentions_list = '';
+
+      if (this.mentions !== undefined && this.mentions.length > 0) {
+        mentions_list = "<div class=\"list-group\">";
+        this.mentions.forEach(function (mention) {
+          mentions_list += "<div class=\"list-group-item\"><a href=\"".concat(_this2.root, "/").concat(mention, "\">").concat(mention, "</a></div>");
+        });
+        mentions_list += "</div>";
+      } else {
+        mentions_list = 'No mention in the comment';
+      }
+
+      $(".mentions-popover").popover({
+        html: true,
+        title: 'Mentions',
+        placement: 'auto',
+        container: document.querySelector(container),
+        content: mentions_list
+      });
     }
   }),
-  components: {
-    CommentReply: _CommentReply_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    CommentTextarea: _CommentTextarea_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  components: {},
+  mounted: function mounted() {
+    this.mentions = this.getMentions(this.comment.content);
   },
-  mounted: function mounted() {},
   watch: {
     data: function data(newData, oldData) {
       this.comment = newData;
-      this.replies_count = newData.replies_count;
-      this.likes_count = newData.likes_count;
-      this.likes = newData.likes;
-    },
-    write_comment: function write_comment(newValue, oldValue) {
-      this.write_comment = newValue;
     }
   }
 });
@@ -2136,6 +2103,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2146,101 +2114,119 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       comment: null,
+      mentions: [],
       replies: [],
-      replies_count: 0,
-      likes: [],
       track: [],
-      current: null
+      current: null,
+      engagements_loaded: false
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff']), {
-    sortedReplies: function sortedReplies() {
-      return this.replies.length > 0 ? this.replies.sort(function (a, b) {
-        return a.id - b.id;
-      }) : null;
-    },
-    isLiked: function isLiked() {
-      var _this = this;
-
-      if (this.is_authenticated) {
-        return this.likes.findIndex(function (like) {
-          return like.user_id == _this.auth.id;
-        }) < 0 ? false : true;
-      }
-
-      return false;
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff', 'makeId', 'renderHTML', 'getMentions', 'resolveMentions']), {
+    comment_body_id: function comment_body_id() {
+      return this.makeId("pop-c-".concat(this.comment.id));
     },
     timeDiff: function timeDiff() {
       return this.comment.created_at;
     },
     prev: function prev() {
-      var _this2 = this;
+      var _this = this;
 
       //return the previous comment loaded
-      var prev_index = this.track.findIndex(function (item) {
-        return item.track == _this2.current.track;
+      var prev_index = this.track.findIndex(function (c) {
+        return c.id == _this.current.id;
       }) - 1;
-      return prev_index < 0 ? null : this.track[prev_index].comment;
+      return prev_index < 0 ? null : this.track[prev_index];
     },
     next: function next() {
-      var _this3 = this;
+      var _this2 = this;
 
-      var next_index = this.track.findIndex(function (item) {
-        return item.track == _this3.current.track;
+      var next_index = this.track.findIndex(function (c) {
+        return c.id == _this2.current.id;
       }) + 1;
-      return next_index >= this.track.length ? null : this.track[next_index].comment;
+      return next_index >= this.track.length ? null : this.track[next_index];
     }
   }),
-  props: ['id'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment', 'likeComment']), {
-    setComment: function setComment(comment) {
-      this.getComment(comment.id);
+  props: ['data', 'id'],
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment', 'loadCommentEngagements']), {
+    setData: function setData(data) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        _this3.comment = data;
+        resolve(data);
+      });
     },
-    getComment: function getComment(id) {
+    setTrack: function setTrack(comment) {
+      var index_in_track = this.track.findIndex(function (c) {
+        return c.id == comment.id;
+      });
+
+      if (index_in_track < 0) {
+        // if the comment is not in the track yet
+        var current = comment;
+        this.current = current;
+        this.track.push(current);
+      } else {
+        this.current = this.track[index_in_track];
+      }
+    },
+    setComment: function setComment(comment) {
       var _this4 = this;
 
+      this.setData(comment).then(function (data) {
+        _this4.mentions = _this4.getMentions(comment.content);
+
+        _this4.renderHTML(_this4.comment_body_id, _this4.resolveMentions(comment.content, _this4.mentions));
+
+        _this4.getEngagements(); //set in the track
+
+
+        _this4.setTrack(comment);
+      });
+    },
+    //load comment by id
+    getComment: function getComment(id) {
+      var _this5 = this;
+
       this.loadComment(id).then(function (response) {
-        _this4.comment = response.data.comment;
-        _this4.threads = response.data.comment.thread;
-        _this4.likes = response.data.comment.comment_likes;
-        _this4.replies = response.data.replies;
-        _this4.replies_count = response.data.comment.replies_count;
+        _this5.setComment(response.data.comment);
+      });
+    },
+    getEngagements: function getEngagements() {
+      var _this6 = this;
 
-        var index_in_track = _this4.track.findIndex(function (track) {
-          return track.comment == response.data.comment.id;
+      this.engagements_loaded = false;
+      this.loadCommentEngagements(this.comment.id).then(function (response) {
+        _this6.comment.likes = response.data.likes;
+        _this6.comment.likes_count = response.data.likes.length;
+        _this6.replies = response.data.replies.sort(function (a, b) {
+          return a.id - b.id;
         });
-
-        if (index_in_track < 0) {
-          // if the comment is not in the track yet
-          var current = {
-            track: "track_".concat(_this4.track.length + 1),
-            comment: response.data.comment.id
-          };
-          _this4.current = current;
-
-          _this4.track.push(current);
-        } else {
-          _this4.current = _this4.track[index_in_track];
-        }
+        response.data.replies;
+        _this6.comment.replies_count = response.data.replies.length;
+        _this6.engagements_loaded = true;
       });
     },
     newReplyPosted: function newReplyPosted(reply) {
-      this.replies_count++;
       this.replies.push(reply);
+      this.comment.replies_count++;
       this.$emit('new-reply', reply);
     },
     goBack: function goBack() {
       if (this.prev !== null) {
-        this.getComment(this.prev);
+        this.setComment(this.prev);
       }
     },
     goForward: function goForward() {
       if (this.next !== null) {
-        this.getComment(this.next);
+        this.setComment(this.next);
       }
     },
     closePopup: function closePopup() {
       this.$emit('close-popup');
+    },
+    updateComment: function updateComment(comment) {
+      this.comment = comment;
     }
   }),
   components: {
@@ -2250,11 +2236,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     CommentTextarea: _CommentTextarea_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   mounted: function mounted() {
-    this.getComment(this.id);
+    //if the data was passed
+    if (this.data != null && this.data != undefined) {
+      this.setComment(this.data);
+    } //if it was an id
+    else if (this.id != null && this.id != undefined) {
+        this.getComment(this.id);
+      }
   },
   watch: {
+    data: function data(newData, oldData) {
+      if (newData != null) {
+        this.setComment(newData);
+      }
+    },
     id: function id(newId, oldId) {
-      this.getComment(newId);
+      if (newId != null) {
+        this.getComment(newId);
+      }
     }
   }
 });
@@ -2364,23 +2363,43 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
+ // import At from 'vue-at';
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       discussion_id: this.discussion || null,
       comment_id: this.comment || null,
-      content: ''
+      mentions: [],
+      content: '',
+      members: ['Kayode', 'Ifeoluwa', 'Olivia']
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated']), {
+    editor: function editor() {
+      return "".concat(this.container, " [role = 'editor']");
+    },
     contentFilled: function contentFilled() {
       return this.content == '' ? false : true;
     }
   }),
-  props: ['discussion', 'comment'],
+  props: ['discussion', 'comment', 'container'],
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['postComment']), {
+    setContent: function setContent() {
+      $(this.editor).focus(); // this.content = $(this.editor).html();
+
+      this.content = $(this.editor).val();
+    },
     addComment: function addComment() {
       var _this = this;
 
@@ -2396,7 +2415,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       });
     }
   }),
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    if (this.is_authenticated) {
+      enableMentions(".mention-user", "users", "username");
+    }
+  },
+  components: {//  At 
+  },
   watch: {
     comment: function comment(newComment, oldComment) {
       this.comment_id = newComment;
@@ -2441,43 +2466,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      thread: this.comment,
-      replies: []
+      thread: this.data,
+      mentions: []
     };
   },
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff'])),
-  props: ['comment'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['likeComment']), {
-    loadThread: function loadThread(thread) {
-      this.$emit('load-thread', thread);
-    },
-    newReply: function newReply(reply) {
-      this.replies.push(reply);
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff', 'makeId', 'renderHTML', 'getMentions', 'resolveMentions'])),
+  props: ['data'],
+  methods: {
+    loadThread: function loadThread() {
+      this.$emit('load-thread', this.thread.id);
     }
-  }),
-  mounted: function mounted() {}
+  },
+  mounted: function mounted() {
+    this.mentions = this.getMentions(this.thread.content);
+    this.renderHTML(this.thread_body_id, this.resolveMentions(this.thread.content, this.mentions));
+  }
 });
 
 /***/ }),
@@ -2551,6 +2559,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -2563,7 +2572,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       links: null,
       meta: null,
       loaded: false,
-      popup_comment: null,
+      can_load_more: true,
+      single_comment: null,
+      comment_id: null,
       mode: 'list',
       total: 0
     };
@@ -2580,6 +2591,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadComments: function loadComments(url) {
       var _this = this;
 
+      this.can_load_more = false;
+
       if (url !== '' && url !== null) {
         axios.get(url).then(function (response) {
           _this.comments = _this.comments.concat(response.data.data);
@@ -2587,13 +2600,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.meta = response.data.meta;
           _this.loaded = true;
           _this.total = response.data.meta.total;
-          console.warn(response.data);
+          _this.can_load_more = true; // console.warn(response.data)
         })["catch"](function (error) {});
       }
     },
-    loadSingleComment: function loadSingleComment(comment) {
+    loadSingleCommentByData: function loadSingleCommentByData(comment) {
       this.mode = 'popup';
-      this.popup_comment = comment.id; // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
+      this.comment_id = null;
+      this.single_comment = comment; // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
+    },
+    loadSingleCommentById: function loadSingleCommentById(id) {
+      this.mode = 'popup';
+      this.comment_id = id;
+      this.single_comment = null; // $('*:not(#single-comment-container)').css({'filter':'blur(2px)'})
     },
     closeSingleComment: function closeSingleComment() {
       this.mode = 'list'; // $('*:not(#single-comment-container)').css({'filter':'blur(0px)'})
@@ -2610,18 +2629,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     CommentTextarea: _CommentTextarea__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   mounted: function mounted() {
-    var component = this;
     this.loadComments(apiURL(this.url));
+    var component = this;
     var container = component.container == null ? $(window) : $('#comments-container');
-    container.on('scroll', function (e) {
-      var content = $('#comments-wrapper');
-      console.log('content:' + content.height() + ' scrolled:' + container.scrollTop());
+    console.log(container);
+    container.scroll(function (e) {
+      var parent = component.container == null ? window : '#comments-container';
 
-      if (container.scrollTop() + container.height() >= content.height()) {
-        if (component.links !== null && component.links.next !== null) {
-          setTimeout(function () {
-            component.loadComments(component.links.next);
-          }, 3000);
+      if (onScreen('#more-comments-loader')) {
+        //if the loader is visible on the screen, It means the bottom has been reached
+        if (component.can_load_more && component.links !== null && component.links.next !== null) {
+          component.loadComments(component.links.next);
         }
       }
     });
@@ -2831,8 +2849,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     Users: _User_Users__WEBPACK_IMPORTED_MODULE_2__["default"],
     Experience: _Experience_Experience__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  mounted: function mounted() {
-    console.warn(this.discussion);
+  mounted: function mounted() {// console.warn(this.discussion)
   }
 });
 
@@ -3300,6 +3317,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3314,7 +3338,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       links: null,
       mode: 'feeds',
       loaded: false,
+      can_load_more: true,
       single_comment: null,
+      single_comment_id: null,
       single_discussion: null,
       single_experience: null
     };
@@ -3329,18 +3355,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     getFeeds: function getFeeds(url) {
       var _this = this;
 
+      this.can_load_more = false; //disallow loading more while this request is processing
+
       axios.get(url).then(function (response) {
         _this.feeds = _this.feeds.concat(response.data.data);
         _this.links = response.data.links;
         _this.loaded = true;
+        _this.can_load_more = true;
+        console.warn(response.data.data);
       })["catch"](function (error) {});
     },
     generateKey: function generateKey(feed) {
       return Math.floor(Math.random() * 1000000);
     },
-    getComment: function getComment(comment) {
+    loadSingleCommentByData: function loadSingleCommentByData(comment) {
       this.mode = 'single';
-      this.single_comment = comment.id;
+      this.single_comment = comment;
+      this.single_comment_id = null;
+    },
+    loadSingleCommentById: function loadSingleCommentById(id) {
+      this.mode = 'single';
+      this.single_comment = null;
+      this.single_comment_id = id;
     },
     closeSingleFeed: function closeSingleFeed() {
       this.mode = 'feeds';
@@ -3358,11 +3394,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.getFeeds(apiURL(component.url));
     var container = component.container == null ? $(window) : $('#feeds-container');
     container.on('scroll', function (e) {
-      var content = $('#feeds-wrapper');
-      console.log('content:' + content.height() + ' scrolled:' + container.scrollTop());
-
-      if (container.scrollTop() + container.height() >= content.height()) {
-        if (component.links !== null && component.links.next !== null) {
+      if (onScreen('#more-feeds-loader')) {
+        //if the loader is visible on the screen, It means the bottom has been reached
+        if (component.can_load_more && component.links !== null && component.links.next !== null) {
           component.getFeeds(component.links.next);
         }
       }
@@ -3564,6 +3598,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   methods: {
     search: function search() {
       var _this = this;
+
+      this.q = $(this.input).val();
 
       if (this.q === '') {
         this.loading = false;
@@ -11881,7 +11917,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.comment-like-btn[data-v-2bd2dece],\n.comment-reply-btn[data-v-2bd2dece]{\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.action[data-v-2bd2dece]{\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -11938,7 +11974,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.commenter-avatar[data-v-54dd51ce]{\n    width: 50px; \n    height: 50px;\n    border-radius: 50%; \n    border: 2px solid #fff;\n}\ntextarea[data-v-54dd51ce]{\n    height: 50px;\n    padding: 10px 60px;\n    padding-right:70px;\n    width: 100%;\n    border: none;\n    resize:none\n}\nbutton.submit[data-v-54dd51ce]{\n    right: 10px;\n    height: 50px;\n    border-radius: 0\n}\n.commenter-avatar[data-v-54dd51ce],\nbutton.submit[data-v-54dd51ce]{\n    position:absolute;\n}\n@media (min-width:992px) {\n}\n", ""]);
+exports.push([module.i, "\n.commenter-avatar[data-v-54dd51ce]{\n    width: 50px; \n    height: 50px;\n    border-radius: 50%; \n    border: 2px solid #fff;\n}\n[role='editor'][data-v-54dd51ce]{\n    height: 50px;\n    overflow-y: auto;\n    padding: 10px 60px;\n    padding-right:70px;\n    width: 100%;\n    border: none;\n    resize:none\n}\nbutton.submit[data-v-54dd51ce]{\n    right: 10px;\n    height: 50px;\n    border-radius: 0\n}\n.commenter-avatar[data-v-54dd51ce],\nbutton.submit[data-v-54dd51ce]{\n    position:absolute;\n    z-index:100;\n}\n.mentions-container[data-v-54dd51ce]{\n    background-color: #f7f7f7;\n    padding: 10px;\n    overflow-x:auto;\n}\na.mention[data-v-54dd51ce]{\n    background-color: #fff;\n    padding: 5px;\n    margin:3px;\n    border-radius: 3px;\n    text-decoration: none;\n}\n@media (min-width:992px) {\n}\n", ""]);
 
 // exports
 
@@ -11957,7 +11993,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.blur[data-v-03a0802f],\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-03a0802f]{\n    top: 0;\n    z-index:1100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-comment-container[data-v-03a0802f]{\n    z-index: 1200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.blur[data-v-03a0802f],\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-03a0802f]{\n    top: 0;\n    z-index:100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-comment-container[data-v-03a0802f]{\n    z-index: 200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
 
 // exports
 
@@ -11995,7 +12031,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ninput.global-search[data-v-59a3b596]{\n    border: 0;\n    border-radius: 3px;\n}\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        z-index:1000000;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n}\n.search-results-container-header[data-v-59a3b596]{\n    position: fixed;\n    z-index:1000001;\n    left: 0;\n    right:0;\n    background-color: #fff;\n    border-bottom: 1px solid #f7f7f7\n}\n.search-results-container-body[data-v-59a3b596]{\n    padding-top: 60px;\n    height: 92vh;\n    overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
+exports.push([module.i, "\ninput.global-search[data-v-59a3b596]{\n    border: 0;\n    border-radius: 3px;\n}\n.search-results-container[data-v-59a3b596]{\n        overflow: auto;\n        position: absolute;\n        z-index:1000000;\n        left: 0;\n        right: 0;\n        background-color: #fff;\n        box-shadow: 0px 30px 30PX rgba(0,0,0,.2);\n        border-radius: 0px 0px 15px 15px;\n}\n.search-results-container-header[data-v-59a3b596]{\n    position: fixed;\n    z-index:1000001;\n    left: 0;\n    right:0;\n    background-color: #fff;\n    border-bottom: 1px solid #f7f7f7\n}\n.search-results-container-body[data-v-59a3b596]{\n    padding-top: 60px;\n    height: 75vh;\n    overflow: auto;\n}\n.result-header[data-v-59a3b596]{\n    background-color: #f7f7f7;\n}\n.result-wrapper[data-v-59a3b596]{\n    max-height: 300px;\n    overflow:auto;\n}\n@media (min-width:992px){\n.search-results-container[data-v-59a3b596]{\n        /* height: unset; */\n}\n.result-wrapper[data-v-59a3b596]{\n        max-height: 100%;\n}\n}\n", ""]);
 
 // exports
 
@@ -44096,89 +44132,82 @@ var render = function() {
                     _vm.comment.reply_to !== null && _vm.quote_comment == true
                       ? [
                           _c("div", { staticClass: "reply_to" }, [
-                            _c(
-                              "div",
-                              {
-                                on: {
-                                  click: function($event) {
-                                    return _vm.loadSingleComment(
-                                      _vm.comment.reply_to
-                                    )
+                            _c("div", [
+                              _c("div", { staticClass: "d-flex" }, [
+                                _c("img", {
+                                  staticClass: "avatar avatar-sm",
+                                  attrs: {
+                                    src: _vm.comment.reply_to.user.image.src,
+                                    alt: _vm.comment.reply_to.user.username
                                   }
-                                }
-                              },
-                              [
-                                _c("div", { staticClass: "d-flex" }, [
-                                  _c("img", {
-                                    staticClass: "avatar avatar-sm",
-                                    attrs: {
-                                      src: _vm.comment.reply_to.user.image.src,
-                                      alt: _vm.comment.reply_to.user.username
-                                    }
-                                  }),
+                                }),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "pt-1" }, [
+                                  _c("strong", { staticClass: "d-block" }, [
+                                    _vm._v(
+                                      _vm._s(_vm.comment.reply_to.user.fullname)
+                                    )
+                                  ]),
                                   _vm._v(" "),
-                                  _c("div", { staticClass: "pt-1" }, [
-                                    _c("strong", { staticClass: "d-block" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      attrs: {
+                                        href:
+                                          _vm.root +
+                                          "/@" +
+                                          _vm.comment.reply_to.user.username
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "@" +
+                                          _vm._s(
+                                            _vm.comment.reply_to.user.username
+                                          )
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    { staticClass: "text-muted ml-2" },
+                                    [
                                       _vm._v(
                                         _vm._s(
-                                          _vm.comment.reply_to.user.fullname
-                                        )
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "a",
-                                      {
-                                        attrs: {
-                                          href:
-                                            _vm.root +
-                                            "/@" +
-                                            _vm.comment.reply_to.user.username
-                                        }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "@" +
-                                            _vm._s(
-                                              _vm.comment.reply_to.user.username
-                                            )
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "span",
-                                      { staticClass: "text-muted ml-2" },
-                                      [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.time_diff(
-                                              _vm.comment.reply_to
-                                                .created_timestamp
-                                            )
+                                          _vm.time_diff(
+                                            _vm.comment.reply_to
+                                              .created_timestamp
                                           )
                                         )
-                                      ]
-                                    )
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  {
-                                    staticClass:
-                                      "single-comment-content break-word"
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                        " +
-                                        _vm._s(_vm.comment.reply_to.content) +
-                                        "\n                                    "
-                                    )
-                                  ]
-                                )
-                              ]
-                            )
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "single-comment-content break-word",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.loadSingleCommentById(
+                                        _vm.comment.reply_to.id
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(_vm.comment.reply_to.content) +
+                                      "\n                                    "
+                                  )
+                                ]
+                              )
+                            ])
                           ])
                         ]
                       : _vm._e(),
@@ -44198,95 +44227,19 @@ var render = function() {
                         ]
                       : _vm._e(),
                     _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "single-comment-content break-word",
-                        on: { click: _vm.loadComment }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(_vm.comment.content) +
-                            "\n                        "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("comment-actions", {
+                    _c("div", {
+                      staticClass: "single-comment-content break-word",
                       attrs: {
-                        data: _vm.comment,
-                        write_comment: _vm.write_comment,
-                        comment_writable: true
-                      },
-                      on: { "new-reply": _vm.newReply }
+                        id: (_vm.main_comment_id = _vm.makeId("comment"))
+                      }
                     }),
                     _vm._v(" "),
-                    _vm._l(_vm.replies, function(reply) {
-                      return _c(
-                        "div",
-                        {
-                          key: reply.id,
-                          staticClass: "my-1",
-                          staticStyle: {
-                            padding: "5px",
-                            border: "1px solid #f7f7f7",
-                            "border-radius": "5px"
-                          }
-                        },
-                        [
-                          _c("div", { staticClass: "d-flex" }, [
-                            _c("img", {
-                              staticClass: "avatar avatar-xs",
-                              attrs: {
-                                src: reply.user.image.src,
-                                alt: reply.user.username
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "ml-2 pt-1" }, [
-                              _c("strong", { staticClass: "d-block" }, [
-                                _vm._v(_vm._s(reply.user.fullname))
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  attrs: {
-                                    href: _vm.root + "/@" + reply.user.username
-                                  }
-                                },
-                                [_vm._v("@" + _vm._s(reply.user.username))]
-                              ),
-                              _vm._v(" "),
-                              _c("span", { staticClass: "text-muted ml-2" }, [
-                                _vm._v(
-                                  _vm._s(_vm.time_diff(reply.created_timestamp))
-                                )
-                              ])
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "single-comment-content break-word",
-                              on: {
-                                click: function($event) {
-                                  return _vm.loadSingleComment(reply)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(reply.content) +
-                                  "\n                            "
-                              )
-                            ]
-                          )
-                        ]
-                      )
+                    _c("comment-actions", {
+                      attrs: { data: _vm.comment, expandable: true },
+                      on: {
+                        "load-single-comment": _vm.loadSingleCommentByData,
+                        "comment-updated": _vm.updateComment
+                      }
                     })
                   ],
                   2
@@ -44308,8 +44261,8 @@ var render = function() {
                         { key: thread.id },
                         [
                           _c("comment-thread", {
-                            attrs: { comment: thread },
-                            on: { "load-thread": _vm.loadThread }
+                            attrs: { data: thread },
+                            on: { "load-thread": _vm.loadSingleCommentById }
                           })
                         ],
                         1
@@ -44349,59 +44302,45 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "d-flex" }, [
-      _c(
-        "span",
-        {
-          staticClass: "mr-2 comment-like-btn",
-          on: { click: _vm.commentLike }
-        },
-        [
-          _c("span", { staticClass: "mr-1" }, [
-            _vm._v(_vm._s(_vm.likes_count) + " ")
-          ]),
-          _vm._v(" "),
-          _vm.isLiked
-            ? _c("span", [_c("i", { staticClass: "fas fa-heart text-danger" })])
-            : _c("span", [_c("i", { staticClass: "far fa-heart" })])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "span",
-        {
-          staticClass: "ml-2 comment-reply-btn",
-          on: { click: _vm.replyComment }
-        },
-        [
-          _c("span", {}, [_vm._v(_vm._s(_vm.replies_count))]),
-          _vm._v(" "),
-          _vm.allow_comment
-            ? _c("span", [_c("i", { staticClass: "fa fa-reply text-primary" })])
-            : _c("span", [_c("i", { staticClass: "fa fa-reply" })])
-        ]
-      )
-    ]),
-    _vm._v(" "),
     _c(
       "div",
+      { staticClass: "d-flex" },
       [
-        _vm.allow_comment && _vm.comment_writable
+        _c(
+          "span",
+          { staticClass: "mx-2 action", on: { click: _vm.commentLike } },
+          [
+            _c("span", { staticClass: "mr-1" }, [
+              _vm._v(_vm._s(_vm.comment.likes_count) + " ")
+            ]),
+            _vm._v(" "),
+            _vm.comment.liked
+              ? _c("span", [
+                  _c("i", { staticClass: "fas fa-heart text-danger" })
+                ])
+              : _c("span", [_c("i", { staticClass: "far fa-heart" })])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "span",
+          { staticClass: "mx-2 action", on: { click: _vm.loadSingleComment } },
+          [
+            _c("span", {}, [_vm._v(_vm._s(_vm.comment.replies_count))]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]
+        ),
+        _vm._v(" "),
+        _vm.expandable
           ? [
               _c(
-                "div",
-                { staticClass: "reply-textarea mb-1" },
-                [
-                  _c("div", { staticClass: "text-muted" }, [
-                    _vm._v("Reply to " + _vm._s(_vm.comment.user.fullname))
-                  ]),
-                  _vm._v(" "),
-                  _c("comment-textarea", {
-                    attrs: { comment: _vm.comment.id },
-                    on: { "comment-posted": _vm.newReplyPosted }
-                  })
-                ],
-                1
+                "span",
+                {
+                  staticClass: "mx-2 action",
+                  on: { click: _vm.loadSingleComment }
+                },
+                [_vm._m(1)]
               )
             ]
           : _vm._e()
@@ -44410,7 +44349,25 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [_c("i", { staticClass: "fa fa-reply" })])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", [
+      _c("i", {
+        staticClass: "fa fa-external-link-alt",
+        attrs: { title: "open comment" }
+      })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -44545,6 +44502,31 @@ var render = function() {
                     _vm._v(" "),
                     _vm.comment.reply_to !== null
                       ? [
+                          _c("div", { staticClass: "text-muted" }, [
+                            _vm._v(
+                              "Replying to " +
+                                _vm._s(_vm.comment.reply_to.user.fullname) +
+                                " "
+                            ),
+                            _c(
+                              "a",
+                              {
+                                attrs: {
+                                  href:
+                                    _vm.root +
+                                    "/@" +
+                                    _vm.comment.reply_to.user.username
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "@" +
+                                    _vm._s(_vm.comment.reply_to.user.username)
+                                )
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
                           _c("div", { staticClass: "reply_to" }, [
                             _c("div", {}, [
                               _c("div", { staticClass: "d-flex" }, [
@@ -44600,41 +44582,28 @@ var render = function() {
                                 ])
                               ]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "ml-5" },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "replied-comment break-word",
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.getComment(
-                                            _vm.comment.reply_to.id
-                                          )
-                                        }
+                              _c("div", { staticClass: "ml-5" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "replied-comment break-word",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getComment(
+                                          _vm.comment.reply_to.id
+                                        )
                                       }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                        " +
-                                          _vm._s(_vm.comment.reply_to.content) +
-                                          "\n                                    "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("comment-actions", {
-                                    attrs: {
-                                      data: _vm.comment.reply_to,
-                                      write_comment: false,
-                                      comment_writable: false
                                     }
-                                  })
-                                ],
-                                1
-                              )
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                        " +
+                                        _vm._s(_vm.comment.reply_to.content) +
+                                        "\n                                    "
+                                    )
+                                  ]
+                                )
+                              ])
                             ])
                           ])
                         ]
@@ -44676,54 +44645,65 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", [
-                  _c("div", { staticClass: "main-comment break-word" }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(_vm.comment.content) +
-                        "\n                    "
-                    )
-                  ]),
+                  _c("div", {
+                    staticClass: "main-comment break-word",
+                    attrs: { id: _vm.comment_body_id }
+                  }),
                   _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "main-comment-actions" },
                     [
                       _c("comment-actions", {
-                        attrs: {
-                          data: _vm.comment,
-                          write_comment: false,
-                          comment_writable: false
-                        }
+                        attrs: { data: _vm.comment, expandable: false },
+                        on: { "comment-updated": _vm.updateComment }
                       })
                     ],
                     1
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", [
-                  _c(
-                    "div",
-                    { staticClass: "replies-container" },
-                    _vm._l(_vm.sortedReplies, function(reply) {
-                      return _c(
-                        "div",
-                        { key: reply.id + Math.random() },
-                        [
-                          _c("comment", {
-                            attrs: {
-                              data: reply,
-                              quote_comment: false,
-                              write_comment: false
-                            },
-                            on: { "load-single-comment": _vm.setComment }
+                _c(
+                  "div",
+                  [
+                    _vm.engagements_loaded
+                      ? [
+                          _c(
+                            "div",
+                            { staticClass: "replies-container" },
+                            _vm._l(_vm.replies, function(reply) {
+                              return _c(
+                                "div",
+                                { key: reply.id + Math.random() },
+                                [
+                                  _c("comment", {
+                                    attrs: {
+                                      data: reply,
+                                      quote_comment: false,
+                                      quote_discussion: false
+                                    },
+                                    on: {
+                                      "load-single-comment-by-data":
+                                        _vm.setComment,
+                                      "load-single-comment-by-id":
+                                        _vm.getComment
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      : [
+                          _c("loading-one", {
+                            attrs: { message: "loading engagement..." }
                           })
-                        ],
-                        1
-                      )
-                    }),
-                    0
-                  )
-                ])
+                        ]
+                  ],
+                  2
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "comment-footer" }, [
@@ -44737,10 +44717,16 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "reply-textarea" },
+                  {
+                    staticClass: "reply-textarea",
+                    attrs: { id: "pop-up-textarea" }
+                  },
                   [
                     _c("comment-textarea", {
-                      attrs: { comment: _vm.comment.id },
+                      attrs: {
+                        comment: _vm.comment.id,
+                        container: "#pop-up-textarea"
+                      },
                       on: { "comment-posted": _vm.newReplyPosted }
                     })
                   ],
@@ -44847,13 +44833,7 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("comment-actions", {
-            attrs: {
-              data: _vm.comment,
-              comment_writable: true,
-              write_comment: false
-            }
-          })
+          _c("comment-actions", { attrs: { data: _vm.comment, z: "" } })
         ],
         1
       )
@@ -44968,12 +44948,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "no-outline btn primary-color submit",
-                        attrs: { type: "submit", disabled: "" }
+                        attrs: { type: "button", disabled: "" }
                       },
                       [_vm._v("Post")]
                     ),
                 _vm._v(" "),
-                _c("div", [
+                [
                   _c("textarea", {
                     directives: [
                       {
@@ -44983,10 +44963,15 @@ var render = function() {
                         expression: "content"
                       }
                     ],
-                    staticClass: "form-control no-outline",
-                    attrs: { name: "content", placeholder: "write here..." },
+                    staticClass: "form-control no-outline mention-user comment",
+                    attrs: {
+                      name: "content",
+                      role: "editor",
+                      placeholder: "write here..."
+                    },
                     domProps: { value: _vm.content },
                     on: {
+                      keyup: _vm.setContent,
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -44995,9 +44980,34 @@ var render = function() {
                       }
                     }
                   })
-                ])
-              ]
-            )
+                ]
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _vm.mentions.length > 0
+              ? [
+                  _c(
+                    "div",
+                    { staticClass: "mentions-container" },
+                    [
+                      _vm._v("\n                mentions: "),
+                      _vm._l(_vm.mentions, function(mention) {
+                        return _c(
+                          "a",
+                          {
+                            key: mention,
+                            staticClass: "mention",
+                            attrs: { href: _vm.root + "/" + mention }
+                          },
+                          [_vm._v(_vm._s(mention))]
+                        )
+                      })
+                    ],
+                    2
+                  )
+                ]
+              : _vm._e()
           ]
         : [
             _c("div", { staticClass: "alert alert-info mb-0" }, [
@@ -45062,93 +45072,23 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "ml-5" },
+      { staticClass: "ml-4" },
       [
-        _c(
-          "div",
-          {
-            staticClass: "single-comment-content break-word",
-            on: {
-              click: function($event) {
-                return _vm.loadThread(_vm.thread)
-              }
-            }
-          },
-          [
-            _vm._v(
-              "\n                    " +
-                _vm._s(_vm.thread.content) +
-                "\n                "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("comment-actions", {
+        _c("div", {
+          staticClass: "single-comment-content break-word",
           attrs: {
-            data: _vm.thread,
-            write_comment: false,
-            comment_writable: true
-          },
-          on: { "new-reply": _vm.newReply }
+            id: (_vm.thread_body_id = _vm.makeId(
+              "thread-" + _vm.thread.id + "-"
+            ))
+          }
         }),
         _vm._v(" "),
-        _vm._l(_vm.replies, function(reply) {
-          return _c(
-            "div",
-            {
-              key: reply.id,
-              staticStyle: {
-                padding: "5px",
-                border: "1px solid #f7f7f7",
-                "border-radius": "5px"
-              }
-            },
-            [
-              _c("div", { staticClass: "d-flex" }, [
-                _c("img", {
-                  staticClass: "avatar avatar-xs",
-                  attrs: { src: reply.user.image.src, alt: reply.user.username }
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "ml-2 pt-1" }, [
-                  _c("strong", { staticClass: "d-block" }, [
-                    _vm._v(_vm._s(reply.user.fullname))
-                  ]),
-                  _vm._v(" "),
-                  _c("a", { attrs: { href: "/@" + reply.user.username } }, [
-                    _vm._v("@" + _vm._s(reply.user.username))
-                  ]),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "text-muted ml-2" }, [
-                    _vm._v(_vm._s(_vm.time_diff(reply.created_timestamp)))
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "single-comment-content break-word",
-                  staticStyle: { "font-style": "italic" },
-                  on: {
-                    click: function($event) {
-                      return _vm.loadReply(reply)
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(reply.content) +
-                      "\n                    "
-                  )
-                ]
-              )
-            ]
-          )
+        _c("comment-actions", {
+          attrs: { data: _vm.thread, expandable: true },
+          on: { "load-single-comment": _vm.loadThread }
         })
       ],
-      2
+      1
     )
   ])
 }
@@ -45177,46 +45117,44 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.app_ready
+      _vm.mode === "popup"
         ? [
-            _vm.mode === "popup"
-              ? [
-                  _c("div", { staticClass: "blur" }),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "single-comment-container shadow-lg" },
-                    [
-                      _c("comment-popup", {
-                        attrs: { id: _vm.popup_comment },
-                        on: {
-                          "new-reply": _vm.newCommentPosted,
-                          "close-popup": _vm.closeSingleComment
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.target == "discussion" && _vm.meta !== null
-              ? [
-                  _vm._v(
-                    "\n            Comments: " +
-                      _vm._s(_vm.total) +
-                      "\n        "
-                  )
-                ]
-              : _vm._e(),
+            _c("div", { staticClass: "blur" }),
             _vm._v(" "),
             _c(
               "div",
-              {
-                style: "max-height: " + _vm.container,
-                attrs: { id: "comments-container" }
-              },
+              { staticClass: "single-comment-container shadow-lg" },
               [
+                _c("comment-popup", {
+                  attrs: { data: _vm.single_comment, id: _vm.comment_id },
+                  on: {
+                    "new-reply": _vm.newCommentPosted,
+                    "close-popup": _vm.closeSingleComment
+                  }
+                })
+              ],
+              1
+            )
+          ]
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.target == "discussion" && _vm.meta !== null
+        ? [_vm._v("\n        Comments: " + _vm._s(_vm.total) + "\n    ")]
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          style:
+            "" +
+            (_vm.container !== null
+              ? "max-height: " + _vm.container + "; overflow-y: auto"
+              : ""),
+          attrs: { id: "comments-container" }
+        },
+        [
+          _vm.app_ready
+            ? [
                 _c(
                   "div",
                   { attrs: { id: "comments-wrapper" } },
@@ -45243,8 +45181,10 @@ var render = function() {
                                           quote_comment: true
                                         },
                                         on: {
-                                          "load-single-comment":
-                                            _vm.loadSingleComment
+                                          "load-single-comment-by-data":
+                                            _vm.loadSingleCommentByData,
+                                          "load-single-comment-by-id":
+                                            _vm.loadSingleCommentById
                                         }
                                       })
                                     ],
@@ -45254,44 +45194,60 @@ var render = function() {
                               )
                             }),
                             0
-                          )
+                          ),
+                          _vm._v(" "),
+                          _vm.links != null && _vm.links.next != null
+                            ? [
+                                _c(
+                                  "div",
+                                  { attrs: { id: "more-comments-loader" } },
+                                  [
+                                    _c("loading-one", {
+                                      attrs: {
+                                        message: "getting more comments..."
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ]
+                            : [_vm._m(0)]
                         ]
                       : [
                           _c("loading-one", {
-                            attrs: { message: "Fetching comments..." }
-                          })
-                        ],
-                    _vm._v(" "),
-                    _vm.links != null && _vm.links.next != null
-                      ? [
-                          _c("loading-one", {
-                            attrs: { message: "Fetching more comments..." }
+                            attrs: { message: "getting comments..." }
                           })
                         ]
-                      : [_vm._m(0)]
                   ],
                   2
-                )
+                ),
+                _vm._v(" "),
+                _vm.target == "discussion"
+                  ? [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "comment-textarea",
+                          attrs: { id: "discussion-comment" }
+                        },
+                        [
+                          _c("comment-textarea", {
+                            attrs: {
+                              discussion: _vm.discussion_id,
+                              container: "#discussion-comment"
+                            },
+                            on: { "comment-posted": _vm.newCommentPosted }
+                          })
+                        ],
+                        1
+                      )
+                    ]
+                  : _vm._e()
               ]
-            ),
-            _vm._v(" "),
-            _vm.target == "discussion"
-              ? [
-                  _c(
-                    "div",
-                    { staticClass: "comment-textarea" },
-                    [
-                      _c("comment-textarea", {
-                        attrs: { discussion: _vm.discussion_id },
-                        on: { "comment-posted": _vm.newCommentPosted }
-                      })
-                    ],
-                    1
-                  )
-                ]
-              : _vm._e()
-          ]
-        : _vm._e()
+            : _vm._e()
+        ],
+        2
+      )
     ],
     2
   )
@@ -46027,7 +45983,10 @@ var render = function() {
               { staticClass: "single-feed-container shadow-lg" },
               [
                 _c("comment-popup", {
-                  attrs: { id: _vm.single_comment },
+                  attrs: {
+                    data: _vm.single_comment,
+                    id: _vm.single_comment_id
+                  },
                   on: { "close-popup": _vm.closeSingleFeed }
                 })
               ],
@@ -46039,7 +45998,11 @@ var render = function() {
       _c(
         "div",
         {
-          style: "max-height: " + _vm.container,
+          style:
+            "" +
+            (_vm.container !== null
+              ? "max-height: " + _vm.container + "; overflow-y: auto"
+              : ""),
           attrs: { id: "feeds-container" }
         },
         [
@@ -46049,49 +46012,76 @@ var render = function() {
             [
               _vm.loaded
                 ? [
-                    _vm.feeds.length == 0 ? [_vm._m(0)] : _vm._e(),
-                    _vm._v(" "),
-                    _vm._l(_vm.computedFeeds, function(feed) {
-                      return _c(
-                        "div",
-                        { key: _vm.generateKey(feed) },
-                        [
-                          feed.type == "comment"
-                            ? [
+                    _vm.feeds.length == 0
+                      ? [_vm._m(0)]
+                      : [
+                          _c(
+                            "div",
+                            _vm._l(_vm.computedFeeds, function(feed) {
+                              return _c("div", { key: _vm.generateKey(feed) }, [
                                 _c(
                                   "div",
                                   [
-                                    _c("comment", {
+                                    feed.type == "comment"
+                                      ? [
+                                          _c(
+                                            "div",
+                                            [
+                                              _c("comment", {
+                                                attrs: {
+                                                  data: feed,
+                                                  quote_discussion: true,
+                                                  quote_comment: true
+                                                },
+                                                on: {
+                                                  "load-single-comment-by-data":
+                                                    _vm.loadSingleCommentByData,
+                                                  "load-single-comment-by-id":
+                                                    _vm.loadSingleCommentById
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        ]
+                                      : feed.type == "discussion"
+                                      ? [
+                                          _c("discussion", {
+                                            attrs: { data: feed }
+                                          })
+                                        ]
+                                      : feed.type == "experience"
+                                      ? [
+                                          _c("experience", {
+                                            attrs: { data: feed }
+                                          })
+                                        ]
+                                      : _vm._e()
+                                  ],
+                                  2
+                                )
+                              ])
+                            }),
+                            0
+                          ),
+                          _vm._v(" "),
+                          _vm.links !== null && _vm.links.next !== null
+                            ? [
+                                _c(
+                                  "div",
+                                  { attrs: { id: "more-feeds-loader" } },
+                                  [
+                                    _c("loading-one", {
                                       attrs: {
-                                        data: feed,
-                                        quote_discussion: true,
-                                        quote_comment: true
-                                      },
-                                      on: {
-                                        "load-single-comment": _vm.getComment
+                                        message: "loading more feeds..."
                                       }
                                     })
                                   ],
                                   1
                                 )
                               ]
-                            : feed.type == "discussion"
-                            ? [_c("discussion", { attrs: { data: feed } })]
-                            : feed.type == "experience"
-                            ? [_c("experience", { attrs: { data: feed } })]
-                            : _vm._e()
-                        ],
-                        2
-                      )
-                    }),
-                    _vm._v(" "),
-                    _vm.links !== null && _vm.links.next !== null
-                      ? [
-                          _c("loading-one", {
-                            attrs: { message: "loading more feeds..." }
-                          })
+                            : [_vm._m(1)]
                         ]
-                      : [_vm._m(1)]
                   ]
                 : [
                     _c("loading-one", {
@@ -63461,8 +63451,19 @@ var actions = {
       });
     });
   },
-  likeComment: function likeComment(_ref10, comment) {
+  loadCommentEngagements: function loadCommentEngagements(_ref10, id) {
     var commit = _ref10.commit;
+    return new Promise(function (resolve, reject) {
+      axios.get(apiURL("/comment/".concat(id, "/engagements"))).then(function (response) {
+        resolve(response);
+      })["catch"](function (error) {
+        toastError(error.response);
+        reject(error);
+      });
+    });
+  },
+  likeComment: function likeComment(_ref11, comment) {
+    var commit = _ref11.commit;
     return new Promise(function (resolve, reject) {
       axios.post(apiURL("/comment/".concat(comment.id, "/like"))).then(function (response) {
         resolve(response);
@@ -63514,6 +63515,45 @@ var getters = {
     return function (content) {
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
       return content.substring(0, length);
+    };
+  },
+  makeId: function makeId(state) {
+    return function () {
+      var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var suffix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+      var random_length = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 5;
+      return "".concat(prefix).concat(randomChar(random_length)).concat(suffix);
+    };
+  },
+  renderHTML: function renderHTML(state) {
+    return function (container, string) {
+      // console.log('rendering in '+container);
+      $('#' + container).html($.parseHTML(string));
+    };
+  },
+  getMentions: function getMentions(state) {
+    return function (content) {
+      var ats = getIndicesOf(' @', content);
+      var mentions = [];
+
+      if (ats.length > 0) {
+        ats.forEach(function (index) {
+          var snippet = content.substring(index).slice(1);
+          var username = snippet.split(' ')[0];
+          mentions.push(username);
+        });
+      }
+
+      return mentions;
+    };
+  },
+  resolveMentions: function resolveMentions(state) {
+    return function (content) {
+      var mentions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+      mentions.forEach(function (mention) {
+        content = content.replace(' ' + mention, ' <a href="' + baseURL() + '/' + mention + '">' + mention + '</a>');
+      });
+      return content;
     };
   }
 };

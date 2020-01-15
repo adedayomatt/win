@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Traits;
-
+use Auth;
+use App\User;
 
 trait Resource
 {
@@ -26,5 +27,19 @@ trait Resource
     protected function isAPIRequest(){
         return request()->is('api/*') || request()->wantsJson();
     }
+    //the current user 
+    protected function currentUser(){
+		$user = null;
+		if($this->isAPIRequest()){
+			$token = \request()->get('api_token');
+			if($token != null){
+				$user = User::where('api_token', $token)->first();
+			}
+		}else{
+			$user = Auth::user();
+		}
+		return $user;
+	}
+
 
 }

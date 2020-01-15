@@ -26,6 +26,7 @@
     },
     "dependencies": {
         "corejs-typeahead": "^1.2.1",
+        "vue-at": "^2.3.2",
         "vue-scroll": "^2.1.12"
     }
 }

@@ -3,10 +3,10 @@
          <template v-if="mode === 'single'">
              <div class="blur"></div>
             <div class="single-feed-container shadow-lg">
-                <comment-popup :id="single_comment" @close-popup="closeSingleFeed"></comment-popup>
+                <comment-popup :data="single_comment" :id="single_comment_id" @close-popup="closeSingleFeed"></comment-popup>
             </div>
         </template>
-        <div id="feeds-container" :style="`max-height: ${container}`">
+        <div id="feeds-container" :style="`${container !== null ? 'max-height: '+container+'; overflow-y: auto' : ''}`">
             <div id="feeds-wrapper">
                 <template v-if="loaded">
                     <template v-if="feeds.length == 0">
@@ -14,28 +14,35 @@
                             <p>There is nothing in this feed yet</p>
                         </div>
                     </template>
-                    <div v-for="feed in computedFeeds" :key="generateKey(feed)">
-                        <template  v-if="feed.type == 'comment'">
-                            <div>
-                                <comment :data="feed" @load-single-comment="getComment" :quote_discussion="true" :quote_comment="true"></comment>
+                    <template v-else>
+                        <div>
+                            <div v-for="feed in computedFeeds" :key="generateKey(feed)">
+                                <div>
+                                    <template  v-if="feed.type == 'comment'">
+                                        <div>
+                                            <comment :data="feed"  @load-single-comment-by-data="loadSingleCommentByData" @load-single-comment-by-id="loadSingleCommentById" :quote_discussion="true" :quote_comment="true"></comment>
+                                        </div>
+                                    </template>
+                                    <template v-else-if="feed.type == 'discussion'">
+                                        <discussion  :data="feed"></discussion>
+                                    </template>
+                                    <template v-else-if="feed.type == 'experience'" >
+                                        <experience :data="feed"></experience>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <template v-if="links !== null && links.next !== null">
+                            <div id="more-feeds-loader">
+                                <loading-one message="loading more feeds..."></loading-one>
                             </div>
                         </template>
-                        <template v-else-if="feed.type == 'discussion'">
-                            <discussion  :data="feed"></discussion>
+                        <template v-else>
+                            <div class="text-center">
+                                <h1>.</h1>
+                            </div>
                         </template>
-                        <template v-else-if="feed.type == 'experience'" >
-                            <experience :data="feed"></experience>
-                        </template>
-                    </div>
-                    <template v-if="links !== null && links.next !== null">
-                        <loading-one message="loading more feeds..."></loading-one>
                     </template>
-                    <template v-else>
-                        <div class="text-center">
-                            <h1>.</h1>
-                        </div>
-                    </template>
-
                 </template>
                 <template v-else>
                     <loading-one message="loading feeds..."></loading-one>
@@ -63,7 +70,9 @@ export default {
                links: null,
                mode: 'feeds',
                loaded: false,
+               can_load_more: true,
                single_comment: null,
+               single_comment_id: null,
                single_discussion: null,
                single_experience: null,
             }
@@ -87,11 +96,14 @@ export default {
             ]),
 
             getFeeds(url){
+                this.can_load_more = false; //disallow loading more while this request is processing
                 axios.get(url)
                 .then(response => { 
                     this.feeds = this.feeds.concat(response.data.data);
                     this.links = response.data.links;
                     this.loaded = true;
+                    this.can_load_more = true;
+                    console.warn(response.data.data);
                 })
                 .catch(error => {
 
@@ -100,9 +112,16 @@ export default {
             generateKey(feed){
                 return Math.floor((Math.random() * 1000000));
             },
-            getComment(comment){
+
+            loadSingleCommentByData(comment){
                 this.mode = 'single';
-                this.single_comment = comment.id;
+                this.single_comment = comment;
+                this.single_comment_id = null;
+            },
+            loadSingleCommentById(id){
+                this.mode = 'single';
+                this.single_comment = null;
+                this.single_comment_id = id;
             },
             closeSingleFeed(){
                 this.mode = 'feeds';
@@ -119,14 +138,14 @@ export default {
             
             let container = component.container == null ? $(window) : $('#feeds-container');
             container.on('scroll',function(e){
-            let content = $('#feeds-wrapper');
-            console.log('content:'+content.height()+' scrolled:'+container.scrollTop());
-            if(container.scrollTop() + container.height() >= content.height()){
-                if(component.links !== null && component.links.next !== null){
-                    component.getFeeds(component.links.next)
+            if(onScreen('#more-feeds-loader')) {//if the loader is visible on the screen, It means the bottom has been reached
+                if(component.can_load_more && component.links !== null && component.links.next !== null){
+                     component.getFeeds(component.links.next)
                 }
+
             }
-            })
+        })
+
         }
     }
 </script>

@@ -6,13 +6,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Collection;
+use App\Traits\Resource;
 
 class Comment extends Model
 {
-	use softDeletes;
+	use softDeletes, Resource;
 	
 	protected $fillable = ['user_id', 'discussion_id','comment_id','thread_id','content'];
-	protected $appends = ['type','comment_discussion', 'reply_to', 'thread', 'likes_count', 'replies_count', 'created_timestamp'];
+	protected $appends = ['type','comment_discussion', 'reply_to', 'thread', 'likes_count', 'liked', 'replies_count', 'created_timestamp'];
 	
 	// sort collection of comments
 	static function sort($comments){
@@ -37,8 +38,20 @@ class Comment extends Model
 		return $this->hasMany('App\CommentLike');
 	}
 	
+	public function getLikedAttribute(){
+		return $this->isLiked();
+	}
+
 	public function isLiked(){
-		if($this->likes()->where('user_id',Auth::id())->count() > 0){
+		$user = $this->currentUser();
+		if($user !== null){
+			return $this->likedByUser($user);
+		}
+		return false;
+	}
+
+	public function likedByUser(User $user){
+		if($this->likes()->where('user_id',$user->id)->count() > 0){
 			return true;
 		}
 		return false;
@@ -59,25 +72,29 @@ class Comment extends Model
 		return $this->discussion();
 	}
 	public function getReplyToAttribute(){
+		$user = $this->currentUser();
 		// I am not returning the model instance because it would keep returning the reply chain and the response size becomes bigger
-		$reply_to = null;
-		$reply_to = DB::table('comments')->where('id', $this->comment_id)->first();
+		// $reply_to = $this->find(Comment::class, $this->comment_id);
+		$reply_to = $this->comment_id == null ? null : DB::table('comments')->where('id', $this->comment_id)->first();
 		if($reply_to !== null){
 			$carbon = new \Carbon\Carbon($reply_to->created_at);
 			$reply_to->created_timestamp = $carbon->getTimestamp();
 			$reply_to->user = User::find($reply_to->user_id);
 			$reply_to->likes_count = CommentLike::where('comment_id', $reply_to->id)->count();
 			$reply_to->replies_count = Comment::where('comment_id', $reply_to->id)->count();
+			$reply_to->liked = $user == null ? false : (DB::table('comment_likes')->where([['comment_id',$reply_to->id],['user_id', $user->id]])->first() == null ? false : true);
+
 		}
 		return $reply_to;
 	}
 	// return other reply to the comment by the comment owner
 	public function getThreadAttribute(){
-		return $this->getThread($this, collect([]));
+		$user = $this->currentUser();
+		return $this->getThread($this, $user, collect([]));
 	}
 
 	// A recursive function to get self replies
-	public function getThread($comment,$threads)
+	public function getThread($comment, $user, $threads)
 	{	 
 		// if($threads->count() > 2){
 		// 	return $threads->paginate(2);
@@ -90,10 +107,10 @@ class Comment extends Model
 			$first_reply->user = User::find($first_reply->user_id);
 			$first_reply->likes_count = DB::table('comment_likes')->where('comment_id',$first_reply->id)->count();
 			$first_reply->replies_count = DB::table('comments')->where('comment_id',$first_reply->id)->count();
-			$first_reply->likes = DB::table('comment_likes')->where('comment_id',$first_reply->id)->get();
+			$first_reply->liked = $user == null ? false : (DB::table('comment_likes')->where([['comment_id',$first_reply->id],['user_id', $user->id]])->first() == null ? false : true);
 			$first_reply->created_timestamp = $carbon->getTimestamp();
 			$newThread = $threads->merge(collect([$first_reply]));
-			return $this->getThread($first_reply,$newThread);
+			return $this->getThread($first_reply, $user, $newThread);
 		}
 	}
 	

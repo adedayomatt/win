@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="{{asset('css/vendors/toastr.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/select2.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/vendors/owl.carousel.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/vendors/jquery.atwho.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/b/layouts.css?v=1')}}">
 <link rel="stylesheet" href="{{asset('css/b/styles.css')}}"> 
 

@@ -67,6 +67,68 @@
           break;
       }
   }
+  // function to generate random characters
+  function randomChar(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+//check if an element is currently on the screen
+function onScreen(element_selector, offset = 0){
+    var element = document.querySelector(element_selector);
+    if(element !== null){
+      var position = element.getBoundingClientRect();
+        // checking whether fully visible
+        if(position.top >= 0 && position.bottom <= window.innerHeight-offset) {
+          // console.log('visible');
+            return true
+        }
+      }
+        // console.log('Not visible');
+
+        return false
+}
+
+//check if an element is scrolled to the bottom
+function atTheBottom(selector = null, attached_to_window = true){
+  var element = document.querySelector(selector);
+  if(attached_to_window){
+    if ((window.innerHeight + window.pageYOffset ) >= (element.offsetHeight)) {
+        return true
+    }
+  }
+  else{
+    if( element.scrollTop === (element.scrollHeight - element.offsetHeight)){
+      // alert('bottom of '+selector);
+      return true;
+    }
+
+  }
+  return false;
+}
+
+//get indices of a string in a string
+function getIndicesOf(searchStr, str, caseSensitive = false) {
+    var searchStrLen = searchStr.length;
+    if (searchStrLen == 0) {
+        return [];
+    }
+    var startIndex = 0, index, indices = [];
+    if (!caseSensitive) {
+        str = str.toLowerCase();
+        searchStr = searchStr.toLowerCase();
+    }
+    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
+        indices.push(index);
+        startIndex = index + searchStrLen;
+    }
+    return indices;
+}
 </script>
 {{-- @include('layouts.components.typeahead.tag') --}}
 <!-- Extra script that should live in the head -->

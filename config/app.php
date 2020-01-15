@@ -169,6 +169,7 @@ return [
         //ckeditor
         Unisharp\Ckeditor\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Unicodeveloper\Mention\MentionServiceProvider::class,
                  
         /*
          * Application Service Providers...

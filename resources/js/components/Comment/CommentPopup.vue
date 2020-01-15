@@ -31,7 +31,7 @@
                         </div>
                         <!-- If the comment was a reply -->
                         <template v-if="comment.reply_to !== null">
-                            <!-- <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div> -->
+                            <div class="text-muted">Replying to {{comment.reply_to.user.fullname}} <a :href="`${root}/@${comment.reply_to.user.username}`">@{{comment.reply_to.user.username}}</a></div>
                             <div class="reply_to">
                                 <div  style="">
                                     <div class="d-flex">
@@ -46,7 +46,7 @@
                                         <div class="replied-comment break-word" @click="getComment(comment.reply_to.id)">
                                             {{comment.reply_to.content}}
                                         </div>
-                                        <comment-actions :data="comment.reply_to" :write_comment="false" :comment_writable="false"></comment-actions>
+                                        <!-- <comment-actions :data="comment.reply_to"></comment-actions> -->
                                     </div>
                                 </div>
                             </div>
@@ -63,25 +63,26 @@
                     </div>
 
                     <div>
-                        <div class="main-comment break-word">
-                            {{comment.content}}
-                        </div>
+
+                        <div class="main-comment break-word" :id="comment_body_id"></div>
+
                         <div class="main-comment-actions">
-                            <comment-actions :data="comment" :write_comment="false" :comment_writable="false"></comment-actions>
+                            <comment-actions :data="comment" :expandable="false" @comment-updated="updateComment"></comment-actions>
                         </div>
                     
                     </div>
                         
                     <div>
-                        <div class="replies-container">
-                            <div v-for="reply in sortedReplies" v-bind:key="reply.id+Math.random()">
-                                <comment :data="reply" @load-single-comment="setComment" :quote_comment="false" :write_comment="false"></comment>
-
-                                <!-- <div v-if="reply.thread_id != comment.id">
-                                    <comment-reply :reply="reply" @load-reply="getComment(reply.id)"></comment-reply>
-                                </div> -->
+                        <template v-if="engagements_loaded">
+                            <div class="replies-container">
+                                <div v-for="reply in replies" v-bind:key="reply.id+Math.random()">
+                                    <comment :data="reply" @load-single-comment-by-data="setComment" @load-single-comment-by-id="getComment" :quote_comment="false" :quote_discussion="false"></comment>
+                                </div>
                             </div>
-                        </div>
+                        </template>
+                        <template v-else>
+                            <loading-one message="loading engagement..."></loading-one>
+                        </template>
                     </div>
 
                 </div>
@@ -93,8 +94,8 @@
                         </div>
                     </div>
                    
-                    <div class="reply-textarea">
-                        <comment-textarea :comment="comment.id" @comment-posted="newReplyPosted"></comment-textarea>
+                    <div class="reply-textarea" id="pop-up-textarea">
+                        <comment-textarea :comment="comment.id" container="#pop-up-textarea" @comment-posted="newReplyPosted"></comment-textarea>
                     </div>
                 </div>
 
@@ -121,11 +122,11 @@ export default {
         data(){
             return {
                 comment: null,
+                mentions: [],
                 replies: [],
-                replies_count: 0,
-                likes:  [],
                 track: [],
                 current: null,
+                engagements_loaded: false,
             }
         },
         computed: {
@@ -134,90 +135,129 @@ export default {
                 'auth',
                 'is_authenticated',
                 'time_diff',
+                'makeId',
+                'renderHTML',
+                'getMentions',
+                'resolveMentions'
+
             ]),
-            sortedReplies(){
-                return this.replies.length > 0 ? this.replies.sort( (a,b) => a.id - b.id ) : null;
-            },
-            isLiked(){
-                if(this.is_authenticated){
-                    return this.likes.findIndex(like =>  like.user_id == this.auth.id) < 0 ? false : true;
-                }
-                return false;
+            comment_body_id(){
+                return  this.makeId(`pop-c-${this.comment.id}`);
             },
             timeDiff(){
                 return this.comment.created_at
             },
             prev(){ //return the previous comment loaded
-                let prev_index = this.track.findIndex(item => item.track == this.current.track) - 1;
-                return prev_index < 0 ? null : this.track[prev_index].comment;
+                let prev_index = this.track.findIndex(c => c.id == this.current.id) - 1;
+                return prev_index < 0 ? null : this.track[prev_index];
             },
             next(){
-                let next_index = this.track.findIndex(item => item.track == this.current.track) + 1;
-                return next_index >= this.track.length ? null : this.track[next_index].comment;
+                let next_index = this.track.findIndex(c => c.id == this.current.id) + 1;
+                return next_index >= this.track.length ? null : this.track[next_index];
             },
-            
-            
         },
-        props: ['id'],
+        props: ['data', 'id'],
         methods:{
             ...mapActions([
                 'loadComment',
-                'likeComment'
+                'loadCommentEngagements',
             ]),
-            setComment(comment){
-                this.getComment(comment.id);
+            setData(data){
+                return new Promise((resolve, reject) => {
+                    this.comment = data;
+                    resolve(data);
+                })
             },
+            setTrack(comment){
+                let index_in_track = this.track.findIndex(c => c.id == comment.id);
+                if(index_in_track < 0){
+                    // if the comment is not in the track yet
+                    let current = comment;
+                    this.current = current
+                    this.track.push(current)
+                }
+                else{
+                    this.current = this.track[index_in_track];
+                }
+            },
+            setComment(comment){
+                this.setData(comment)
+                .then((data) => {
+                    this.mentions = this.getMentions(comment.content);
+                    this.renderHTML(this.comment_body_id, this.resolveMentions(comment.content, this.mentions));
+                    
+                    this.getEngagements();
+                    //set in the track
+                    this.setTrack(comment);
+                })
+            },
+            //load comment by id
             getComment(id){
                 this.loadComment(id)
                .then(response => {
-                        this.comment =  response.data.comment;
-                        this.threads =  response.data.comment.thread;
-                        this.likes =  response.data.comment.comment_likes;
-                        this.replies = response.data.replies;
-                        this.replies_count = response.data.comment.replies_count;
-                        let index_in_track = this.track.findIndex(track => track.comment == response.data.comment.id);
-                        if(index_in_track < 0){
-                            // if the comment is not in the track yet
-                            let current = {track: `track_${this.track.length+1}`,comment: response.data.comment.id};
-                            this.current = current
-                            this.track.push(current)
-                        }
-                        else{
-                            this.current = this.track[index_in_track];
-                        }
-                    })
+                       this.setComment(response.data.comment);
+               });
+            },
+
+            getEngagements(){
+                this.engagements_loaded = false;
+                this.loadCommentEngagements(this.comment.id)
+                .then(response => {
+                        this.comment.likes =  response.data.likes;
+                        this.comment.likes_count = response.data.likes.length;
+                        this.replies = response.data.replies.sort( (a,b) => a.id - b.id ); response.data.replies;
+                        this.comment.replies_count = response.data.replies.length;
+                        this.engagements_loaded = true;
+                })
             },
 
             newReplyPosted(reply){
-                this.replies_count++;
-                this.replies.push(reply)
+                this.replies.push(reply);
+                this.comment.replies_count++;
                 this.$emit('new-reply', reply);
             },
             goBack(){
                 if(this.prev !==  null){
-                    this.getComment(this.prev)
+                    this.setComment(this.prev)
                 }
             },
             goForward(){
                 if(this.next !==  null){
-                    this.getComment(this.next)
+                    this.setComment(this.next)
                 }
             },
             closePopup(){
                 this.$emit('close-popup');
-            }
-
+            },
+            updateComment(comment){
+                this.comment = comment;
+            },
         },
         components:{
             LoadingOne,Discussion,CommentReply, CommentTextarea
         },
         mounted() {
+            //if the data was passed
+            if(this.data != null && this.data != undefined){
+              this.setComment(this.data);
+            }
+            //if it was an id
+            else if(this.id != null && this.id != undefined){
                 this.getComment(this.id);
+            }
         },
         watch: {
-            id: function(newId, oldId){
-                this.getComment(newId);
+            data: function(newData, oldData){
+                if(newData != null){
+                    this.setComment(newData);
+                }
             },
+            id: function(newId, oldId){
+                if(newId != null){
+                    this.getComment(newId);
+                }
+            },
+
         }
     }
 </script>

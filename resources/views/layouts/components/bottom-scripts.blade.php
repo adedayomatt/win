@@ -1,4 +1,4 @@
-<script src="{{asset('js/app.js')}}"></script>
+<script src="{{asset('js/app.js?v=2.1')}}"></script>
 <script src="{{asset('js/vendors/toastr.min.js')}}"></script>
 <script src="{{asset('js/vendors/owl.carousel.min.js')}}"></script>
 
@@ -8,24 +8,28 @@
 <script src="{{ asset('js/b/scripts.js') }}"></script>
 
 <script>
-			toastr.options = {
-				"closeButton": true,
-				"debug": true,
-				"newestOnTop": true,
-				"progressBar": true,
-				"escapeHtml": false,
-				"positionClass": "toast-bottom-center",
-				"preventDuplicates": false,
-				"onclick": null,
-				"showDuration": "300",
-				"hideDuration": "1000",
-				"timeOut": "0",
-				"extendedTimeOut": "0",
-				"showEasing": "swing",
-				"hideEasing": "linear",
-				"showMethod": "fadeIn",
-				"hideMethod": "fadeOut"
-			}
+	$('[data-toggle="popover"]').popover({
+		html: true
+	});
+
+	toastr.options = {
+		"closeButton": true,
+		"debug": true,
+		"newestOnTop": true,
+		"progressBar": true,
+		"escapeHtml": false,
+		"positionClass": "toast-bottom-center",
+		"preventDuplicates": false,
+		"onclick": null,
+		"showDuration": "300",
+		"hideDuration": "1000",
+		"timeOut": "0",
+		"extendedTimeOut": "0",
+		"showEasing": "swing",
+		"hideEasing": "linear",
+		"showMethod": "fadeIn",
+		"hideMethod": "fadeOut"
+	}
 
 	$('.infinite-scroll').each(function(){
 		var container = $(this);
@@ -46,6 +50,8 @@
 </script>
 	@include('layouts.components.toastr')
 	@include('layouts.components.owl')
+	@include('vendor.mentions.assets')
+	@include('layouts.components.tinymce')
 
 <!-- Extra scripts -->
 @yield('b-scripts')

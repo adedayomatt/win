@@ -1,24 +1,26 @@
 <template>
     <div>
         <div class="d-flex">
-            <span class="mr-2 comment-like-btn" @click="commentLike">
-                <span class="mr-1">{{likes_count}} </span> 
-                <span v-if="isLiked"><i class="fas fa-heart text-danger"></i></span>
+            <span class="mx-2 action" @click="commentLike">
+                <span class="mr-1">{{comment.likes_count}} </span> 
+                <span v-if="comment.liked"><i class="fas fa-heart text-danger"></i></span>
                 <span v-else><i class="far fa-heart"></i></span>
             </span> 
-            <span class="ml-2 comment-reply-btn" @click="replyComment">
-                <span class="">{{replies_count}}</span> 
-                <span v-if="allow_comment"><i class="fa fa-reply text-primary"></i></span>
-                <span v-else><i class="fa fa-reply"></i></span>
+            <span class="mx-2 action" @click="loadSingleComment">
+                <span class="">{{comment.replies_count}}</span> 
+                <span><i class="fa fa-reply"></i></span>
             </span>
-        </div>
-        <div>
-            <template v-if="allow_comment && comment_writable">
-                <div class="reply-textarea mb-1">
-                    <div class="text-muted">Reply to {{comment.user.fullname}}</div>
-                    <comment-textarea :comment="comment.id" @comment-posted="newReplyPosted"></comment-textarea>
-                </div>
+
+            <template v-if="expandable">
+                <span class="mx-2 action" @click="loadSingleComment">
+                    <span><i class="fa fa-external-link-alt" title="open comment"></i></span>
+                </span>
             </template>
+
+            <!-- <span class="ml-auto action mentions" >
+                <button type="button" class="btn btn-default border-1 no-outline" style="border: 1px solid #f7f7f7;" @click="showMentions"><i class="fa fa-users"></i></button>
+            </span> -->
+
         </div>
     </div>
 </template>
@@ -26,38 +28,27 @@
 <script>
 import {mapGetters} from 'vuex';
 import {mapActions} from 'vuex';
-import CommentReply from './CommentReply.vue'
-import CommentTextarea from './CommentTextarea.vue'
 
 export default {
         data(){
             return {
                 comment: this.data,
-                recent_replies: [],
-                replies_count: this.data.replies_count,
-                likes_count: this.data.likes_count,
-                likes:  this.data.likes,
-                allow_comment: this.write_comment
             }
         },
         computed: {
              ...mapGetters([
+                'root',
                 'auth',
                 'is_authenticated',
                 'time_diff',
+                'getMentions',
             ]),
-            isLiked(){
-                if(this.is_authenticated){
-                    return this.likes.findIndex(like =>  like.user_id == this.auth.id) < 0 ? false : true;
-                }
-                return false;
-            },
             timeDiff(){
                 return this.comment.created_at
             }
             
         },
-        props: ['data','comment_writable','write_comment'],
+        props: ['data', 'expandable'],
         methods:{
             ...mapActions([
                 'likeComment'
@@ -66,56 +57,59 @@ export default {
                 this.likeComment(this.comment)
                 .then((response) => {
                     if(response.data.action == 'like'){
-                        this.likes.push(response.data.like);
-                        this.likes_count++;
+                        this.comment.likes_count++;
+                        this.comment.liked = true;
                     }else if(response.data.action == 'unlike'){
-                        this.likes.splice(getIndex(this.likes, response.data.like), 1);
-                        this.likes_count--;
+                        this.comment.likes_count--;
+                        this.comment.liked = false;
                     }
+                    this.$emit('comment-updated', this.comment);
                 })
                 .catch(error => {
 
                 })
                
             },
-            loadSingleComment(comment){
-                this.$emit('load-single-comment', comment);
+            loadSingleComment(){
+                this.$emit('load-single-comment', this.comment);
             },
-            replyComment(){
-                    this.allow_comment = this.allow_comment == true ? false : true;
-            },
-            disallowComment(){
-                this.allow_comment = false;
-            },
-            newReplyPosted(reply){
-                this.replies_count++;
-                this.allow_comment = false;
-                this.$emit('new-reply', reply);
+            showMentions(){
+                let container = this.container;
+                let mentions_list = '';
+                if(this.mentions !== undefined && this.mentions.length > 0){
+                    mentions_list = `<div class="list-group">`;
+                    this.mentions.forEach(mention => {
+                      mentions_list += `<div class="list-group-item"><a href="${this.root}/${mention}">${mention}</a></div>`;  
+                    });
+                    mentions_list += `</div>`;
+                }else{
+                    mentions_list = 'No mention in the comment'
+                }
+                $(`.mentions-popover`).popover({
+                    html: true,
+                    title: 'Mentions',
+                    placement: 'auto',
+                    container: document.querySelector(container),
+                    content: mentions_list
+                })
             }
         },
         components:{
-            CommentReply, CommentTextarea
+
         },
         mounted() {
-           
+            this.mentions = this.getMentions(this.comment.content);
         },
         watch: {
             data: function(newData, oldData){
                 this.comment = newData;
-                this.replies_count = newData.replies_count;
-                this.likes_count = newData.likes_count;
-                this.likes = newData.likes;
             },
-             write_comment: function(newValue, oldValue){
-                this.write_comment = newValue;
-            }
         }
     }
 </script>
 
 <style scoped>
-    .comment-like-btn,
-    .comment-reply-btn{
+    .action{
         cursor: pointer;
     }
 </style>
