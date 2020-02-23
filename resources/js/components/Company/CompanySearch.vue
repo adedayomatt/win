@@ -41,12 +41,19 @@
            
         },
         methods: {
+            ...mapActions([
+                'apiCall'
+            ]),
             selectCompany(comp){
                 this.company = comp;
                 $(this.input).typeahead('close');
             },
             createNewCompany(name){
-                axios.post(apiURL('/company'), {company: name})
+                this.apiCall({
+                   endpoint: `/company`,
+                   method: 'POST',
+                   data: {company: name}
+                })
                 .then(response => {
                     this.selectCompany(response.data)
                 })

@@ -2,7 +2,7 @@
     <div>
         <template v-if="mode === 'popup'">
             <div class="blur"></div>
-            <div class="single-comment-container shadow-lg">
+            <div class="single-comment-container">
                 <comment-popup :data="single_comment" :id="comment_id"  @new-reply="newCommentPosted" @close-popup="closeSingleComment"></comment-popup>
             </div>
         </template>
@@ -23,7 +23,7 @@
                             </div>
                             <template v-if="links != null && links.next != null">
                                 <div id="more-comments-loader">
-                                    <loading-one message="getting more comments..."></loading-one>
+                                    <loading-one message="getting more comments..." :error="comments_loading_error" @retry="loadComments(links.next)"></loading-one>
                                 </div>
                             </template>
                             <template v-else>
@@ -33,7 +33,7 @@
                             </template>
                         </template>
                         <template v-else>
-                                <loading-one message="getting comments..."></loading-one>
+                                <loading-one message="getting comments..." :error="comments_loading_error" @retry="loadComments(url)"></loading-one>
                         </template>
                         
                     </div>
@@ -67,7 +67,8 @@ import CommentTextarea from './CommentTextarea';
                 single_comment: null,
                 comment_id: null,
                 mode: 'list',
-                total: 0
+                total: 0,
+                comments_loading_error: null,
 
             }
         },
@@ -83,9 +84,10 @@ import CommentTextarea from './CommentTextarea';
         props: ['container','url', 'target', 'discussion_id'],
         methods:{
             ...mapActions([
-                'loadComments'
+
             ]),
             loadComments(url){
+               this.comments_loading_error = null;
                 this.can_load_more = false;
                 if(url !== '' && url !== null){
                     axios.get(url)
@@ -99,7 +101,7 @@ import CommentTextarea from './CommentTextarea';
                         // console.warn(response.data)
                     })
                     .catch(error => {
-
+                       this.comments_loading_error = error;
                     })
                 }
             },
@@ -133,7 +135,6 @@ import CommentTextarea from './CommentTextarea';
             this.loadComments(apiURL(this.url));
             const component = this;
             let container = component.container == null ? $(window) : $('#comments-container');
-            console.log(container);
             container.scroll(function(e){
                 let parent = component.container == null ? window : '#comments-container'
                 if(onScreen('#more-comments-loader')) { //if the loader is visible on the screen, It means the bottom has been reached
@@ -169,6 +170,7 @@ import CommentTextarea from './CommentTextarea';
 
     .single-comment-container{
         z-index: 200;
+        box-shadow: 0px -20px 20px 10px rgba(0, 0, 0, 0.125) !important;
     }
     
     .list-group-item.comment{

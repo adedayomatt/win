@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="app_ready">
         <div>
             <strong class="mr-3">All Contributors</strong>
             <users :data="contributors" @user-clicked="loadUserContributions"></users>
@@ -36,6 +36,10 @@ export default {
             }
         },
         computed: {
+            ...mapGetters([
+                'root',
+                'app_ready'
+            ]),
             all_comments(){
                 return `/discussion/${this.discussion}/comments`;
             }
@@ -43,7 +47,7 @@ export default {
         props: ['discussion', 'user'],
         methods:{
             ...mapActions([
-                'loadUser'
+                'apiCall'
             ]),
             getContributors(){
                 axios.get(apiURL(`/discussion/${this.discussion}/contributors`))
@@ -74,15 +78,17 @@ export default {
         mounted() {
             this.getContributors();
             if(this.user !== ''){
-                this.loadUser(this.user)
+                this.apiCall({
+                    endpoint: `/user/${this.user}`
+                })
                 .then(response => {
                     this.loadUserContributions(response.data.data)
                 })
                 .catch(error => {
-                    this.source = `/discussion/${this.discussion}/comments`
+                    this.source = `/discussion/${this.discussion}/comments`;
                 })
             }else{
-                this.source = `/discussion/${this.discussion}/comments`
+                this.source = `/discussion/${this.discussion}/comments`;
             }
         }
     }

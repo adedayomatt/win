@@ -23,16 +23,15 @@ import {mapActions} from 'vuex';
             ...mapActions([
             'getAuth',
             ]),
-
         },
         mounted() {
-                this.getAuth()
-                .then(response => {
-                
-                })
-                .catch(err =>{
+            this.getAuth()
+            .then(response => {
+            
+            })
+            .catch(err =>{
 
-                });
+            });
         }
     }
 </script>
@@ -43,7 +42,7 @@ import {mapActions} from 'vuex';
         width: 100%;
         height: 100vh;
         position: fixed;
-        z-index: 1000000;
+        z-index: 99000000;
     }
 </style>
 

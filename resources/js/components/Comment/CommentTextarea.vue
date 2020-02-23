@@ -62,7 +62,7 @@ import {mapActions} from 'vuex';
         props: ['discussion','comment', 'container'],
         methods:{
             ...mapActions([
-                'postComment'
+                'apiCall'
             ]),
             setContent(){
                 $(this.editor).focus();
@@ -70,16 +70,37 @@ import {mapActions} from 'vuex';
                 this.content = $(this.editor).val();
             },
             addComment(){
-                let comment = {
-                    discussion: this.discussion_id,
-                    comment: this.comment_id,
-                    content: this.content,
-                };
-               this.postComment(comment)
+            let endpoint = null;
+            let data = null;
+            if(this.discussion_id != null){
+                endpoint = `/discussion/${this.discussion_id}/comment`;
+                data = {
+                    comment: this.content
+                }
+            }
+            // if it's a reply to a comment
+            else if (this.comment_id != null){ 
+                endpoint = `/comment/${this.comment_id}/reply`;
+                data = {
+                    parent_comment: this.comment,
+                    comment: this.content
+                }
+            }
+            if(endpoint != null && data != null){
+               this.apiCall({
+                   endpoint:endpoint, 
+                   method: 'POST',
+                   data: data
+                })
                .then(response => {
                    this.content = '';
-                   this.$emit('comment-posted', response.data.comment)
+                   this.$emit('comment-posted', response.data.comment);
                })
+               .catch(error => {
+                    
+                })
+            }
+
             },
         },
         mounted() {

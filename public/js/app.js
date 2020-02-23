@@ -1714,13 +1714,41 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      loading_error: null
+    };
+  },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root'])),
-  props: ['message'],
+  methods: {
+    retry: function retry() {
+      this.$emit('retry');
+    }
+  },
+  props: ['message', 'error'],
+  mounted: function mounted() {
+    this.loading_error = this.error;
+  },
   watch: {
-    message: function message(newMessage, oldMessage) {
-      this.message = newMessage;
+    message: function message(new_message, old_message) {
+      this.message = new_message;
+    },
+    error: function error(new_error, old_error) {
+      this.loading_error = new_error;
     }
   }
 });
@@ -1915,11 +1943,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   props: ['data', 'expandable'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['likeComment']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     commentLike: function commentLike() {
       var _this = this;
 
-      this.likeComment(this.comment).then(function (response) {
+      this.apiCall({
+        endpoint: "/comment/".concat(this.comment.id, "/like"),
+        method: 'POST'
+      }).then(function (response) {
         if (response.data.action == 'like') {
           _this.comment.likes_count++;
           _this.comment.liked = true;
@@ -2118,7 +2149,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       replies: [],
       track: [],
       current: null,
-      engagements_loaded: false
+      engagements_loaded: false,
+      comment_loading_error: null,
+      comment_engagement_loading_error: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'is_authenticated', 'time_diff', 'makeId', 'renderHTML', 'getMentions', 'resolveMentions']), {
@@ -2147,7 +2180,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   props: ['data', 'id'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment', 'loadCommentEngagements']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     setData: function setData(data) {
       var _this3 = this;
 
@@ -2184,19 +2217,37 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         _this4.setTrack(comment);
       });
     },
+    //entry point
+    loadComment: function loadComment() {
+      //if the data was passed
+      if (this.data != null && this.data != undefined) {
+        this.setComment(this.data);
+      } //if it was an id
+      else if (this.id != null && this.id != undefined) {
+          this.getComment(this.id);
+        }
+    },
     //load comment by id
     getComment: function getComment(id) {
       var _this5 = this;
 
-      this.loadComment(id).then(function (response) {
+      this.comment_loading_error = null;
+      this.apiCall({
+        endpoint: "/comment/".concat(id)
+      }).then(function (response) {
         _this5.setComment(response.data.comment);
+      })["catch"](function (error) {
+        _this5.comment_loading_error = error;
       });
     },
     getEngagements: function getEngagements() {
       var _this6 = this;
 
+      this.comment_engagement_loading_error = null;
       this.engagements_loaded = false;
-      this.loadCommentEngagements(this.comment.id).then(function (response) {
+      this.apiCall({
+        endpoint: "/comment/".concat(this.comment.id, "/engagements")
+      }).then(function (response) {
         _this6.comment.likes = response.data.likes;
         _this6.comment.likes_count = response.data.likes.length;
         _this6.replies = response.data.replies.sort(function (a, b) {
@@ -2205,6 +2256,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         response.data.replies;
         _this6.comment.replies_count = response.data.replies.length;
         _this6.engagements_loaded = true;
+      })["catch"](function (error) {
+        _this6.comment_engagement_loading_error = error;
       });
     },
     newReplyPosted: function newReplyPosted(reply) {
@@ -2236,13 +2289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     CommentTextarea: _CommentTextarea_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   mounted: function mounted() {
-    //if the data was passed
-    if (this.data != null && this.data != undefined) {
-      this.setComment(this.data);
-    } //if it was an id
-    else if (this.id != null && this.id != undefined) {
-        this.getComment(this.id);
-      }
+    this.loadComment();
   },
   watch: {
     data: function data(newData, oldData) {
@@ -2394,7 +2441,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   props: ['discussion', 'comment', 'container'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['postComment']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     setContent: function setContent() {
       $(this.editor).focus(); // this.content = $(this.editor).html();
 
@@ -2403,16 +2450,34 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     addComment: function addComment() {
       var _this = this;
 
-      var comment = {
-        discussion: this.discussion_id,
-        comment: this.comment_id,
-        content: this.content
-      };
-      this.postComment(comment).then(function (response) {
-        _this.content = '';
+      var endpoint = null;
+      var data = null;
 
-        _this.$emit('comment-posted', response.data.comment);
-      });
+      if (this.discussion_id != null) {
+        endpoint = "/discussion/".concat(this.discussion_id, "/comment");
+        data = {
+          comment: this.content
+        };
+      } // if it's a reply to a comment
+      else if (this.comment_id != null) {
+          endpoint = "/comment/".concat(this.comment_id, "/reply");
+          data = {
+            parent_comment: this.comment,
+            comment: this.content
+          };
+        }
+
+      if (endpoint != null && data != null) {
+        this.apiCall({
+          endpoint: endpoint,
+          method: 'POST',
+          data: data
+        }).then(function (response) {
+          _this.content = '';
+
+          _this.$emit('comment-posted', response.data.comment);
+        })["catch"](function (error) {});
+      }
     }
   }),
   mounted: function mounted() {
@@ -2576,7 +2641,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       single_comment: null,
       comment_id: null,
       mode: 'list',
-      total: 0
+      total: 0,
+      comments_loading_error: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready']), {
@@ -2587,10 +2653,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   props: ['container', 'url', 'target', 'discussion_id'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComments']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])([]), {
     loadComments: function loadComments(url) {
       var _this = this;
 
+      this.comments_loading_error = null;
       this.can_load_more = false;
 
       if (url !== '' && url !== null) {
@@ -2601,7 +2668,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           _this.loaded = true;
           _this.total = response.data.meta.total;
           _this.can_load_more = true; // console.warn(response.data)
-        })["catch"](function (error) {});
+        })["catch"](function (error) {
+          _this.comments_loading_error = error;
+        });
       }
     },
     loadSingleCommentByData: function loadSingleCommentByData(comment) {
@@ -2632,7 +2701,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.loadComments(apiURL(this.url));
     var component = this;
     var container = component.container == null ? $(window) : $('#comments-container');
-    console.log(container);
     container.scroll(function (e) {
       var parent = component.container == null ? window : '#comments-container';
 
@@ -2668,6 +2736,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2706,7 +2780,7 @@ __webpack_require__.r(__webpack_exports__);
       return this.company == null ? '' : this.company.id;
     }
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     selectCompany: function selectCompany(comp) {
       this.company = comp;
       $(this.input).typeahead('close');
@@ -2714,13 +2788,17 @@ __webpack_require__.r(__webpack_exports__);
     createNewCompany: function createNewCompany(name) {
       var _this = this;
 
-      axios.post(apiURL('/company'), {
-        company: name
+      this.apiCall({
+        endpoint: "/company",
+        method: 'POST',
+        data: {
+          company: name
+        }
       }).then(function (response) {
         _this.selectCompany(response.data);
       })["catch"](function (error) {});
     }
-  },
+  }),
   components: {},
   mounted: function mounted() {
     var component = this;
@@ -2910,13 +2988,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       source: ''
     };
   },
-  computed: {
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'app_ready']), {
     all_comments: function all_comments() {
       return "/discussion/".concat(this.discussion, "/comments");
     }
-  },
+  }),
   props: ['discussion', 'user'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadUser']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     getContributors: function getContributors() {
       var _this = this;
 
@@ -2951,7 +3029,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.getContributors();
 
     if (this.user !== '') {
-      this.loadUser(this.user).then(function (response) {
+      this.apiCall({
+        endpoint: "/user/".concat(this.user)
+      }).then(function (response) {
         _this2.loadUserContributions(response.data.data);
       })["catch"](function (error) {
         _this2.source = "/discussion/".concat(_this2.discussion, "/comments");
@@ -3336,13 +3416,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       key: 1,
       feeds: [],
       links: null,
+      meta: null,
       mode: 'feeds',
       loaded: false,
       can_load_more: true,
       single_comment: null,
       single_comment_id: null,
       single_discussion: null,
-      single_experience: null
+      single_experience: null,
+      feeds_loading_error: null
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'time_diff', 'snippet', 'is_trashed']), {
@@ -3351,19 +3433,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   }),
   props: ['container', 'url'],
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['loadComment']), {
-    getFeeds: function getFeeds(url) {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])([]), {
+    loadFeeds: function loadFeeds(url) {
       var _this = this;
 
+      this.feeds_loading_error = null;
       this.can_load_more = false; //disallow loading more while this request is processing
 
       axios.get(url).then(function (response) {
         _this.feeds = _this.feeds.concat(response.data.data);
         _this.links = response.data.links;
+        _this.meta = response.data.meta;
         _this.loaded = true;
-        _this.can_load_more = true;
-        console.warn(response.data.data);
-      })["catch"](function (error) {});
+        _this.can_load_more = true; // console.warn(response.data.data);
+      })["catch"](function (error) {
+        _this.feeds_loading_error = error;
+      });
+    },
+    getFeeds: function getFeeds() {
+      this.loadFeeds(apiURL(this.url));
+    },
+    getNextFeeds: function getNextFeeds() {
+      var url = "".concat(apiURL(this.url), "&page=").concat(parseInt(this.meta.current_page) + 1);
+      this.loadFeeds(url);
     },
     generateKey: function generateKey(feed) {
       return Math.floor(Math.random() * 1000000);
@@ -3391,13 +3483,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   mounted: function mounted() {
     var component = this;
-    this.getFeeds(apiURL(component.url));
+    this.getFeeds();
     var container = component.container == null ? $(window) : $('#feeds-container');
     container.on('scroll', function (e) {
       if (onScreen('#more-feeds-loader')) {
         //if the loader is visible on the screen, It means the bottom has been reached
         if (component.can_load_more && component.links !== null && component.links.next !== null) {
-          component.getFeeds(component.links.next);
+          component.getNextFeeds();
         }
       }
     });
@@ -3586,19 +3678,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       users: [],
       active: false,
       loading: false,
-      status: 'Type above to search'
+      status: 'Type above to search',
+      search_error: null
     };
   },
   props: ['container'],
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'is_following_tag']), {
     input: function input() {
       return "".concat(this.container, " input.global-search");
+    },
+    still_typing: function still_typing() {
+      return $(this.input).val() == this.q ? false : true;
     }
   }),
   methods: {
     search: function search() {
       var _this = this;
 
+      this.search_error = null;
       this.q = $(this.input).val();
 
       if (this.q === '') {
@@ -3607,15 +3704,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {
         this.loading = true;
         this.status = "Looking up \"".concat(this.q, "\"...");
-        setTimeout(function () {
-          axios.get("".concat(_this.root, "/search?q=").concat(_this.q)).then(function (response) {
-            _this.tags = response.data.tags;
-            _this.discussions = response.data.discussions;
-            _this.experiences = response.data.experiences;
-            _this.users = response.data.users;
-            _this.loading = false;
-            _this.status = "Search result for \"".concat(_this.q, "\"");
-          })["catch"](function (error) {});
+        var timeout = setTimeout(function () {
+          if (_this.still_typing) {
+            clearTimeout(timeout); //don't send request yet
+          } else {
+            axios.get("".concat(_this.root, "/search?q=").concat(_this.q)).then(function (response) {
+              _this.tags = response.data.tags;
+              _this.discussions = response.data.discussions;
+              _this.experiences = response.data.experiences;
+              _this.users = response.data.users;
+              _this.loading = false;
+              _this.status = "Search result for \"".concat(_this.q, "\"");
+            })["catch"](function (error) {
+              _this.search_error = error;
+            });
+          }
         }, 2000);
       }
     },
@@ -3666,6 +3769,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_bloodhound__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! corejs-typeahead/dist/typeahead.jquery */ "./node_modules/corejs-typeahead/dist/typeahead.jquery.js");
 /* harmony import */ var corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(corejs_typeahead_dist_typeahead_jquery__WEBPACK_IMPORTED_MODULE_2__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -3703,22 +3812,26 @@ __webpack_require__.r(__webpack_exports__);
       return this.school == null ? '' : this.school.id;
     }
   },
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     selectSchool: function selectSchool(sch) {
       this.school = sch;
     },
     createNewSchool: function createNewSchool(name) {
       var _this = this;
 
-      axios.post(apiURL('/school'), {
-        school: name
+      this.apiCall({
+        endpoint: '/school',
+        method: 'POST',
+        data: {
+          school: name
+        }
       }).then(function (response) {
         _this.selectSchool(response.data);
       })["catch"](function (error) {
         toastError(error.response);
       });
     }
-  },
+  }),
   components: {},
   mounted: function mounted() {
     var component = this;
@@ -3962,7 +4075,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['root', 'auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
   props: ['data', 'url'],
-  methods: {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['apiCall']), {
     tagFollowed: function tagFollowed(tag) {
       this.followers.push(this.auth);
       this.$emit('tag-followed', tag);
@@ -3971,7 +4084,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       removeItem(this.followers, this.auth);
       this.$emit('tag-unfollowed', tag);
     }
-  },
+  }),
   components: {
     TagFollowButton: _TagFollowButton__WEBPACK_IMPORTED_MODULE_2__["default"],
     Users: _User_Users__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -3980,7 +4093,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _this = this;
 
     if (this.data == undefined && this.url != undefined) {
-      axios.get(apiURL(this.url)).then(function (response) {
+      this.apiCall({
+        enpoint: this.url
+      }).then(function (response) {
         _this.tag = response.data;
         _this.followers = response.data.users;
       });
@@ -4375,6 +4490,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -4476,7 +4595,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       tags: [],
-      links: null
+      links: null,
+      can_load_more: true
     };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(['auth', 'app_ready', 'tags_following', 'my_tags_loaded', 'is_following_tag'])),
@@ -4485,11 +4605,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     loadTags: function loadTags(url) {
       var _this = this;
 
+      this.can_load_more = false; //disallow loading more while this request is processing
+
       axios.get(apiURL(url)).then(function (response) {
         _this.tags = _this.tags.concat(response.data.data);
         _this.links = response.data.links;
         _this.loaded = true;
-        console.warn(response.data);
+        _this.can_load_more = true; // console.warn(response.data)
       })["catch"](function (error) {});
     }
   },
@@ -4505,14 +4627,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.loadTags(this.url);
       var container = this.container == null ? $(window) : $('#tag-list-container');
       container.on('scroll', function (e) {
-        var content = $("#tag-list-container #".concat(component.id));
-        console.log('content:' + content.height() + 'scrolled:' + container.scrollTop());
-
-        if (container.scrollTop() + container.height() >= content.height()) {
-          if (component.links !== null && component.links.next !== null) {
-            setTimeout(function () {
-              component.loadTags(component.links.next);
-            }, 3000);
+        if (onScreen("#".concat(component.id, " .more-tags-loader"))) {
+          //if the loader is visible on the screen, It means the bottom has been reached
+          if (component.can_load_more && component.links !== null && component.links.next !== null) {
+            component.loadTags(component.links.next);
           }
         }
       });
@@ -11993,7 +12111,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-
 
 
 // module
-exports.push([module.i, "\n.blur[data-v-03a0802f],\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-03a0802f]{\n    top: 0;\n    z-index:100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-comment-container[data-v-03a0802f]{\n    z-index: 200;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
+exports.push([module.i, "\n.blur[data-v-03a0802f],\n.single-comment-container[data-v-03a0802f]{\n    position: fixed;\n    right: 0;\n    left: 0;\n    bottom: 0;\n}\n.blur[data-v-03a0802f]{\n    top: 0;\n    z-index:100;\n    background-color:rgba(255, 255, 255, 0.9);\n}\n.single-comment-container[data-v-03a0802f]{\n    z-index: 200;\n    box-shadow: 0px -20px 20px 10px rgba(0, 0, 0, 0.125) !important;\n}\n.list-group-item.comment[data-v-03a0802f]{\n    border: 0;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.125);\n}\n.comment-textarea[data-v-03a0802f]{\n    position: fixed;\n    bottom:0;\n    right:0;\n    left:0;\n}\n@media (min-width: 768px){\n.single-comment-container[data-v-03a0802f]{\n        left: 50%;\n}\n.comment-textarea[data-v-03a0802f]{\n        left:50%;\n}\n}\n@media (min-width: 992px){\n.single-comment-container[data-v-03a0802f]{\n            left: 70%;\n}\n}\n", ""]);
 
 // exports
 
@@ -12107,7 +12225,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.loader-parent[data-v-a075204a]{\n    background-color: rgba(0,0,0,.2);\n    width: 100%;\n    height: 100vh;\n    position: fixed;\n    z-index: 1000000;\n}\n", ""]);
+exports.push([module.i, "\n.loader-parent[data-v-a075204a]{\n    background-color: rgba(0,0,0,.2);\n    width: 100%;\n    height: 100vh;\n    position: fixed;\n    z-index: 99000000;\n}\n", ""]);
 
 // exports
 
@@ -44009,16 +44127,53 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", {
-      staticClass: "loading-container",
-      style: "background-image: url(" + _vm.root + "/assets/loading-1.gif)"
-    }),
-    _vm._v(" "),
-    _c("div", { staticClass: "text-center" }, [
-      _c("p", [_vm._v(_vm._s(_vm.message))])
-    ])
-  ])
+  return _c(
+    "div",
+    [
+      _vm.loading_error == null
+        ? [
+            _c("div", {
+              staticClass: "loading-container",
+              style:
+                "background-image: url(" + _vm.root + "/assets/loading-1.gif)"
+            }),
+            _vm._v(" "),
+            _c("div", { staticClass: "text-center" }, [
+              _c("p", [_vm._v(_vm._s(_vm.message))])
+            ])
+          ]
+        : [
+            _c(
+              "div",
+              { staticClass: "text-center py-5" },
+              [
+                !_vm.loading_error.response
+                  ? [
+                      _c("div", { staticClass: "text-muted" }, [
+                        _vm._v("Oops! Looks like network isn't good enough")
+                      ])
+                    ]
+                  : [
+                      _c("div", { staticClass: "text-muted" }, [
+                        _vm._v(
+                          "Oops! Something isn't right: " +
+                            _vm._s(_vm.loading_error.response.statusText)
+                        )
+                      ])
+                    ],
+                _vm._v(" "),
+                _c(
+                  "button",
+                  { staticClass: "btn btn-default", on: { click: _vm.retry } },
+                  [_c("i", { staticClass: "fa fa-reset" }), _vm._v("Retry")]
+                )
+              ],
+              2
+            )
+          ]
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -44337,7 +44492,7 @@ var render = function() {
               _c(
                 "span",
                 {
-                  staticClass: "mx-2 action",
+                  staticClass: "mx-2 ml-auto action",
                   on: { click: _vm.loadSingleComment }
                 },
                 [_vm._m(1)]
@@ -44698,7 +44853,11 @@ var render = function() {
                         ]
                       : [
                           _c("loading-one", {
-                            attrs: { message: "loading engagement..." }
+                            attrs: {
+                              message: "loading engagement...",
+                              error: _vm.comment_engagement_loading_error
+                            },
+                            on: { retry: _vm.getEngagements }
                           })
                         ]
                   ],
@@ -44735,7 +44894,13 @@ var render = function() {
               ])
             ]
           : [
-              _c("loading-one", { attrs: { message: "loading comment..." } }),
+              _c("loading-one", {
+                attrs: {
+                  message: "loading comment...",
+                  error: _vm.comment_loading_error
+                },
+                on: { retry: _vm.loadComment }
+              }),
               _vm._v(" "),
               _c("div", { staticClass: "text-center" }, [
                 _c(
@@ -45123,7 +45288,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "single-comment-container shadow-lg" },
+              { staticClass: "single-comment-container" },
               [
                 _c("comment-popup", {
                   attrs: { data: _vm.single_comment, id: _vm.comment_id },
@@ -45204,7 +45369,15 @@ var render = function() {
                                   [
                                     _c("loading-one", {
                                       attrs: {
-                                        message: "getting more comments..."
+                                        message: "getting more comments...",
+                                        error: _vm.comments_loading_error
+                                      },
+                                      on: {
+                                        retry: function($event) {
+                                          return _vm.loadComments(
+                                            _vm.links.next
+                                          )
+                                        }
                                       }
                                     })
                                   ],
@@ -45215,7 +45388,15 @@ var render = function() {
                         ]
                       : [
                           _c("loading-one", {
-                            attrs: { message: "getting comments..." }
+                            attrs: {
+                              message: "getting comments...",
+                              error: _vm.comments_loading_error
+                            },
+                            on: {
+                              retry: function($event) {
+                                return _vm.loadComments(_vm.url)
+                              }
+                            }
                           })
                         ]
                   ],
@@ -45544,70 +45725,76 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
+  return _vm.app_ready
+    ? _c(
         "div",
         [
-          _c("strong", { staticClass: "mr-3" }, [_vm._v("All Contributors")]),
-          _vm._v(" "),
-          _c("users", {
-            attrs: { data: _vm.contributors },
-            on: { "user-clicked": _vm.loadUserContributions }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.contributor != null
-        ? [
-            _c("div", { staticClass: "d-flex" }, [
-              _c(
-                "div",
-                [
-                  _vm._v("\n                Comments by:\n                "),
-                  _c("user", { attrs: { data: _vm.contributor } })
-                ],
-                1
-              ),
+          _c(
+            "div",
+            [
+              _c("strong", { staticClass: "mr-3" }, [
+                _vm._v("All Contributors")
+              ]),
               _vm._v(" "),
-              _c("div", { staticClass: "ml-auto" }, [
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.loadAllComments($event)
-                      }
-                    }
-                  },
-                  [_vm._v("show all comments")]
-                )
-              ])
-            ])
-          ]
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "div",
-        [
-          _c("comments", {
-            attrs: {
-              url: _vm.source,
-              target: "discussion",
-              discussion_id: _vm.discussion
-            },
-            on: { "comment-posted": _vm.addContributor }
-          })
+              _c("users", {
+                attrs: { data: _vm.contributors },
+                on: { "user-clicked": _vm.loadUserContributions }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.contributor != null
+            ? [
+                _c("div", { staticClass: "d-flex" }, [
+                  _c(
+                    "div",
+                    [
+                      _vm._v(
+                        "\n                Comments by:\n                "
+                      ),
+                      _c("user", { attrs: { data: _vm.contributor } })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "ml-auto" }, [
+                    _c(
+                      "a",
+                      {
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.loadAllComments($event)
+                          }
+                        }
+                      },
+                      [_vm._v("show all comments")]
+                    )
+                  ])
+                ])
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c("comments", {
+                attrs: {
+                  url: _vm.source,
+                  target: "discussion",
+                  discussion_id: _vm.discussion
+                },
+                on: { "comment-posted": _vm.addContributor }
+              })
+            ],
+            1
+          )
         ],
-        1
+        2
       )
-    ],
-    2
-  )
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -46073,8 +46260,10 @@ var render = function() {
                                   [
                                     _c("loading-one", {
                                       attrs: {
-                                        message: "loading more feeds..."
-                                      }
+                                        message: "loading more feeds...",
+                                        error: _vm.feeds_loading_error
+                                      },
+                                      on: { retry: _vm.getNextFeeds }
                                     })
                                   ],
                                   1
@@ -46085,7 +46274,11 @@ var render = function() {
                   ]
                 : [
                     _c("loading-one", {
-                      attrs: { message: "loading feeds..." }
+                      attrs: {
+                        message: "loading feeds...",
+                        error: _vm.feeds_loading_error
+                      },
+                      on: { retry: _vm.getFeeds }
                     })
                   ]
             ],
@@ -46248,7 +46441,11 @@ var render = function() {
                                 { staticClass: "p-5" },
                                 [
                                   _c("loading-one", {
-                                    attrs: { message: "searching..." }
+                                    attrs: {
+                                      message: "searching...",
+                                      error: _vm.search_error
+                                    },
+                                    on: { retry: _vm.search }
                                   })
                                 ],
                                 1
@@ -47068,87 +47265,93 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("strong", [_vm._v("Already following")]),
-          _vm._v(" "),
-          _c("div", [
-            _c("small", { staticClass: "text-muted" }, [
-              _vm._v("Following " + _vm._s(_vm.tags_following.length) + " tags")
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "list-group",
-              staticStyle: { "max-height": "300px", overflow: "auto" }
-            },
-            _vm._l(_vm.tags_following, function(tag) {
-              return _c(
-                "div",
-                { key: tag.id, staticClass: "list-group-item" },
-                [
-                  _c("tag", {
-                    attrs: { data: tag },
-                    on: {
-                      "tag-followed": _vm.tagFollowed,
-                      "tag-unfollowed": _vm.tagUnfollowed
-                    }
-                  })
-                ],
-                1
-              )
-            }),
-            0
-          )
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("strong", [_vm._v("Suggestions")]),
+        _c("div", { staticClass: "col-md-6 p-0" }, [
+          _c("div", { staticClass: "p-" }, [
+            _c("strong", [_vm._v("Already following")]),
             _vm._v(" "),
             _c("div", [
               _c("small", { staticClass: "text-muted" }, [
-                _vm._v(_vm._s(_vm.suggested_tag_status))
+                _vm._v(
+                  "Following " + _vm._s(_vm.tags_following.length) + " tags"
+                )
               ])
             ]),
             _vm._v(" "),
-            _vm.app_ready
-              ? [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "list-group",
-                      staticStyle: { "max-height": "300px", overflow: "auto" }
-                    },
-                    _vm._l(_vm.suggestions, function(tag) {
-                      return _c(
-                        "div",
-                        {
-                          key: tag.id + Math.random(),
-                          staticClass: "list-group-item"
-                        },
-                        [
-                          _c("tag", {
-                            attrs: { data: tag },
-                            on: {
-                              "tag-followed": _vm.tagFollowed,
-                              "tag-unfollowed": _vm.tagUnfollowed
-                            }
-                          })
-                        ],
-                        1
-                      )
-                    }),
-                    0
-                  )
-                ]
-              : _vm._e()
-          ],
-          2
-        )
+            _c(
+              "div",
+              {
+                staticClass: "list-group",
+                staticStyle: { "max-height": "300px", overflow: "auto" }
+              },
+              _vm._l(_vm.tags_following, function(tag) {
+                return _c(
+                  "div",
+                  { key: tag.id, staticClass: "list-group-item" },
+                  [
+                    _c("tag", {
+                      attrs: { data: tag },
+                      on: {
+                        "tag-followed": _vm.tagFollowed,
+                        "tag-unfollowed": _vm.tagUnfollowed
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-6 p-0" }, [
+          _c(
+            "div",
+            { staticClass: "p-1" },
+            [
+              _c("strong", [_vm._v("Suggestions")]),
+              _vm._v(" "),
+              _c("div", [
+                _c("small", { staticClass: "text-muted" }, [
+                  _vm._v(_vm._s(_vm.suggested_tag_status))
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.app_ready
+                ? [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "list-group",
+                        staticStyle: { "max-height": "300px", overflow: "auto" }
+                      },
+                      _vm._l(_vm.suggestions, function(tag) {
+                        return _c(
+                          "div",
+                          {
+                            key: tag.id + Math.random(),
+                            staticClass: "list-group-item"
+                          },
+                          [
+                            _c("tag", {
+                              attrs: { data: tag },
+                              on: {
+                                "tag-followed": _vm.tagFollowed,
+                                "tag-unfollowed": _vm.tagUnfollowed
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      }),
+                      0
+                    )
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ])
       ])
     ],
     1
@@ -47205,7 +47408,7 @@ var render = function() {
                   ? [
                       _c(
                         "div",
-                        { staticClass: "text-center" },
+                        { staticClass: "text-center more-tags-loader" },
                         [
                           _c("loading-one", {
                             attrs: { message: "loading more..." }
@@ -63334,8 +63537,56 @@ var actions = {
       }
     });
   },
-  loadUser: function loadUser(_ref2, username) {
+  apiCall: function apiCall(_ref2) {
     var commit = _ref2.commit;
+    var param = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+      endpoint: '',
+      method: 'GET',
+      api: true,
+      data: {}
+    };
+    console.log(param);
+    return new Promise(function (resolve, reject) {
+      var endpoint = param.endpoint == undefined ? '' : param.endpoint;
+      var method = param.method == undefined ? 'GET' : param.method;
+      var api = param.api == undefined ? true : param.api;
+      var data = param.data == undefined ? {} : param.data;
+      var request = null;
+
+      if (api === true) {
+        endpoint = apiURL(endpoint);
+      }
+
+      switch (method) {
+        case 'GET':
+          request = axios.get(endpoint, data);
+          break;
+
+        case 'POST':
+          request = axios.post(endpoint, data);
+          break;
+
+        case 'PUT':
+          request = axios.put(endpoint, data);
+          break;
+
+        case 'DELETE':
+          request = axios["delete"](endpoint, data);
+          break;
+      }
+
+      if (request !== null) {
+        request.then(function (response) {
+          resolve(response);
+        })["catch"](function (error) {
+          toastError(error);
+          reject(error);
+        });
+      }
+    });
+  },
+  loadUser: function loadUser(_ref3, username) {
+    var commit = _ref3.commit;
     return new Promise(function (resolve, reject) {
       axios.get(apiURL("/user/".concat(username))).then(function (response) {
         resolve(response);
@@ -63348,24 +63599,13 @@ var actions = {
       });
     });
   },
-  loadFeeds: function loadFeeds(_ref3, url) {
-    var commit = _ref3.commit;
-    return new Promise(function (resolve, reject) {
-      axios.get(url).then(function (response) {
-        resolve(response);
-      })["catch"](function (error) {
-        toastError(error.response);
-        reject(error);
-      });
-    });
-  },
   loadMyTags: function loadMyTags(_ref4) {
     var commit = _ref4.commit;
     return new Promise(function (resolve, reject) {
       axios.get(apiURL("/my_tags")).then(function (res) {
         resolve(res);
       })["catch"](function (error) {
-        toastError(error.response);
+        toastError(error);
         reject(error);
       });
     });
@@ -63377,7 +63617,7 @@ var actions = {
       axios.get(apiURL("/tag_suggestions")).then(function (res) {
         resolve(res);
       })["catch"](function (error) {
-        toastError(error.response);
+        toastError(error);
         reject(error);
       });
     });
@@ -63392,7 +63632,7 @@ var actions = {
         commit('ADD_TAG', response.data);
         resolve(response);
       })["catch"](function (error) {
-        toastError(error.response);
+        toastError(error);
         reject(error);
       });
     });
@@ -63404,71 +63644,7 @@ var actions = {
       axios.post(apiURL("/tag/".concat(tag.id, "/follow"))).then(function (response) {
         resolve(response); // Let the calling function know that http is done.
       })["catch"](function (error) {
-        toastError(error.response);
-        reject(error);
-      });
-    });
-  },
-  postComment: function postComment(_ref8, comment) {
-    var commit = _ref8.commit;
-    var endpoint = null;
-    var data = null;
-    return new Promise(function (resolve, reject) {
-      // if the comment is directly to a discussion
-      if (comment.discussion != null) {
-        endpoint = apiURL("/discussion/".concat(comment.discussion, "/comment"));
-        data = {
-          comment: comment.content
-        };
-      } // if it's a reply to a comment
-      else if (comment.comment != null) {
-          endpoint = apiURL("/comment/".concat(comment.comment, "/reply"));
-          data = {
-            parent_comment: comment.comment,
-            comment: comment.content
-          };
-        }
-
-      if (endpoint != null && data != null) {
-        axios.post(endpoint, data).then(function (response) {
-          console.log(response);
-          resolve(response);
-        })["catch"](function (error) {
-          toastError(error.response);
-          reject(error);
-        });
-      }
-    });
-  },
-  loadComment: function loadComment(_ref9, id) {
-    var commit = _ref9.commit;
-    return new Promise(function (resolve, reject) {
-      axios.get(apiURL("/comment/".concat(id))).then(function (response) {
-        resolve(response);
-      })["catch"](function (error) {
-        toastError(error.response);
-        reject(error);
-      });
-    });
-  },
-  loadCommentEngagements: function loadCommentEngagements(_ref10, id) {
-    var commit = _ref10.commit;
-    return new Promise(function (resolve, reject) {
-      axios.get(apiURL("/comment/".concat(id, "/engagements"))).then(function (response) {
-        resolve(response);
-      })["catch"](function (error) {
-        toastError(error.response);
-        reject(error);
-      });
-    });
-  },
-  likeComment: function likeComment(_ref11, comment) {
-    var commit = _ref11.commit;
-    return new Promise(function (resolve, reject) {
-      axios.post(apiURL("/comment/".concat(comment.id, "/like"))).then(function (response) {
-        resolve(response);
-      })["catch"](function (error) {
-        toastError(error.response);
+        toastError(error);
         reject(error);
       });
     });

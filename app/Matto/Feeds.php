@@ -18,7 +18,7 @@ class feeds
     public function feeds(){
 		$feeds = collect([])->merge($this->experiences)
 							->merge($this->comments)
-							->merge($this->discussions);
+                            ->merge($this->discussions);
         return $feeds->sortByDesc('created_at')->paginate(config('custom.pagination'));  								
 	}
 }

@@ -2,29 +2,33 @@
     <div id="tag-selection">
         <tag-search container="#tag-selection" purpose="follow" key="2" @tag-followed="tagFollowed"></tag-search>
         <div class="row">
-            <div class="col-md-6">
-                <strong>Already following</strong>
-                <div>
-                    <small class="text-muted">Following {{tags_following.length}} tags</small>
-                </div>
-                <div class="list-group" style="max-height: 300px; overflow: auto">
-                    <div class="list-group-item" v-for="tag in tags_following" v-bind:key="tag.id">
-                        <tag :data="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed"></tag>
+            <div class="col-md-6 p-0">
+                <div class="p-">
+                    <strong>Already following</strong>
+                    <div>
+                        <small class="text-muted">Following {{tags_following.length}} tags</small>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <strong>Suggestions</strong>
-                <div>
-                    <small class="text-muted">{{suggested_tag_status}}</small>
-                </div>
-                <template v-if="app_ready">
                     <div class="list-group" style="max-height: 300px; overflow: auto">
-                        <div class="list-group-item" v-for="tag in suggestions" v-bind:key="tag.id+Math.random()">
+                        <div class="list-group-item" v-for="tag in tags_following" v-bind:key="tag.id">
                             <tag :data="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed"></tag>
                         </div>
                     </div>
-                </template>
+                </div>
+            </div>
+            <div class="col-md-6 p-0">
+                <div class="p-1">
+                    <strong>Suggestions</strong>
+                    <div>
+                        <small class="text-muted">{{suggested_tag_status}}</small>
+                    </div>
+                    <template v-if="app_ready">
+                        <div class="list-group" style="max-height: 300px; overflow: auto">
+                            <div class="list-group-item" v-for="tag in suggestions" v-bind:key="tag.id+Math.random()">
+                                <tag :data="tag" @tag-followed="tagFollowed" @tag-unfollowed="tagUnfollowed"></tag>
+                            </div>
+                        </div>
+                    </template>
+                </div>
             </div>
         </div>
         

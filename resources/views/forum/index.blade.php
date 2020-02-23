@@ -5,7 +5,7 @@
 
 @section('xs-styles')
 .main-content{
-    padding-top: 70px;
+    padding-top: 100px;
 }
 @endsection
 

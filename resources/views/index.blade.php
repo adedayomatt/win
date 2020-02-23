@@ -6,8 +6,8 @@
 @section('styles')
     @guest
         .lhs-fixed{
-            background-color: {{primaryColor()}};
-            min-height: 100vh;
+            {{-- background-color: {{primaryColor()}}; --}}
+            min-height: 50vh;
             margin-top: -20px;
         }
         .lhs-content{
@@ -15,15 +15,17 @@
             padding-right: 10px;
         }
         .lhs-content .tag-line{
-            color: #fff !important
+            {{-- color: #fff !important --}}
         }
     @endguest
 @endsection
 
 @section('md-styles')
     @guest
-
-    @endguest
+        .lhs-fixed{
+            min-height: 100vh;
+        }
+@endguest
 @endsection
 @section('LHS')
     @auth()
@@ -58,8 +60,8 @@
     @endauth
 
     @guest()
-    <div class="pt-3">
-        <h2 class="text-center tag-line">Built Just For You</h2>
+    <div class="py-5">
+        <h2 class="text-center tag-line">Your Story Could Inspire Us</h2>
         <div class="content-box ">
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -81,12 +83,13 @@
     
 @endsection
 @section('main')
-    <h6>Most used tags</h6>    
-    @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
-    <div id="home-feeds-container">
-        <feeds url="/feeds"></feeds>
+    <div class="py-3">
+        <h6>Most used tags</h6>    
+        @include('tag.widgets.trending', ['carousel_layout' => ['xs' => 2, 'sm' => 3, 'md' => 3, 'lg' => 3] ])
+        <div id="home-feeds-container">
+            <feeds url="{{Auth::check() ? '/feeds' : '/recent-feeds'}}"></feeds>
+        </div>
     </div>
-  
 @endsection
 @section('RHS')
     <div class="">

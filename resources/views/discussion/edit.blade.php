@@ -1,13 +1,13 @@
 @extends('layouts.app')
 @section('title')
-   {{$comment->user->fullname}} | Edit
+   {{$discussion->title}} | Edit
 @endsection
 
 @section('main')
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="content-box">
-                <h6>Update discussion <a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
+                <h6>Edit discussion <a href="{{route('discussion.show',[$discussion->slug])}}">{{$discussion->title}}</a></h6>
                 <hr>
                 @include('discussion.forms.edit')
             </div>

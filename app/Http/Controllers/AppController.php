@@ -39,8 +39,7 @@ class AppController extends Controller
 			return  FeedResource::collection($feeds->feeds());
 		}
 		return view('index')->with('feeds',$feeds->feeds()->sortByDesc('created_at'));
-	}
-	
+	}	
 	public function about(){
 		return view('about');
 	}

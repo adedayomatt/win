@@ -12,7 +12,7 @@
             </span>
 
             <template v-if="expandable">
-                <span class="mx-2 action" @click="loadSingleComment">
+                <span class="mx-2 ml-auto action" @click="loadSingleComment">
                     <span><i class="fa fa-external-link-alt" title="open comment"></i></span>
                 </span>
             </template>
@@ -51,10 +51,13 @@ export default {
         props: ['data', 'expandable'],
         methods:{
             ...mapActions([
-                'likeComment'
+                'apiCall'
             ]),
              commentLike(){
-                this.likeComment(this.comment)
+                this.apiCall({
+                    endpoint: `/comment/${this.comment.id}/like`,
+                    method: 'POST'
+                    })
                 .then((response) => {
                     if(response.data.action == 'like'){
                         this.comment.likes_count++;

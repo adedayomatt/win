@@ -6,7 +6,7 @@
                     <tag :data="tag"></tag>
                 </div>
             <template v-if="links != null && links.next != null">
-                <div class="text-center">
+                <div class="text-center more-tags-loader">
                      <loading-one message="loading more..."></loading-one>
                 </div>
             </template>
@@ -36,6 +36,7 @@ import LoadingOne from './../Assets/LoadingOne';
             return {
                 tags: [],
                 links: null,
+                can_load_more: true,
             }
         },
         computed: {
@@ -50,14 +51,16 @@ import LoadingOne from './../Assets/LoadingOne';
         props: [ 'id', 'container','url', 'collection'],
         methods: {
         loadTags(url){
-                    axios.get(apiURL(url))
-                    .then(response => {
-                      this.tags =  this.tags.concat(response.data.data);
-                        this.links = response.data.links
-                        this.loaded = true;
-                        console.warn(response.data)
-                    })
-                    .catch(error => {
+            this.can_load_more = false; //disallow loading more while this request is processing
+            axios.get(apiURL(url))
+            .then(response => {
+                this.tags =  this.tags.concat(response.data.data);
+                this.links = response.data.links
+                this.loaded = true;
+                this.can_load_more = true;
+                // console.warn(response.data)
+            })
+            .catch(error => {
 
             })
         },
@@ -71,16 +74,11 @@ import LoadingOne from './../Assets/LoadingOne';
                 this.loadTags(this.url);
                 let container = this.container == null ? $(window) : $('#tag-list-container');
                 container.on('scroll',function(e){
-                let content = $(`#tag-list-container #${component.id}`);
-                console.log('content:'+content.height()+'scrolled:'+container.scrollTop());
-                if(container.scrollTop() + container.height() >= content.height()){
-                    if(component.links !== null && component.links.next !== null){
-                        setTimeout(() => { 
+                if(onScreen(`#${component.id} .more-tags-loader`)) {//if the loader is visible on the screen, It means the bottom has been reached
+                        if(component.can_load_more && component.links !== null && component.links.next !== null){
                             component.loadTags(component.links.next)
-                            },3000)
-                        
+                        }
                     }
-                }
                 })
             }else{
                 this.tags = JSON.parse(this.collection);

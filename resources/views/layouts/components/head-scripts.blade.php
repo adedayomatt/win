@@ -55,7 +55,10 @@
   }
 
   function toastError(err,message=''){
-      switch(err.status){
+    if(!err.response){
+      toastr.error('Network error');
+    }else{
+      switch(err.response.status){
           case 401:
               toastr.error(`${message} <a href="${baseURL()}/login">Login first</a>`);
           break;
@@ -66,6 +69,7 @@
               toastr.error(`Server error: ${err.statusText}. ${message}`);
           break;
       }
+    }
   }
   // function to generate random characters
   function randomChar(length) {

@@ -21,7 +21,44 @@ let actions = {
                 commit('APP_READY', true)
             } 
         });
+    },
 
+    apiCall({commit}, param = {endpoint: '', method: 'GET', api: true, data: {}}){
+        console.log(param);
+
+        return new Promise((resolve, reject) => {
+            let endpoint = param.endpoint == undefined ? '' : param.endpoint;
+            let method = param.method == undefined ? 'GET' : param.method;
+            let api = param.api == undefined ? true : param.api;
+            let data = param.data == undefined ? {} : param.data;
+            let request = null;
+            if(api === true){
+               endpoint = apiURL(endpoint)
+            }
+            switch(method){
+                case 'GET':
+                    request = axios.get(endpoint, data);
+                break;
+                case 'POST':
+                    request = axios.post(endpoint, data);
+                break;
+                case 'PUT':
+                    request = axios.put(endpoint, data);
+                break;
+                case 'DELETE':
+                    request = axios.delete(endpoint, data);
+                break;
+            }
+            if(request !== null){
+                request.then(response => {
+                resolve(response);
+                })
+                .catch(error => {
+                    toastError(error);
+                    reject(error)
+                })
+            }
+        })
     },
     loadUser({commit}, username){
         return new Promise((resolve, reject) => {
@@ -39,26 +76,13 @@ let actions = {
          })
  
     },   
-    loadFeeds({commit}, url){
-        return new Promise((resolve, reject) => {
-            axios.get(url)
-                .then(response => {
-                   resolve(response);
-                })
-                .catch(error => {
-                    toastError(error.response);
-                    reject(error)
-                })
-         })
- 
-    },
     loadMyTags({commit}) {
        return new Promise((resolve, reject) => {
                 axios.get(apiURL(`/my_tags`))
                 .then(res => {
                     resolve(res);
                 }).catch(error => {
-                    toastError(error.response);
+                    toastError(error);
                     reject(error);
             })
        })
@@ -69,7 +93,7 @@ let actions = {
                  .then(res => {
                      resolve(res);
                  }).catch(error => {
-                    toastError(error.response);
+                    toastError(error);
                     reject(error);
              })
         })
@@ -82,12 +106,11 @@ let actions = {
                 resolve(response);
             })
             .catch((error) =>{
-                toastError(error.response);
+                toastError(error);
                 reject(error);
             })
             
          });
-        
     },
     followTag({commit, dispatch}, tag) {
         return new Promise((resolve, reject) => {
@@ -96,88 +119,11 @@ let actions = {
                 resolve(response);  // Let the calling function know that http is done.
             })
             .catch(error => {
-                toastError(error.response);
+                toastError(error);
                 reject(error);
             })
         });
     },
-
-    postComment({commit},comment){
-        let endpoint = null;
-        let data = null;
-        return new Promise((resolve, reject) => {
-            // if the comment is directly to a discussion
-            if(comment.discussion != null){
-                endpoint = apiURL(`/discussion/${comment.discussion}/comment`);
-                data = {
-                    comment: comment.content
-                }
-            }
-            // if it's a reply to a comment
-            else if (comment.comment != null){ 
-                endpoint = apiURL(`/comment/${comment.comment}/reply`);
-                data = {
-                    parent_comment: comment.comment,
-                    comment: comment.content
-                }
-            }
-            if(endpoint != null && data != null){
-                axios.post(endpoint,data)
-                .then(response => {
-                 console.log(response);
-                   resolve(response);
-                })
-                .catch(error => {
-                    toastError(error.response);
-                    reject(error)
-                })
-            }
-        })
-      
-   },
-    loadComment({commit}, id){
-        return new Promise((resolve, reject) => {
-            axios.get(apiURL(`/comment/${id}`))
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    toastError(error.response);
-                    reject(error)
-                })
-        })
-
-    },
-    loadCommentEngagements({commit}, id){
-        return new Promise((resolve, reject) => {
-            axios.get(apiURL(`/comment/${id}/engagements`))
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    toastError(error.response);
-                    reject(error)
-                })
-        })
-
-    },
-
-
-    likeComment({commit},comment){
-        return new Promise((resolve, reject) => {
-           axios.post(apiURL(`/comment/${comment.id}/like`))
-               .then(response => {
-                  resolve(response);
-               })
-               .catch(error => {
-                   toastError(error.response);
-                   reject(error)
-               })
-        })
-      
-   },
-
-
 
 }
 

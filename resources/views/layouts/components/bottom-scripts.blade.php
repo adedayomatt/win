@@ -1,4 +1,4 @@
-<script src="{{asset('js/app.js?v=2.1')}}"></script>
+<script src="{{asset('js/app.js?v=2.2')}}"></script>
 <script src="{{asset('js/vendors/toastr.min.js')}}"></script>
 <script src="{{asset('js/vendors/owl.carousel.min.js')}}"></script>
 

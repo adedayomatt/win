@@ -81,7 +81,7 @@
                             </div>
                         </template>
                         <template v-else>
-                            <loading-one message="loading engagement..."></loading-one>
+                            <loading-one message="loading engagement..." :error="comment_engagement_loading_error" @retry="getEngagements"></loading-one>
                         </template>
                     </div>
 
@@ -101,7 +101,7 @@
 
             </template>
             <template v-else>
-                <loading-one message="loading comment..."></loading-one>
+                <loading-one message="loading comment..." :error="comment_loading_error" @retry="loadComment"></loading-one>
                 <div class="text-center">
                     <button class="btn btn-default btn-sm" @click="closePopup"><i class="fa fa-times"></i> cancel</button>
                 </div>
@@ -127,6 +127,8 @@ export default {
                 track: [],
                 current: null,
                 engagements_loaded: false,
+                comment_loading_error: null,
+                comment_engagement_loading_error: null
             }
         },
         computed: {
@@ -159,8 +161,7 @@ export default {
         props: ['data', 'id'],
         methods:{
             ...mapActions([
-                'loadComment',
-                'loadCommentEngagements',
+                'apiCall'
             ]),
             setData(data){
                 return new Promise((resolve, reject) => {
@@ -191,17 +192,36 @@ export default {
                     this.setTrack(comment);
                 })
             },
+            //entry point
+            loadComment(){
+                //if the data was passed
+                if(this.data != null && this.data != undefined){
+                this.setComment(this.data);
+                }
+                //if it was an id
+                else if(this.id != null && this.id != undefined){
+                    this.getComment(this.id);
+                }
+            },
             //load comment by id
             getComment(id){
-                this.loadComment(id)
+                this.comment_loading_error = null;
+                this.apiCall({
+                    endpoint: `/comment/${id}`,
+                })
                .then(response => {
                        this.setComment(response.data.comment);
-               });
+               })
+               .catch(error=>{
+                   this.comment_loading_error = error;
+               })
             },
-
             getEngagements(){
+                this.comment_engagement_loading_error = null;
                 this.engagements_loaded = false;
-                this.loadCommentEngagements(this.comment.id)
+                this.apiCall({
+                   endpoint: `/comment/${this.comment.id}/engagements`,
+                })
                 .then(response => {
                         this.comment.likes =  response.data.likes;
                         this.comment.likes_count = response.data.likes.length;
@@ -209,6 +229,10 @@ export default {
                         this.comment.replies_count = response.data.replies.length;
                         this.engagements_loaded = true;
                 })
+                .catch(error=>{
+                    this.comment_engagement_loading_error = error;
+               })
+
             },
 
             newReplyPosted(reply){
@@ -237,14 +261,7 @@ export default {
             LoadingOne,Discussion,CommentReply, CommentTextarea
         },
         mounted() {
-            //if the data was passed
-            if(this.data != null && this.data != undefined){
-              this.setComment(this.data);
-            }
-            //if it was an id
-            else if(this.id != null && this.id != undefined){
-                this.getComment(this.id);
-            }
+            this.loadComment()
         },
         watch: {
             data: function(newData, oldData){

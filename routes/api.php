@@ -18,10 +18,8 @@ Route::group(['middlewre' => 'auth:admin','prefix' => 'system'], function(){
     Route::post('/artisan','SystemController@runArtisan')->name('system.artisan.run');
 });
 Route::get('/user/{username}', 'UserController@show');
-
 Route::get('tags', 'TagController@index');
 Route::get('tag/{tag}', 'TagController@show');
-
 Route::get('experiences','ExperienceController@index');
 Route::get('experience/{id}','ExperienceController@show');
 Route::get('experience/{experience}/discussions','ExperienceController@discussions');
@@ -33,16 +31,16 @@ Route::get('discussion/{discussion}/contributors','DiscussionController@contribu
 Route::get('comments','CommentController@index');
 Route::get('comment/{comment}','CommentController@show');
 Route::get('comment/{comment}/engagements','CommentController@engagements');
-Route::get('/feeds', 'AppController@index');
 Route::get('/{user}/feeds', 'UserController@feeds');
 Route::get('/tag/{tag}/feeds', 'TagController@feeds');
+Route::get('/recent-feeds', 'AppController@index');
 
 Route::group(['middleware' => 'auth:api'], function(){
     // return the authenticated user
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
+    Route::get('/feeds', 'AppController@index');
     // create a new tag
     Route::post('tag', 'TagController@store');
     // follow/unfollow a tag

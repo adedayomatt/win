@@ -13,7 +13,7 @@
                     <template v-if="q !== ''">
                         <template v-if="loading">
                             <div class="p-5">
-                                <loading-one message="searching..."></loading-one>
+                                <loading-one message="searching..." :error="search_error" @retry="search"></loading-one>
                             </div>
                         </template>
                         <template v-else>
@@ -75,7 +75,8 @@
                 users: [],
                 active: false,
                 loading: false,
-                status: 'Type above to search'
+                status: 'Type above to search',
+                search_error: null,
             }
         },
         props: ['container'],
@@ -86,11 +87,14 @@
             ]),
             input(){
                 return `${this.container} input.global-search`
+            },
+            still_typing(){
+                return $(this.input).val() == this.q ? false : true;
             }
-           
         },
         methods: {
             search(){
+                this.search_error = null;
                 this.q = $(this.input).val();
                 if(this.q === ''){
                     this.loading = false;
@@ -98,21 +102,25 @@
                 }else{
                     this.loading = true;
                      this.status = `Looking up "${this.q}"...`;
-                    setTimeout(() => {
-                        axios.get(`${this.root}/search?q=${this.q}`)
-                        .then(response => {
-                            this.tags = response.data.tags;
-                            this.discussions = response.data.discussions;
-                            this.experiences = response.data.experiences;
-                            this.users = response.data.users;
-                            this.loading = false;
-                            this.status = `Search result for "${this.q}"`
-                        })
-                        .catch(error => {
-
-                        })
-                    }, 2000)
-                   
+                    let timeout = setTimeout(() => {
+                        if(this.still_typing){
+                            clearTimeout(timeout); //don't send request yet
+                        }else{
+                            axios.get(`${this.root}/search?q=${this.q}`)
+                            .then(response => {
+                                this.tags = response.data.tags;
+                                this.discussions = response.data.discussions;
+                                this.experiences = response.data.experiences;
+                                this.users = response.data.users;
+                                this.loading = false;
+                                this.status = `Search result for "${this.q}"`
+                            })
+                            .catch(error => {
+                                this.search_error = error
+                            })
+                        }
+                    }, 2000);
+                                       
                 }
                
             },

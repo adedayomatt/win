@@ -34,7 +34,7 @@
                         </div>
                         <template v-if="links !== null && links.next !== null">
                             <div id="more-feeds-loader">
-                                <loading-one message="loading more feeds..."></loading-one>
+                                <loading-one message="loading more feeds..."  :error="feeds_loading_error" @retry="getNextFeeds"></loading-one>
                             </div>
                         </template>
                         <template v-else>
@@ -45,7 +45,7 @@
                     </template>
                 </template>
                 <template v-else>
-                    <loading-one message="loading feeds..."></loading-one>
+                    <loading-one message="loading feeds..." :error="feeds_loading_error" @retry="getFeeds"></loading-one>
                 </template>
             </div>
         </div>
@@ -68,6 +68,7 @@ export default {
                key: 1,
                feeds: [],
                links: null,
+               meta: null,
                mode: 'feeds',
                loaded: false,
                can_load_more: true,
@@ -75,6 +76,7 @@ export default {
                single_comment_id: null,
                single_discussion: null,
                single_experience: null,
+               feeds_loading_error: null,
             }
         },
         computed: {
@@ -92,22 +94,31 @@ export default {
         props: ['container', 'url'],
         methods:{
             ...mapActions([
-                'loadComment'
+
             ]),
 
-            getFeeds(url){
+            loadFeeds(url){
+                this.feeds_loading_error = null;
                 this.can_load_more = false; //disallow loading more while this request is processing
                 axios.get(url)
                 .then(response => { 
                     this.feeds = this.feeds.concat(response.data.data);
                     this.links = response.data.links;
+                    this.meta = response.data.meta;
                     this.loaded = true;
                     this.can_load_more = true;
-                    console.warn(response.data.data);
+                    // console.warn(response.data.data);
                 })
                 .catch(error => {
-
+                    this.feeds_loading_error = error;
                 })
+            },
+            getFeeds(){
+                this.loadFeeds(apiURL(this.url));
+            },
+            getNextFeeds(){
+                let url = `${apiURL(this.url)}&page=${(parseInt(this.meta.current_page)+1)}`;
+                this.loadFeeds(url)
             },
             generateKey(feed){
                 return Math.floor((Math.random() * 1000000));
@@ -126,7 +137,8 @@ export default {
             closeSingleFeed(){
                 this.mode = 'feeds';
                 this.single_comment = null
-            }
+            },
+
 
         },
         components:{
@@ -134,15 +146,13 @@ export default {
         },
         mounted() {
             let component = this;
-            this.getFeeds(apiURL(component.url));
-            
+            this.getFeeds();
             let container = component.container == null ? $(window) : $('#feeds-container');
             container.on('scroll',function(e){
             if(onScreen('#more-feeds-loader')) {//if the loader is visible on the screen, It means the bottom has been reached
                 if(component.can_load_more && component.links !== null && component.links.next !== null){
-                     component.getFeeds(component.links.next)
+                     component.getNextFeeds()
                 }
-
             }
         })
 

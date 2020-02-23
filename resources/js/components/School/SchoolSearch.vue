@@ -40,11 +40,18 @@
 
         },
         methods: {
+            ...mapActions([
+                'apiCall'
+            ]),
             selectSchool(sch){
                 this.school = sch;
             },
             createNewSchool(name){
-                axios.post(apiURL('/school'), {school: name})
+                this.apiCall({
+                    endpoint: '/school',
+                    method: 'POST',
+                    data: {school: name}
+                })
                 .then(response => {
                     this.selectSchool(response.data)
                 })

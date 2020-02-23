@@ -45,6 +45,9 @@ import TagFollowButton from './TagFollowButton';
         },
         props: ['data','url'],
         methods: {
+            ...mapActions([
+                'apiCall'
+            ]),
         tagFollowed(tag){
             this.followers.push(this.auth);
             this.$emit('tag-followed', tag);
@@ -59,7 +62,7 @@ import TagFollowButton from './TagFollowButton';
         },
         mounted() {
             if(this.data == undefined && this.url != undefined){
-                axios.get(apiURL(this.url))
+                this.apiCall({enpoint: this.url})
                 .then(response => {
                     this.tag = response.data;
                     this.followers = response.data.users
