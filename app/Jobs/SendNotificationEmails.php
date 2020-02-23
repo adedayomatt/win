@@ -30,6 +30,7 @@ class SendNotificationEmails implements ShouldQueue
 
     public $recipients;
     public $notification;
+    public $deleteWhenMissingModels = true;
     /**
      * Create a new job instance.
      *

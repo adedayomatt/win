@@ -19,10 +19,12 @@
             }
             .mail-head{
                 background-color: #fff;
-                box-shadow: 0px 5px 5px rgba(0,0,0,.2);
+                text-align: center;
+                /* box-shadow: 0px 5px 5px rgba(0,0,0,.2); */
             }
             button{
                 border: none;
+                word-wrap: break-word;
             }
             table{
                 width: 100%;
@@ -34,6 +36,9 @@
                 height: 1px;
                 border: none;
                 background-color: #f2f2f2;
+            }
+            a{
+                text-decoration: none;
             }
             .text-left{
                 text-align: left;
@@ -52,17 +57,20 @@
             }
             .white,
             .btn,
-            .btn:hover,
-            .mail-foot{
+            .btn:hover
+           {
                 color: #fff;
             }
             .color-primary{
                 color: {{primaryColor()}};
             }
             .bg-primary,
-            .btn,
-            .mail-foot{
+            .btn
+            {
                 background-color: {{primaryColor()}};
+            }
+            .mail-foot{
+                background-color: #f7f7f7;
             }
             .bg-white{
                 background-color: #fff;
@@ -114,6 +122,9 @@
     </head>
     <body>
         <div class="mail-head">
+            <div>
+                <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife"><br>
+            </div>
             @yield('head')
         </div>
         <div class="mail-body">
@@ -122,6 +133,7 @@
         <div class="mail-foot">
             @yield('foot')
             <div class="text-center">
+                <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife"><br>
                 &copy; {{config('app.name')}}, {{now()->format('Y')}}
             </div>
         </div>

@@ -44,9 +44,9 @@ class NewCommentReplyNotification extends Notification
     public function toMail($notifiable)
     {
         if($this->comment_owner){
-            $subject = $this->reply->user->fullname().' ('.$this->reply->user->username().') replied to your comment on '.$this->reply->comment->discussion()->title;
+            $subject = $this->reply->user->fullname().' ('.$this->reply->user->username().') replied to your comment on "'.$this->reply->comment->discussion()->title.'"';
         }else{
-            $subject = $this->reply->user->fullname().' ('.$this->reply->user->username().') also replied to '.$this->reply->comment->user->fullname().' ('.$this->reply->comment->user->username().')\' comment on '.$this->reply->comment->discussion()->title;
+            $subject = $this->reply->user->fullname().' ('.$this->reply->user->username().') also replied to '.$this->reply->comment->user->fullname().' ('.$this->reply->comment->user->username().')\' comment on "'.$this->reply->comment->discussion()->title.'"';
         }
         return (new MailMessage)
                     ->subject($subject)

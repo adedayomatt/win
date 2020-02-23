@@ -35,9 +35,11 @@ class SendNewExperienceNotification
         
         // queue the mailing job instead...
         foreach($event->experience->reachableUsers() as $recipient){
-            SendNotificationEmails::dispatch($recipient, new NewExperienceNotification($event->experience))
-                            ->onQueue(config('custom.notification_mail_queue'))
-                            ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+            if($recipient->id !== $event->experience->user->id){ //exclude the author
+                SendNotificationEmails::dispatch($recipient, new NewExperienceNotification($event->experience))
+                                        ->onQueue(config('custom.notification_mail_queue'))
+                                        ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+}
         }
     }
 }

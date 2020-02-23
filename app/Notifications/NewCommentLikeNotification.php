@@ -40,7 +40,7 @@ class NewCommentLikeNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = $this->comment_like->user->fullname().' ('.$this->comment_like->user->username().') liked your comment on '.$this->comment_like->comment->discussion()->title;
+        $subject = $this->comment_like->user->fullname().' ('.$this->comment_like->user->username().') liked your comment on "'.$this->comment_like->comment->discussion()->title.'"';
         return (new MailMessage)
                     ->subject($subject)
                     ->view('mail.notification.new-comment-like',['subject' => $subject, 'comment_like' => $this->comment_like]);

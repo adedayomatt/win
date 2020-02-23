@@ -41,7 +41,7 @@ class NewCommentNotificationForContributors extends Notification
      */
     public function toMail($notifiable)
     {
-        $subject = $this->comment->user->fullname().' ('.$this->comment->user->username().') also commented on the discussion : '.$this->comment->discussion()->title;
+        $subject = $this->comment->user->fullname().' ('.$this->comment->user->username().') also commented on the discussion "'.$this->comment->discussion()->title.'"';
         return (new MailMessage)
                     ->subject($subject)
                     ->view('mail.notification.new-comment-for-contributors',['subject' => $subject, 'comment' => $this->comment]);

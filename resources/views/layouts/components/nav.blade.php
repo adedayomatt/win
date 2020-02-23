@@ -1,6 +1,9 @@
 <init></init>
 <nav class="navbar navbar-expand-lg fixed-top">
-  <a class="navbar-brand text-primary" href="{{route('home')}}">{{config('app.name')}}</a>
+  <a class="navbar-brand text-primary" href="{{route('home')}}">
+    <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife" style="height: 35px" class="d-none d-md-block">
+    <img src="{{asset('assets/insydelife-icon-50x50.png')}}" alt="insydelife" style="height: 35px" class="d-block d-md-none">
+  </a>
   
   <form class="form-inline my-2 my-lg-0" id="global-search-wrapper">
         <global-search container="#global-search-wrapper"></global-search>

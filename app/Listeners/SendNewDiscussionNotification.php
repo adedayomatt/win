@@ -34,9 +34,11 @@ class SendNewDiscussionNotification
         
         // queue the mailing job instead...
         foreach($event->discussion->reachableUsers() as $recipient){
-            SendNotificationEmails::dispatch($recipient, new NewDiscussionNotification($event->discussion))
+            if($recipient->id !== $event->discussion->user->id){ //exclude the author
+                SendNotificationEmails::dispatch($recipient, new NewDiscussionNotification($event->discussion))
                                 ->onQueue(config('custom.notification_mail_queue'))
                                 ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+            }
         }
 
     }

@@ -50,6 +50,6 @@
                 </div>
             </div>
         </div>
-        {{Form::submit('Create',['class' => 'btn btn-theme'])}}
+        {{Form::submit('Create discussion',['class' => 'btn btn-theme'])}}
 </fieldset>
 {!! Form::close() !!}

@@ -1,6 +1,8 @@
 <init></init>
 <nav class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-brand text-primary" href="{{route('home')}}">{{config('app.name')}}</a>
+    <a class="navbar-brand text-primary" href="{{route('home')}}">
+        <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife" style="height: 35px" class="">
+    </a>
           <ul class="navbar-nav ml-auto">
             @auth()
             <li class="nav-item text-right">
