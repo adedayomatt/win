@@ -15,7 +15,7 @@
     <div class="row justify-content-center">
         <div class="col-md-3 col-sm-4">
             <div class="content-box">
-                <div style="padding: 40px 0">
+                <div>
                     <div class="text-center">
                         <h4>Sign in</h4>
                         <p>Don't have an account yet? <a href="{{route('register')}}">Sign up now</a></p>

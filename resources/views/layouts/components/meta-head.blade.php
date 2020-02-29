@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- CSRF Token -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="theme" content="{{primaryColor()}}">
+<meta name="theme-color" content="{{primaryColor()}}">
 <title> @yield('title') - {{ config('app.name') }}</title>
 <link rel="shortcut icon" href="{{asset('assets/insydelife-icon-50x50.png')}}" type="image/x-icon">
 <!-- Fonts -->
