@@ -118,7 +118,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
 	public function avatar(){
         $image = array();
-		$image['src'] = $this->avatar === null || !Storage::exists('public/images/users/'.$this->avatar) ? asset('storage/images/users/default.png') : asset('storage/images/users/'.$this->avatar);
+		$image['src'] = $this->avatar === null || !Storage::exists('public/images/users/'.$this->avatar) ? asset('assets/user-default.png') : asset('storage/images/users/'.$this->avatar);
 		$image['alt'] = $this->fullname().'('.$this->username().') on '.config('app.name');
 		return $image;
     }

@@ -114,7 +114,7 @@ class Experience extends Model
 
 	public function cover(){
 		$image = array();
-		$image['src'] = $this->photos()->count() > 0 ? asset('storage/experiences/media/'.$this->photos()->first()->slug) : asset('storage/experiences/default.jpg');
+		$image['src'] = $this->photos()->count() > 0 ? asset('storage/experiences/media/'.$this->photos()->first()->slug) : asset('assets/experience-default.jpg');
 		$image['alt'] =  $this->title. ' on '.config('app.name');
 		return $image;
 	}
