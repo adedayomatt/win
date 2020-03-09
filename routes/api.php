@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middlewre' => ['cors','auth:admin'],'prefix' => 'system'], function(){
+Route::group(['middlewre' => ['auth:admin'],'prefix' => 'system'], function(){
     Route::get('/','SystemController@index')->name('system');
     Route::post('/cache','SystemController@clearSystemCache')->name('system.cache.clear');
     Route::post('/artisan','SystemController@runArtisan')->name('system.artisan.run');
 });
 
-Route::group(['middleware' => ['cors']], function(){
+Route::group([], function(){
     Route::get('/user/{username}', 'UserController@show');
     Route::get('tags', 'TagController@index');
     Route::get('tag/{tag}', 'TagController@show');
@@ -38,7 +38,7 @@ Route::group(['middleware' => ['cors']], function(){
     Route::get('/recent-feeds', 'AppController@index');
 });
 
-Route::group(['middleware' => ['cors','auth:api']], function(){
+Route::group(['middleware' => ['auth:api']], function(){
     // return the authenticated user
     Route::get('/user', function (Request $request) {
         return $request->user();
