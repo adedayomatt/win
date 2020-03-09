@@ -10,7 +10,7 @@
             body{
                 margin: 0;
                 font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-                line-height: 25px;
+                line-height: 35px;
             }
             .mail-head,
             .mail-body,
@@ -76,7 +76,7 @@
                 background-color: #fff;
             }
             .btn{
-                padding: 10px 20px;
+                padding: 7px 20px;
                 border-radius: 5px;
                 text-decoration: none;
             }
@@ -133,7 +133,7 @@
         <div class="mail-foot">
             @yield('foot')
             <div class="text-center">
-                <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife"><br>
+                <img src="{{asset('assets/insydelife-logo-146x42.png')}}" alt="insydelife" width="70px"><br>
                 &copy; {{config('app.name')}}, {{now()->format('Y')}}
             </div>
         </div>

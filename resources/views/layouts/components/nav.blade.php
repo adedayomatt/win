@@ -59,12 +59,12 @@
     </ul>
     @auth()
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item ">
-            <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm mx-1" >
-                 <i class="fa fa-plus"></i> New Discussion
+        <li class="nav-item">
+            <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm mx-1  d-sm-none d-md-inline" data-toggle="tooltip" title="Start a discussion">
+                 <i class="fa fa-plus"></i>
             </a>
-            <a href="{{route('experience.create')}}" class="btn btn-theme btn-sm mx-1" >
-             <i class="fa fa-share-alt"></i> Share Experience
+            <a href="{{route('experience.create')}}" class="btn btn-theme btn-sm mx-1  d-sm-none d-md-inline"  data-toggle="tooltip" title="Share an experience">
+             <i class="fa fa-share-alt"></i>
             </a>
         </li>
     </ul>
@@ -76,11 +76,15 @@
 
                   <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                     <img src="{{auth()->user()->avatar()['src']}}" alt="{{auth()->user()->avatar()['alt']}}" class="avatar avatar-xs">
-                       <span class="caret"></span>
+                    <span class="d-inline d-lg-none">{{ auth()->user()->username }}</span>   
+                    <span class="caret"></span>
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">                            
                     <a class="dropdown-item" href="{{route('user.profile',[Auth::user()->username])}}">
-                      <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> {{ auth()->user()->username }}
+                      <span class="d-none d-lg-inline">
+                        <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> 
+                        {{ auth()->user()->username }}
+                      </span>
                     </a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{route('tag.create')}}">create tag</a>

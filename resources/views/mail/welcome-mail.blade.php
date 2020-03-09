@@ -8,7 +8,7 @@
     <h4 class="text-center color-primary">Thank you for verifying your email</h4>
     <div>
         <p>Dear <strong>{{$user->firstname}}</strong>, We are so glad to have you join this community.</p>
-        <p>This is a community where experiences on different topics are provided by top trainers. You can keep up with your favorite niche by choosing <a href="{{route('tags')}}">tags</a> to follow. The tags you follow will be used to customize what you see on your feed. </p>
+        <p>This is a community where you can share your experience and read other people's experience on different topics. You can keep up with your favorite topics by choosing <a href="{{route('tags')}}">tags</a> to follow. The tags you follow will be used to customize what you see on your feed. </p>
         <?php 
             $tag_suggestions = $_tags::whereNotIn('id',$user->interests())->get();
             $experience_suggestions = $_experiences::take(3)->get();
@@ -38,7 +38,7 @@
         @endif
 
         @if($experience_suggestions->count() > 0)
-            <p>You may also want to check this experiences, they have been resourceful</p>
+            <p>You may also want to check these recent experiences shared...</p>
             @foreach($experience_suggestions as $experience)
                 @include('mail.snippets.experience')
                 <hr>
@@ -48,8 +48,8 @@
             </div>
         @endif
 
-        @if($experience_suggestions->count() > 0)
-            <p>Remember, {{config('app.name')}} is a community where you can discuss several topics, for example, here are some things your fellow winners are talking about</p>
+        @if($discussion_suggestions->count() > 0)
+            <p>You can also have discussion in the community, for example, here are some things your people are talking about</p>
             @foreach($discussion_suggestions as $discussion)
                 @include('mail.snippets.discussion')
                 <hr>
@@ -58,7 +58,6 @@
                 <a href="{{route('discussions')}}">see more discussions</a>
             </div>
         @endif
-
 
         <p>You can now create your own tag, forums, discussions and contribute to other discussions</p>
         <div class="text-center">

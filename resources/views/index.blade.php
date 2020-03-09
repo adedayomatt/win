@@ -31,6 +31,14 @@
     @auth()
         <div class="content-box">
             @include('user.widgets.snippet',['user' => Auth::user()])
+            <div class="text-center my-2">
+                <a href="{{route('discussion.create')}}" class="btn btn-theme btn-sm m-1">
+                    <i class="fa fa-plus"></i> Start a discussion
+               </a>
+               <a href="{{route('experience.create')}}" class="btn btn-theme btn-sm m-1">
+                <i class="fa fa-share-alt"></i> Share an experience
+               </a>
+            </div>
         </div>
         <h6>My Interests: </h6>
         <div style="max-height: 200px; overflow: auto">
