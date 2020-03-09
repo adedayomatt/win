@@ -81,7 +81,7 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">                            
                     <a class="dropdown-item" href="{{route('user.profile',[Auth::user()->username])}}">
-                      <span class="d-none d-lg-inline">
+                      <span class="">
                         <img src="{{auth()->user()->avatar()['src']}}" width="20px" height="20px" class="avatar"> 
                         {{ auth()->user()->username }}
                       </span>

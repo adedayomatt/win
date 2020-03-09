@@ -71,7 +71,7 @@ export default {
            User
         },
         mounted() {
-            console.log(this.experience)
+            // console.log(this.experience)
             }
     }
 </script>

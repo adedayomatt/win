@@ -9,7 +9,7 @@
         <template v-else>
             <div class="text-center py-5">
                 <template v-if="!loading_error.response">
-                    <div class="text-muted">Oops! Looks like network isn't good enough</div>
+                    <div class="text-muted">Oops! connection issue</div>
                 </template>
                 <template v-else>
                     <div class="text-muted">Oops! Something isn't right: {{loading_error.response.statusText}}</div>

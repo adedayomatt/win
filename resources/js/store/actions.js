@@ -5,7 +5,7 @@ let actions = {
             if(window.key !== ''){
                 axios.get(apiURL('/user'))
                 .then(res => {
-                    console.log(res);
+                    // console.log(res);
                     if(res.data != null){
                         commit('SET_AUTH_USER', res.data);
                         commit('APP_READY', true);
@@ -24,7 +24,7 @@ let actions = {
     },
 
     apiCall({commit}, param = {endpoint: '', method: 'GET', api: true, data: {}}){
-        console.log(param);
+        // console.log(param);
 
         return new Promise((resolve, reject) => {
             let endpoint = param.endpoint == undefined ? '' : param.endpoint;
