@@ -61,12 +61,11 @@
                     // header: '<div class="list-group-item text-center font-weight-bold">Tags Found:</div>',
                     // footer: '<div class="list-group-item text-center">Footer Content</div>',
                     suggestion: function (data) {
-                        var avatarURL = baseURL()+'/storage/images/users/';
                         return `<div class="list-group-item">
                                     <a href="${baseURL()}/@${data.username}">
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <img src="${data.avatar == null ? avatarURL+'default.png' : avatarURL+data.avatar}"  style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
+                                                <img src="${data.image.src}"  style="width: 50px; height: 50px; border-radius: 50%; border: 2px solid #fff">
                                             </div>
                                             <div>
                                                 <strong class="d-block">${data.firstname} ${data.lastname}</strong>
