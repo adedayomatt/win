@@ -165,7 +165,7 @@ class UserController extends Controller
 		$user->bio = $request->bio;
 		$user->save();
 		
-		return redirect()->route('user.profile',['username' => $username])->with('success','Profile updated');
+		return redirect()->route('user.profile',['username' => $user->username])->with('success','Profile updated');
 	}
 
 	public function updateInterests(Request $request, $username){
