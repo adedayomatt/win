@@ -1,11 +1,11 @@
-<script src="{{asset('js/app.js?v=2.2')}}"></script>
+<script src="{{asset('js/app.js?v='.config('app.version'))}}"></script>
 <script src="{{asset('js/vendors/toastr.min.js')}}"></script>
 <script src="{{asset('js/vendors/owl.carousel.min.js')}}"></script>
 
 <script src="{{ asset('js/vendors/jquery.jscroll.min.js') }}"></script>
 <script src="{{ asset('js/vendors/typeahead.min.js') }}"></script>
 <script src="{{ asset('js/vendors/select2.min.js') }}"></script>
-<script src="{{ asset('js/b/scripts.js') }}"></script>
+<script src="{{ asset('js/b/scripts.js?v='.config('app.version')) }}"></script>
 
 <script>
 	$('[data-toggle="popover"]').popover({
