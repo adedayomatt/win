@@ -48,11 +48,11 @@ class UserController extends Controller
 	}
 	
 	public function show($username){
-		$user = $this->find($username);
+		$user = User::where('username',$username)->first();
 		if($this->isAPIRequest()){
 			return new UserResource($user);
 		}
-		return view('user.show')->with(['user'=>$user]);
+		return view('user.show')->with(['user'=>$user, 'username' => $username]);
 	}
 	public function feeds($username){
 		$user = $this->find($username);
