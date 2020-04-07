@@ -8,6 +8,7 @@ function apiURL(endpoint = ''){
 
 // find the id of an object in a json array
 function getIndex(array, object){
+  console.error()
   return array.findIndex(obj => obj.id === object.id);
 }
 // return an object specified by id from an array

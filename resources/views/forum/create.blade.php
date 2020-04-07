@@ -2,6 +2,17 @@
 @section('title')
     New Forum
 @endsection
+
+@section('meta')
+    <meta name="description" content="Create your own forum and start discussion">
+    <meta name="keywords" content="insydelife, discussion, experience, community, share, learning, forum">
+    <meta property="og:title" content="Create Forum" />
+    <meta property="og:description" content="Create your own forum and start your discussion" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('forums')}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
 @section('styles')
     body{
         background-color: #F5F8FA;

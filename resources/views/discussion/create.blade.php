@@ -2,8 +2,15 @@
 @section('title')
     New Discussions
 @endsection
-
-
+@section('meta')
+    <meta name="description" content="Start a new conversation">
+    <meta name="keywords" content="insydelife, experience, community, tag, followers">
+    <meta property="og:title" content="Start a discussion" />
+    <meta property="og:description" content="Start a new conversation" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('discussion.create')}}" />
+    <meta property="og:type" content="website" />
+@endsection
 @section('main')
         <div class="">
             <h6>Start new discussion{{isset($experience) ? ' on' : ''}}</h6>

@@ -3,6 +3,18 @@
     Tags
 @endsection
 
+@section('meta')
+    <meta name="description" content="Best way to keep up with your favorite topics, see all th tags and choose what to follow">
+    <meta name="keywords" content="insydelife, experience, community, share, learning, tag">
+    <meta property="og:title" content="Tags" />
+    <meta property="og:description" content="Best way to keep up with your favorite topics, see all th tags and choose what to follow" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('tags')}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
+
+
 @section('LHS')
     <div class="content-box">
         <div class="d-flex">

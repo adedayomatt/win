@@ -3,6 +3,17 @@
    {{$discussion->title}}
 @endsection
 
+@section('meta')
+    <meta name="description" content="{{$discussion->snippet}}">
+    <meta name="keywords" content="insydelife, discussion, community, {{join(',',$discussion->tags->pluck('name')->toArray()) }}">
+    <meta name="Author" content="{{$discussion->user->fullname()}}">
+    <meta property="og:title" content="Experience: {{$discussion->title}}" />
+    <meta property="og:description" content="{{$discussion->snippet}}" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('discussion.show',[$discussion->slug])}}" />
+    <meta property="og:type" content="article" />
+@endsection
+
 @section('styles')
     [data-role = 'unlike']{
         color: red;

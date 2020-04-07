@@ -2,7 +2,16 @@
 @section('title')
     Forum :  {{$forum->name}}
 @endsection
-
+@section('meta')
+    <meta name="description" content="{{$forum->name}} created by {{$forum->user->fullname()}}. {{$forum->description}}">
+    <meta name="keywords" content="insydelife, discussion, experience, community, share, learning, forum">
+    <meta name="Author" content="{{$forum->user->fullname()}}">
+    <meta property="og:title" content="Forum: {{$forum->name}}" />
+    <meta property="og:description" content="{{$forum->name}} created by {{$forum->user->fullname()}}. {{$forum->description}}" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('forum.show',[$forum->slug])}}" />
+    <meta property="og:type" content="website" />
+@endsection
 @section('styles')
     .snippet{
         background-color: #fff;

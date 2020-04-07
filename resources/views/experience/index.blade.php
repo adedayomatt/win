@@ -3,6 +3,17 @@
   Experiences
 @endsection
 
+@section('meta')
+    <meta name="description" content="Experience they say is the best teacher, see different people's xperiences on various topics. Oppourtunity to learn from their successes and mistakes ">
+    <meta name="keywords" content="insydelife, experience, community, share, learning">
+    <meta property="og:title" content="See People's Experiences" />
+    <meta property="og:description" content="Experience they say is the best teacher, see different people's xperiences on various topics. Oppourtunity to learn from their successes and mistakes." />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('experiences')}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
+
 @section('xs-styles')
 .main-content{
     padding-top: 70px;

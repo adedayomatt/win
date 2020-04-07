@@ -2,6 +2,15 @@
 @section('title')
     Forums
 @endsection
+@section('meta')
+    <meta name="description" content="See forums where different discussions are happening">
+    <meta name="keywords" content="insydelife, discussion, experience, community, share, learning, forum">
+    <meta property="og:title" content="Forums on insydelife" />
+    <meta property="og:description" content="See forums where different discussions are happening" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('forums')}}" />
+    <meta property="og:type" content="website" />
+@endsection
 
 @section('xs-styles')
 .main-content{

@@ -1,4 +1,7 @@
 @extends('layouts.plain')
+@section('title')
+    Forgot Password
+@endsection
 @section('styles')
         body{
             background-color: #F5F8FA;

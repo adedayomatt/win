@@ -2,7 +2,15 @@
 @section('title')
     #{{$tag->name}} : Followers
 @endsection
-
+@section('meta')
+    <meta name="description" content="Users that are following #{{$tag->name}}">
+    <meta name="keywords" content="insydelife, experience, community, tag, followers">
+    <meta property="og:title" content="#{{$tag->name}} Followers on insydelife" />
+    <meta property="og:description" content="Users that are following #{{$tag->name}}" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('tag.followers',[$tag->slug])}}" />
+    <meta property="og:type" content="website" />
+@endsection
 @section('styles')
     .after-fixed-head{
         padding-top: 72px;

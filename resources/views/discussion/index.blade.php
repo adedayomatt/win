@@ -2,6 +2,15 @@
 @section('title')
     Discussions
 @endsection
+@section('meta')
+    <meta name="description" content="Discussions on insydelife">
+    <meta name="keywords" content="insydelife, experience, community, tag, followers">
+    <meta property="og:title" content="Discussions on insydelife" />
+    <meta property="og:description" content="Discussions on insydelife" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('discussions')}}" />
+    <meta property="og:type" content="website" />
+@endsection
 
 @section('xs-styles')
 .main-content{

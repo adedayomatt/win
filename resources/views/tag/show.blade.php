@@ -2,6 +2,16 @@
 @section('title')
     #{{$tag->name}}
 @endsection
+@section('meta')
+    <meta name="description" content="See experiences and discussions tagged #{{$tag->name}}">
+    <meta name="keywords" content="insydelife, experience, community, tag">
+    <meta property="og:title" content="#{{$tag->name}} on insydelife" />
+    <meta property="og:description" content="See experiences and discussions tagged #{{$tag->name}} {{$tag->description !== null ? ' - '.$tag->description : ''}}" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('tag.show',[$tag->slug])}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
 @section('styles')
     .after-fixed-head{
         padding-top: 82px;

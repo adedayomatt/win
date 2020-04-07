@@ -2,6 +2,15 @@
 @section('title')
    New Experience
 @endsection
+@section('meta')
+    <meta name="description" content="We'd love to read aboutyour experience on any topic, we want to learn from your success and mistakes">
+    <meta name="keywords" content="insydelife, experience, community, share, learning">
+    <meta property="og:title" content="Share Your Experience" />
+    <meta property="og:description" content="We'd love to read aboutyour experience on any topic, we want to learn from your success and mistakes" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('experience.create')}}" />
+    <meta property="og:type" content="website" />
+@endsection
 
 @section('main')
 <div class="">

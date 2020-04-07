@@ -2,6 +2,15 @@
 @section('title')
     Create Tag
 @endsection
+@section('meta')
+    <meta name="description" content="Create a tag">
+    <meta name="keywords" content="insydelife, experience, community, share, learning, tag">
+    <meta property="og:title" content="Create Tag" />
+    <meta property="og:description" content="Create a tag" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('tag.create')}}" />
+    <meta property="og:type" content="website" />
+@endsection
 @section('styles')
     body{
         background-color: #F5F8FA;

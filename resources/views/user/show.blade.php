@@ -4,6 +4,17 @@
   {{$user->fullname}} ({{$user->username()}})
 @endsection
 
+@section('meta')
+    <meta name="description" content="{{$user->fullname()}} on insydelife. {{$user->educationStatus()}}. {{$user->workStatus()}}">
+    <meta name="keywords" content="insydelife, discussion, experience, community, share, learning, forum, {{$user->hasEducation() ? $user->education->course.','.$user->education->school->name.',' : ''}}, {{$user->hasWork() ? $user->work->title.','. $user->work->company->name : ''}} ">
+    <meta name="Author" content="{{$user->fullname()}}">
+    <meta property="og:title" content="{{$user->fullname()}}" />
+    <meta property="og:description" content="{{$user->fullname()}} on insydelife. {{$user->educationStatus()}}. {{$user->workStatus()}}" />
+    <meta property="og:image" content="{{$user->avatar()['src']}}" />
+    <meta property="og:url" content="{{route('user.profile',[$user->username])}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
 @section('styles')
     main{
         margin-top: 60px;

@@ -2,7 +2,15 @@
 @section('title')
     #{{$tag->name}} : Experiences
 @endsection
-
+@section('meta')
+    <meta name="description" content="Experiences tagged #{{$tag->name}}">
+    <meta name="keywords" content="insydelife, experience, community, tag">
+    <meta property="og:title" content="#{{$tag->name}} Experiences on insydelife" />
+    <meta property="og:description" content="Experiences tagged #{{$tag->name}}" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('tag.experiences',[$tag->slug])}}" />
+    <meta property="og:type" content="website" />
+@endsection
 @section('styles')
     .after-fixed-head{
         padding-top: 72px;
