@@ -35,8 +35,10 @@ class SendNewCommentNotificationToAuthor
         // Notification::send($recipients, $notification);
 
         // queue the mailing job instead...
-        SendNotificationEmails::dispatch($recipient, $notification)
-                            ->onQueue(config('custom.notification_mail_queue'))
-                            ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+        if($recipient->id !== $event->comment->user->id){ //if not self comment
+            SendNotificationEmails::dispatch($recipient, $notification)
+                        ->onQueue(config('custom.notification_mail_queue'))
+                        ->delay(Carbon::now()->addSeconds(config('custom.queue_delay')));
+}
     }
 }

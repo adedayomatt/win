@@ -10,7 +10,7 @@
             body{
                 margin: 0;
                 font-family: "Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-                line-height: 45px;
+                line-height: 40px;
             }
             .mail-head,
             .mail-body,

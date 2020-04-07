@@ -3,6 +3,16 @@
   Home
 @endsection
 
+@section('meta')
+    <meta name="description" content="Online community to share experience on several topics all inside life!">
+    <meta name="keywords" content="online, insydelife, discussion, community, experience, {{join(',',\App\Tag::trending()->pluck('name')->toArray()) }}">
+    <meta property="og:title" content="InsydeLife" />
+    <meta property="og:description" content="Online community to share experience on several topics all inside life!" />
+    <meta property="og:image" content="{{asset('asset/insydelife-logo-425x125.png')}}" />
+    <meta property="og:url" content="{{route('home')}}" />
+    <meta property="og:type" content="website" />
+@endsection
+
 @section('styles')
     @guest
         .lhs-fixed{

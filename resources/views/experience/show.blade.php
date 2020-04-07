@@ -6,7 +6,7 @@
     <meta name="description" content="{{$experience->snippet}}">
     <meta name="keywords" content="insydelife, experience, community, {{join(',',$experience->tags->pluck('name')->toArray()) }}">
     <meta name="Author" content="{{$experience->user->fullname()}}">
-    <meta property="og:title" content="Experience: {{$experience->title}}" />
+    <meta property="og:title" content="{{$experience->title}}" />
     <meta property="og:description" content="{{$experience->snippet}}" />
     <meta property="og:image" content="{{$experience->cover['src']}}" />
     <meta property="og:url" content="{{route('experience.show',[$experience->slug])}}" />

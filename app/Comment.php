@@ -13,8 +13,9 @@ class Comment extends Model
 	use softDeletes, Resource;
 	
 	protected $fillable = ['user_id', 'discussion_id','comment_id','thread_id','content'];
-	protected $appends = ['type','comment_discussion', 'reply_to', 'thread', 'likes_count', 'liked', 'replies_count', 'created_timestamp'];
-	
+	protected $appends = ['type','comment_discussion', 'reply_to', 'thread', 'likes_count', 'liked', 'replies_count', 'created_timestamp', 'snippet'];
+	protected $snippet_length = 200;
+
 	// sort collection of comments
 	static function sort($comments){
 		$sorted = [];
@@ -130,6 +131,9 @@ class Comment extends Model
 		return $this->created_at->getTimestamp();
 	}
 
+	public function getSnippetAttribute(){
+		return str_limit(strip_tags($this->content),$this->snippet_length).(strlen(strip_tags($this->content)) > $this->snippet_length ? '...' : '');
+	}
 
 	public function isReply(){
 		return $this->comment == null ? false : true;
