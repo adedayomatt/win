@@ -1,7 +1,11 @@
 <template>
     <div>
-        <input class="global-search form-control no-outline" placeholder="search Insyde Life..."
-        v-model.trim="q" @keyup="search" @focus="activateSearch"
+        <input class="global-search form-control no-outline" 
+        placeholder="search Insyde Life..."
+        type="search"
+        v-model.trim="q" 
+        @keyup="search" 
+        @focus="activateSearch"
         >
         <template v-if="active">
             <div class="search-results-container shadow-md">

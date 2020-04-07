@@ -28,7 +28,7 @@
                 @include('tag.widgets.list')
             </div>
             <div class="text-right">
-                <a href="{{route('tags')}}">see all tagss</a>
+                <a href="{{route('tags')}}">see all tags</a>
             </div>
         </div>
 
